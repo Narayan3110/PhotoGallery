@@ -55,8 +55,8 @@ Before running the project, ensure you have the following installed:
 - **Java 17+** for Spring Boot backend
 - **Node.js** (v14 or higher)
 - **npm** (for managing React dependencies)
-- **MySQL/PostgreSQL** (if using a database for storage)
-- **IDE** like IntelliJ IDEA or VS Code
+- **MySQL** 
+- **IDE** like Eclips or VS Code
 
 ### Backend Setup
 
