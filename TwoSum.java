@@ -27,7 +27,7 @@ public class TwoSum {
 			}
 		} 
 			else {
-			newArr = new int[n];
+			newArr == new int[n];
 			System.arraycopy(arr, 0, newArr, 0, n);
 		}
 
