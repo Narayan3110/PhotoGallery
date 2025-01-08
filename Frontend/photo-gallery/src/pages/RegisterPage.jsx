@@ -1,48 +1,66 @@
 import React, { useState } from "react";
+import AuthService from '../services/authService';
 
 const SignupPage = () => {
   const [formData, setFormData] = useState({
-    username: "",
+    userName: "",
     email: "",
-    password: "",
-    confirmPassword: "",
-  });
+    password: ""
+});
+  const [confirmpassword, setConfirmpassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState(""); // To handle error messages
 
+  // Handle form data changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Validate form data
-    if (formData.password !== formData.confirmPassword) {
-      alert("Passwords do not match!");
+    if (formData.password !== confirmpassword) {
+      setErrorMessage("Passwords do not match!");
+//      alert("Passwords do not match!");
       return;
     }
 
     try {
-      // Send data to backend
-      const response = await fetch("http://your-backend-url.com/api/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (response.ok) {
-        alert("Signup successful!");
-        // Optionally redirect the user
-      } else {
-        const errorData = await response.json();
-        alert(`Signup failed: ${errorData.message}`);
-      }
+      // Call AuthService to register the user
+      const response = await AuthService.registerUser(formData);
+      alert("Signup successful!");
+      console.log("User registered successfully:", response);
+      // Optionally redirect the user to the login page
+      // For example: window.location.href = "/login";
     } catch (error) {
-      alert(`Error: ${error.message}`);
+      setErrorMessage("Error during registration. Please try again.");
+      console.error("Error during registration:", error);
     }
   };
+
+  //   try {
+  //     // Send data to backend
+  //     const response = await fetch(("http://localhost:9090/api/users/register"), {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify(formData),
+  //     });
+
+  //     if (response.ok) {
+  //       alert("Signup successful!");
+  //       // Optionally redirect the user
+  //     } else {
+  //       const errorData = await response.json();
+  //       alert(`Signup failed: ${errorData.message}`);
+  //     }
+  //   } catch (error) {
+  //     alert(`Error: ${error.message}`);
+  //   }
+  // };
 
   return (
     <div className="min-h-screen bg-gradient-to-r from-blue-500 via-purple-500 to-indigo-600 flex items-center justify-center">
@@ -67,10 +85,10 @@ const SignupPage = () => {
               <label className="block text-gray-700 font-medium">Username</label>
               <input
                 type="text"
-                name="username"
+                name="userName"
                 placeholder="Enter your username"
                 className="form-input w-full border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                value={formData.username}
+                value={formData.userName}
                 onChange={handleChange}
               />
             </div>
@@ -106,9 +124,12 @@ const SignupPage = () => {
                 placeholder="Confirm your password"
                 className="form-input w-full border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 value={formData.confirmPassword}
-                onChange={handleChange}
-              />
+                // onChange={handleChange}
+                onChange={(e) => setConfirmpassword(e.target.value)}
+                />
             </div>
+            {errorMessage && (<p className="text-red-500 text-center">{errorMessage}</p>)}
+
             <button
               type="submit"
               className="w-full py-2 rounded bg-gradient-to-r from-blue-500 to-purple-500 text-white font-bold hover:opacity-90 transition-opacity"
