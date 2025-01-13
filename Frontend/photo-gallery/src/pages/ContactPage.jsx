@@ -1,7 +1,7 @@
 const ContactPage = () => {
   return (
-    <div className='max-w-2xl mx-auto mt-10 p-6 text-center bg-gray-100 border border-gray-300 rounded-lg shadow-lg'>
-      <h1 className='text-3xl font-bold text-gray-800 mb-4'>Contact Us</h1>
+    <div className='min-h-screen items-center justify-center mx-auto mt-10 p-6 text-center bg-gray-100 border border-gray-300 rounded-lg shadow-lg '>
+      <h1 className='text-3xl font-bold text-gray-80'>Contact Us</h1>
       <p className='text-gray-600 mb-6'>
         We&apos;re here to help! Feel free to reach out to us with any
         questions, concerns, or feedback.

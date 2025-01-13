@@ -11,6 +11,9 @@ import lombok.ToString;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import org.springframework.stereotype.Component;
+
+@Component
 //@JsonIgnoreProperties(ignoreUnknown = true)
 @Data
 @NoArgsConstructor

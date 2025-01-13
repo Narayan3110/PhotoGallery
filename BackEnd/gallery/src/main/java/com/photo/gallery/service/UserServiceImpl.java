@@ -1,12 +1,15 @@
-package com.photo.gallery.security.services;
+package com.photo.gallery.service;
 
 import com.photo.gallery.dtos.UserDTO;
 import com.photo.gallery.model.Role;
 import com.photo.gallery.model.User;
 import com.photo.gallery.repository.RoleRepository;
 import com.photo.gallery.repository.UserRepository;
-import com.photo.gallery.service.UserService;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -16,9 +19,6 @@ import java.util.Optional;
 @Service
 public class UserServiceImpl implements UserService {
 
-//    @Autowired
-//    private PasswordEncoder passwordEncoder;
-
     @Autowired
     private UserRepository userRepository;
 
@@ -27,7 +27,10 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
-
+    
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    
     @Override
     public List<User> getAllUsers() {
         return userRepository.findAll();
@@ -38,7 +41,6 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         return convertToDto(user);
-//        return userDTO ;
     }
 
 
@@ -98,4 +100,17 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
+
+	
+	@Override
+	public Optional<User> findUserByUserEmail(String email) {
+		// TODO Auto-generated method stub
+		return userRepository.findByEmail(email);
+	}
+
+	@Override
+	public Optional<User> getUserUserName(String userName) {
+		return userRepository.findByUserName(userName);
+	}
+	
 }

@@ -4,8 +4,9 @@ package com.photo.gallery.controller;
 import com.photo.gallery.dtos.UserDTO;
 import com.photo.gallery.model.Role;
 import com.photo.gallery.model.User;
-import com.photo.gallery.security.services.UserServiceImpl;
 import com.photo.gallery.service.UserService;
+import com.photo.gallery.service.UserServiceImpl;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

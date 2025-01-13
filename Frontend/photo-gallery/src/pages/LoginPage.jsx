@@ -1,33 +1,51 @@
 import { useState } from 'react';
+import AuthService from '../services/authService';  // Adjust the path if needed
+import { FaEye, FaEyeSlash } from "react-icons/fa"; // Importing FontAwesome icons for eye and eye-slash
 
 const LoginPage = () => {
-  const [username, setUsername] = useState('');
+  const [usernameOrEmail, setUsernameOrEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    const loginData = { username, password };
+
+    // Basic client-side validation
+    if (!usernameOrEmail ) {
+      setError('UserName Or Email are required');
+      return;
+    }
+    if (!password) {
+      setError('Password are required');
+      return;
+    }
+
+    setError('');
+    setIsLoading(true); // Show loading state
 
     try {
-      const response = await fetch('http://localhost:8080/api/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(loginData),
-      });
-
-      if (!response.ok) throw new Error('Invalid credentials');
-
-      const data = await response.json();
-      console.log('Login successful:', data);
-
+      const response = await AuthService.loginUser(usernameOrEmail, password);
+      if (response) {
+        console.log('Login successful:', response);
+        // Assuming `response.data.username` contains the user's name
+      const name = response.user.userName;
+      alert(`Hello ${name}\nLogin successful!\nRedirecting to HomePage...`);
+        // Store token based on "Remember Me"
       if (rememberMe) {
-        localStorage.setItem('token', data.token);
+        localStorage.setItem('token', response.token); // Persistent storage
+      } else {
+        sessionStorage.setItem('token', response.token); // Session-based storage
       }
-    } catch (err) {
+      window.location.href = "/"; // Redirect if needed
+      }
+    }catch (err) {
       console.error('Login failed:', err);
-      setError(err.message);
+      setError('Invalid Credential');
+    }finally {
+      setIsLoading(false); // Hide loading state
     }
   };
 
@@ -42,7 +60,7 @@ const LoginPage = () => {
         <div className='bg-white bg-opacity-50 shadow-2xl rounded-lg p-8 w-full max-w-md transform transition duration-300 hover:scale-105 hover:bg-opacity-80 backdrop-filter backdrop-blur-lg'>
           <div className='flex items-center justify-center mb-6'>
             <img
-              src='https://img.icons8.com/?size=100&id=5TtWAoVmqRBy&format=png'
+              src='/photo/login-logo.png'
               alt='Login Logo'
               className='h-12 w-12 animate-bounce'
             />
@@ -57,7 +75,7 @@ const LoginPage = () => {
             <div>
               <label className='block text-gray-700 font-medium flex items-center'>
                 <img
-                  src='https://img.icons8.com/?size=100&id=HmQQr0jYHZxu&format=png'
+                  src='../photo/username.png'
                   alt='Username Icon'
                   className='h-5 w-5 mr-2'
                 />
@@ -67,8 +85,8 @@ const LoginPage = () => {
                 type='text'
                 placeholder='Enter your username'
                 className='form-input w-full border-gray-300 rounded shadow-sm focus:ring focus:ring-pink-300'
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                value={usernameOrEmail}
+                onChange={(e) => setUsernameOrEmail(e.target.value)}
               />
             </div>
             <div>
@@ -80,13 +98,22 @@ const LoginPage = () => {
                 />
                 Password
               </label>
-              <input
-                type='password'
-                placeholder='Enter your password'
-                className='form-input w-full border-gray-300 rounded shadow-sm focus:ring focus:ring-pink-300'
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
+              <div className="relative">
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  placeholder='Enter your password'
+                  className='form-input w-full border-gray-300 rounded shadow-sm focus:ring focus:ring-pink-300'
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-1 top-5 transform -translate-y-1/2 text-black bg-transparent  focus:outline-none hover:bg-transparent"
+                >
+                {showPassword ? (<FaEyeSlash className="h-5 w-5" />) : (<FaEye className="h-5 w-5" />)}
+                </button>
+              </div>
             </div>
             <div className='flex justify-between items-center text-sm text-gray-600'>
               <label className='flex items-center'>
@@ -106,9 +133,19 @@ const LoginPage = () => {
               </a>
             </div>
             {error && <p className='text-red-500 text-sm'>{error}</p>}
-            <button className='w-full py-2 rounded bg-gradient-to-r from-purple-500 to-pink-500 text-white flex items-center justify-center space-x-3 hover:opacity-50 transition-all duration-300 transform hover:scale-105'>
-              <img src='https://img.icons8.com/?size=100&id=bSYAgL542A4K&format=png&color=000000' alt='Logo' className='h-5 w-5' />
-              <span>Login</span>
+            <button
+              type='submit'
+              className={`w-full py-2 rounded bg-gradient-to-r from-purple-500 to-pink-500 text-white flex items-center justify-center space-x-3 hover:opacity-50 transition-all duration-300 transform hover:scale-105
+              ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+              disabled={isLoading}
+            >
+              <img
+              src='https://img.icons8.com/?size=100&id=bSYAgL542A4K&format=png&color=000000'
+              alt='Logo'
+              className='h-5 w-5'
+              />
+              {isLoading && <span className="animate-spin">🔄</span>}
+              <span>{isLoading ? 'Logging in...' : 'Login'}</span>
             </button>
           </form>
 

@@ -68,6 +68,11 @@ public class User {
         this.userName = userName;
         this.email = email;
     }
+    
+    public User(){
+    	
+    }
+
     public Long getUserId() {
         return userId;
     }
@@ -124,8 +129,5 @@ public class User {
         this.role = role;
     }
 
-    public User(){
-
-    }
 
 }
