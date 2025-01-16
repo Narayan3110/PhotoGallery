@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 const HomePage = () => {
   return (
     <div
@@ -12,10 +13,13 @@ const HomePage = () => {
           <p className='text-lg text-gray-300 mb-6 animate-fade-in-up'>
             Upload and explore beautiful images seamlessly.
           </p>
-          <button className='bg-blue-600 text-white px-8 py-3 rounded-full font-medium shadow-md hover:bg-blue-700 transition duration-300 animate-bounce'>
-            <a href='/login' className='text-white'>
-              Get Started
-            </a>
+          <button className='bg-blue-100  px-8 py-3 rounded-full font-medium shadow-md hover:bg-blue-700 transition duration-300 '>
+            <Link
+              to='/login'
+              className='flex items-center justify-center  '
+            >
+              Click Here !
+            </Link>
           </button>
         </div>
       </div>
