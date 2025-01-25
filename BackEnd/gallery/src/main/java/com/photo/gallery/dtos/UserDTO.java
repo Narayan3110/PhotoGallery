@@ -3,6 +3,9 @@ package com.photo.gallery.dtos;
 import com.photo.gallery.model.Role;
 import java.time.LocalDateTime;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class UserDTO {
 
     private Long userId;
