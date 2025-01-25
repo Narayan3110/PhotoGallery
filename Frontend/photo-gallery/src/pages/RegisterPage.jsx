@@ -18,7 +18,6 @@ const SignupPage = () => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
-
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -30,6 +29,9 @@ const SignupPage = () => {
       return;
     }
 
+    setErrorMessage('');
+    setIsLoading(true); // Show loading state
+
     try {
       // Call AuthService to register the user
       const response = await AuthService.registerUser(formData);
@@ -39,6 +41,8 @@ const SignupPage = () => {
     } catch (error) {
       setErrorMessage('Error during registration. Please try again.');
       console.error('Error during registration:', error);
+    }finally {
+      setIsLoading(false); // Hide loading state
     }
   };
 
@@ -138,9 +142,8 @@ const SignupPage = () => {
               ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
               disabled={isLoading}
             >
-            Sign Up
             {isLoading && <span className="animate-spin">🔄</span>}
-            <span>{isLoading ? 'Logging in...' : 'Login'}</span>
+            <span>{isLoading ? 'Signing Up...' : 'Sign Up'}</span>
             </button>
           </form>
 

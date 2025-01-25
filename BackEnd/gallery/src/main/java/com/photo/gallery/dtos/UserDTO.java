@@ -1,23 +1,8 @@
 package com.photo.gallery.dtos;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.photo.gallery.model.Role;
-import com.photo.gallery.model.User;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
-
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import org.springframework.stereotype.Component;
-
-@Component
-//@JsonIgnoreProperties(ignoreUnknown = true)
-@Data
-@NoArgsConstructor
-//@AllArgsConstructor
 public class UserDTO {
 
     private Long userId;
@@ -26,32 +11,6 @@ public class UserDTO {
     private Role role;
     private LocalDateTime createdDate;
     private LocalDateTime updatedDate;
-    //    private boolean accountNonLocked;
-//    private boolean accountNonExpired;
-//    private boolean credentialsNonExpired;
-//    private boolean enabled;
-//    private LocalDate credentialsExpiryDate;
-//    private LocalDate accountExpiryDate;
-//    private String twoFactorSecret;
-//    private boolean isTwoFactorEnabled;
-//    private String signUpMethod;
-   
-
-    // Custom constructor to be used when only basic user info is needed (without all the flags).
-//    public UserDTO(Long userId, String userName, String email, Role role, LocalDateTime createdDate, LocalDateTime updatedDate) {
-//        this.userId = userId;
-//        this.userName = userName;
-//        this.email = email;
-//        this.role = role;
-//        this.createdDate = createdDate;
-//        this.updatedDate = updatedDate;
-//        // Default values for other fields, as they might be optional
-//        this.accountNonLocked = true; // Default to true if not set
-//        this.accountNonExpired = true;
-//        this.credentialsNonExpired = true;
-//        this.enabled = true;
-//        this.isTwoFactorEnabled = false; // Default to false
-//    }
 
     public UserDTO(Long userId, String userName, String email, Role role, LocalDateTime createdDate, LocalDateTime updatedDate) {
         this.userId = userId;
@@ -62,7 +21,60 @@ public class UserDTO {
         this.updatedDate = updatedDate;
     }
     
-    @Override
+//  No Arguments Constructor
+    public UserDTO() {
+    	
+    }
+//    Getter and Setter
+    public Long getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Long userId) {
+		this.userId = userId;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public Role getRole() {
+		return role;
+	}
+
+	public void setRole(Role role) {
+		this.role = role;
+	}
+
+	public LocalDateTime getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(LocalDateTime createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	public LocalDateTime getUpdatedDate() {
+		return updatedDate;
+	}
+
+	public void setUpdatedDate(LocalDateTime updatedDate) {
+		this.updatedDate = updatedDate;
+	}
+
+	@Override
     public String toString() {
         return "UserDTO{" +
                 "userId=" + userId +
@@ -73,6 +85,9 @@ public class UserDTO {
                 ", updatedDate=" + updatedDate +
                 '}';
     }
+
+
+
 
 
 
