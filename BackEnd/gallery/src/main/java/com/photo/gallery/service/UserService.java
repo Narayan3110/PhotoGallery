@@ -3,11 +3,9 @@ package com.photo.gallery.service;
 import com.photo.gallery.dtos.UserDTO;
 import com.photo.gallery.model.Role;
 import com.photo.gallery.model.User;
-import com.photo.gallery.repository.UserRepository;
-import org.hibernate.sql.Update;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserService {
 
@@ -30,5 +28,11 @@ public interface UserService {
 
     User saveUser(User user);
 
+//	ResponseEntity<Object> loginUser(String username, String password);
 
+	Optional<User> findUserByUserEmail(String email);
+
+	Optional<User> getUserUserName(String userName);
+
+ 
 }

@@ -81,11 +81,20 @@
 			<groupId>com.fasterxml.jackson.dataformat</groupId>
 			<artifactId>jackson-dataformat-xml</artifactId>
 		</dependency>
-		<!-- JWT dependency -->
 		<dependency>
-    		<groupId>io.jsonwebtoken</groupId>
-    		<artifactId>jjwt</artifactId>
-    		<version>[3.0.0,)</version> <!-- Version 3.0.0 or greater -->
+	        <groupId>io.jsonwebtoken</groupId>
+	        <artifactId>jjwt-api</artifactId>
+			<version>0.12.5</version>
+        </dependency>
+        <dependency>
+		    <groupId>io.jsonwebtoken</groupId>
+		    <artifactId>jjwt-impl</artifactId>
+		    <version>0.12.5</version>
+		</dependency>
+		<dependency>
+		    <groupId>io.jsonwebtoken</groupId>
+		    <artifactId>jjwt-jackson</artifactId>
+		    <version>0.12.5</version>
 		</dependency>
 	</dependencies>
 

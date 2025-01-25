@@ -1,5 +1,9 @@
 const GalleryPage = () => {
-  return <div className='p-4'>Gallery Page</div>;
+  return (
+    <div className='min-h-screen flex items-center justify-center'>
+      Gallery Page
+    </div>
+  );
 };
 
 export default GalleryPage;

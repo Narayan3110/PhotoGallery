@@ -1,7 +1,6 @@
 package com.photo.gallery.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -68,6 +67,11 @@ public class User {
         this.userName = userName;
         this.email = email;
     }
+    
+    public User(){
+    	
+    }
+
     public Long getUserId() {
         return userId;
     }
@@ -124,8 +128,5 @@ public class User {
         this.role = role;
     }
 
-    public User(){
-
-    }
 
 }
