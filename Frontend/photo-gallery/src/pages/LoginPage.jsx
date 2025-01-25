@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import AuthService from '../services/authService';  // Adjust the path if needed
+import AuthService from '../services/authTest';
 import { FaEye, FaEyeSlash } from "react-icons/fa"; // Importing FontAwesome icons for eye and eye-slash
 
 const LoginPage = () => {

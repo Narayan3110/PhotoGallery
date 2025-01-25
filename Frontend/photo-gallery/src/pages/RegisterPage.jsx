@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import AuthService from '../services/authService';
-import { FaEye, FaEyeSlash } from "react-icons/fa"; // Importing FontAwesome icons for eye and eye-slash
+import AuthService from '../services/authTest';
+import { FaEye, FaEyeSlash } from 'react-icons/fa'; // Importing FontAwesome icons for eye and eye-slash
+import { Link } from 'react-router-dom'; // Importing Link from react-router-dom for routing
 
 const SignupPage = () => {
   const [formData, setFormData] = useState({
@@ -37,11 +38,11 @@ const SignupPage = () => {
       const response = await AuthService.registerUser(formData);
       alert('Signup successful!');
       console.log('User registered successfully:', response);
-      window.location.href = "/login";
+      window.location.href = '/login';
     } catch (error) {
       setErrorMessage('Error during registration. Please try again.');
       console.error('Error during registration:', error);
-    }finally {
+    } finally {
       setIsLoading(false); // Hide loading state
     }
   };
@@ -92,7 +93,7 @@ const SignupPage = () => {
               <label className='block text-gray-700 font-medium'>
                 Password
               </label>
-              <div className="relative">
+              <div className='relative'>
                 <input
                   type={showPassword ? 'text' : 'password'}
                   name='password'
@@ -102,11 +103,15 @@ const SignupPage = () => {
                   onChange={handleChange}
                 />
                 <button
-                  type="button"
+                  type='button'
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-1 top-5 transform -translate-y-1/2 text-black bg-transparent  focus:outline-none hover:bg-transparent"
+                  className='absolute right-1 top-5 transform -translate-y-1/2 text-black bg-transparent  focus:outline-none hover:bg-transparent'
                 >
-                {showPassword ? (<FaEyeSlash className="h-5 w-5" />) : (<FaEye className="h-5 w-5" />)}
+                  {showPassword ? (
+                    <FaEyeSlash className='h-5 w-5' />
+                  ) : (
+                    <FaEye className='h-5 w-5' />
+                  )}
                 </button>
               </div>
             </div>
@@ -114,7 +119,7 @@ const SignupPage = () => {
               <label className='block text-gray-700 font-medium'>
                 Confirm Password
               </label>
-              <div className="relative">
+              <div className='relative'>
                 <input
                   type={showConfirmPassword ? 'text' : 'password'}
                   name='confirmPassword'
@@ -124,11 +129,15 @@ const SignupPage = () => {
                   onChange={(e) => setConfirmpassword(e.target.value)}
                 />
                 <button
-                  type="button"
+                  type='button'
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  className="absolute right-1 top-5 transform -translate-y-1/2 text-black bg-transparent  focus:outline-none hover:bg-transparent"
+                  className='absolute right-1 top-5 transform -translate-y-1/2 text-black bg-transparent  focus:outline-none hover:bg-transparent'
                 >
-                {showConfirmPassword ? (<FaEyeSlash className="h-5 w-5" />) : (<FaEye className="h-5 w-5" />)}
+                  {showConfirmPassword ? (
+                    <FaEyeSlash className='h-5 w-5' />
+                  ) : (
+                    <FaEye className='h-5 w-5' />
+                  )}
                 </button>
               </div>
             </div>
@@ -142,16 +151,17 @@ const SignupPage = () => {
               ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
               disabled={isLoading}
             >
-            {isLoading && <span className="animate-spin">🔄</span>}
-            <span>{isLoading ? 'Signing Up...' : 'Sign Up'}</span>
+              {isLoading && <span className='animate-spin'>🔄</span>}
+              <span>{isLoading ? 'Signing Up...' : 'Sign Up'}</span>
             </button>
           </form>
 
           <p className='text-center text-sm text-gray-600 mt-6'>
             Already have an account?{' '}
-            <a href='/login' className='text-blue-500 hover:underline'>
+            {/* <a href='/login' className='text-blue-500 hover:underline'>
               Login
-            </a>
+            </a> */}
+            <Link to='/login'>Login</Link>
           </p>
         </div>
       </div>

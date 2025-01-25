@@ -36,7 +36,7 @@ const Navbar = () => {
         {/* Login Button */}
         <Link
           to='/login'
-          className='flex items-center justify-center bg-gradient-to-r from-blue-500 via-purple-500 to-indigo-600 px-5 py-2 rounded-lg text-white font-medium hover:opacity-90 transition-all duration-300 transform hover:scale-105 space-x-3 shadow-lg'
+          className='flex items-center justify-center text-white font-medium hover:opacity-90 transition-all duration-300 transform hover:scale-105 space-x-3 shadow-lg'
         >
           <img
             src='https://img.icons8.com/?size=100&id=g7IgcLvs4JT6&format=png&color=000000'
