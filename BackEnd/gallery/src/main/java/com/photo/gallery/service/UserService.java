@@ -5,7 +5,10 @@ import com.photo.gallery.model.Role;
 import com.photo.gallery.model.User;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+
+import org.springframework.http.ResponseEntity;
 
 public interface UserService {
 
@@ -34,5 +37,6 @@ public interface UserService {
 
 	Optional<User> getUserUserName(String userName);
 
+	ResponseEntity<Map<String, String>> loginUser(String userName,String password);
  
 }

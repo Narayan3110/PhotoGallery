@@ -6,7 +6,7 @@ const SignupPage = () => {
   const [formData, setFormData] = useState({
     userName: '',
     email: '',
-    password: '',
+    password: ''
   });
   const [confirmpassword, setConfirmpassword] = useState('');
   const [errorMessage, setErrorMessage] = useState(''); // To handle error messages

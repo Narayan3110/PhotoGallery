@@ -5,6 +5,7 @@ import com.photo.gallery.model.User;
 import com.photo.gallery.repository.RoleRepository;
 import com.photo.gallery.repository.UserRepository;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,22 +15,22 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
 public class SecurityConfig {
 
-//	    @Bean
-//	    public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
-//	        return http.getSharedObject(AuthenticationManagerBuilder.class).build();
-//	    }
+	@Autowired
+	private JwtFilter jwtFilter;
 	    
 	@Bean
-	public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
+	AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
 		return authConfig.getAuthenticationManager();
 	}
 
@@ -44,21 +45,23 @@ public class SecurityConfig {
 
 		http.csrf(AbstractHttpConfigurer::disable); // Disable CSRF protection (useful for stateless apps or when using
 													// JWT)
+		http.sessionManagement(session -> session
+				.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Enable session management
+				.addFilterBefore(jwtFilter,UsernamePasswordAuthenticationFilter.class);
+		
 //		http.csrf();
 //		http.httpBasic(withDefaults()); // Or you can use formLogin() depending on your requirements
 		
 		http.formLogin(form -> form.loginPage("/login")
 									.loginProcessingUrl("api/users/login")
 									.permitAll());
-//		.sessionManagement(session -> session
-//								            .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)); // Enable session management
 		return http.build();
 	}
 	
 	
 	
 	@Bean
-	public CommandLineRunner initData(RoleRepository roleRepository, UserRepository userRepository,
+	CommandLineRunner initData(RoleRepository roleRepository, UserRepository userRepository,
 			PasswordEncoder passwordEncoder) {
 		return args -> {
 			// Check if the USER role exists, otherwise create it
@@ -91,7 +94,7 @@ public class SecurityConfig {
 	}
 
 	@Bean
-	public PasswordEncoder passwordEncoder() {
+	PasswordEncoder passwordEncoder() {
 		// Return an instance of BCryptPasswordEncoder
 		return new BCryptPasswordEncoder();
 	}

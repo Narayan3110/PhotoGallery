@@ -30,16 +30,15 @@ const LoginPage = () => {
       const response = await AuthService.loginUser(usernameOrEmail, password);
       if (response) {
         console.log('Login successful:', response);
-        // Assuming `response.data.username` contains the user's name
-      const name = response.user.userName;
-      alert(`Hello ${name}\nLogin successful!\nRedirecting to HomePage...`);
         // Store token based on "Remember Me"
-      if (rememberMe) {
-        localStorage.setItem('token', response.token); // Persistent storage
-      } else {
-        sessionStorage.setItem('token', response.token); // Session-based storage
-      }
-      window.location.href = "/"; // Redirect if needed
+        if (rememberMe) {
+          localStorage.setItem('token', response.token); // Persistent storage
+        } else {
+          sessionStorage.setItem('token', response.token); // Session-based storage
+        }
+        const greet = response.message;
+        alert(`${greet}\nLogin successful!\nRedirecting to HomePage...`);
+        window.location.href = "/"; // Redirect if needed
       }
     }catch (err) {
       console.error('Login failed:', err);
