@@ -48,7 +48,7 @@ const SignupPage = () => {
   };
 
   return (
-    <div className='min-h-screen bg-gradient-to-r from-blue-500 via-purple-500 to-indigo-600 flex items-center justify-center'>
+    <div className='min-h-screen bg-gradient-to-r from-violet-600 via-violet-400  flex items-center justify-center'>
       <div className='flex-1'></div>
       <div className='flex-1 flex items-center justify-center'>
         <div className='bg-white bg-opacity-50 shadow-2xl rounded-lg p-8 w-full max-w-md transform transition duration-300 hover:scale-90 hover:bg-opacity-70 backdrop-filter backdrop-blur-lg'>
@@ -147,7 +147,7 @@ const SignupPage = () => {
 
             <button
               type='submit'
-              className={`w-full py-2 rounded bg-gradient-to-r from-blue-500 to-purple-500 text-white font-bold hover:opacity-90 transition-opacity
+              className={`w-full py-2 rounded bg-gradient-to-r from-blue-800 via-blue-500 text-white font-bold hover:opacity-90 transition-opacity
               ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
               disabled={isLoading}
             >

@@ -5,8 +5,8 @@ const Navbar = () => {
     <nav className='bg-gray-900 text-white shadow-lg h-20 flex items-center justify-center'>
       <div className='container mx-auto flex justify-between items-center px-6'>
         {/* Logo */}
-        <h1 className='font-heading text-4xl font-bold bg-gradient-to-r from-blue-500 via-purple-500 to-indigo-600 text-transparent bg-clip-text'>
-          Photo<span className='text-pink-500'>Gallery</span>
+        <h1 className='font-heading text-4xl font-bold bg-gradient-to-r from-blue-500   text-transparent bg-clip-text'>
+          Photo<span className='text-blue-500'>Gallery</span>
         </h1>
 
         {/* Navigation Links */}

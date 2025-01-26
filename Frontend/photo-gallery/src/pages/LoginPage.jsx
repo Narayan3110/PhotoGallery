@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import AuthService from '../services/authTest';
-import { FaEye, FaEyeSlash } from "react-icons/fa"; // Importing FontAwesome icons for eye and eye-slash
+import { FaEye, FaEyeSlash } from 'react-icons/fa'; // Importing FontAwesome icons for eye and eye-slash
 
 const LoginPage = () => {
   const [usernameOrEmail, setUsernameOrEmail] = useState('');
@@ -14,7 +14,7 @@ const LoginPage = () => {
     e.preventDefault();
 
     // Basic client-side validation
-    if (!usernameOrEmail ) {
+    if (!usernameOrEmail) {
       setError('UserName Or Email are required');
       return;
     }
@@ -31,20 +31,20 @@ const LoginPage = () => {
       if (response) {
         console.log('Login successful:', response);
         // Assuming `response.data.username` contains the user's name
-      const name = response.user.userName;
-      alert(`Hello ${name}\nLogin successful!\nRedirecting to HomePage...`);
+        const name = response.user.userName;
+        alert(`Hello ${name}\nLogin successful!\nRedirecting to HomePage...`);
         // Store token based on "Remember Me"
-      if (rememberMe) {
-        localStorage.setItem('token', response.token); // Persistent storage
-      } else {
-        sessionStorage.setItem('token', response.token); // Session-based storage
+        if (rememberMe) {
+          localStorage.setItem('token', response.token); // Persistent storage
+        } else {
+          sessionStorage.setItem('token', response.token); // Session-based storage
+        }
+        window.location.href = '/'; // Redirect if needed
       }
-      window.location.href = "/"; // Redirect if needed
-      }
-    }catch (err) {
+    } catch (err) {
       console.error('Login failed:', err);
       setError('Invalid Credential');
-    }finally {
+    } finally {
       setIsLoading(false); // Hide loading state
     }
   };
@@ -54,28 +54,42 @@ const LoginPage = () => {
   };
 
   return (
-    <div className='min-h-screen bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 flex items-center justify-center'>
-      <div className='flex-1'></div>
+    <div className='min-h-screen flex items-center justify-center'>
+      {/* Left Side Background */}
+      <div className='flex-1 bg-cover bg-center'>
+        <img
+          src='src/assets/photos/loginpage/loginleft.jpg'
+          alt='Login Logo'
+          className='bg-cover'
+        />
+      </div>
+
+      {/* Right Side Login Form */}
       <div className='flex-1 min-h-screen flex items-center justify-center'>
         <div className='bg-white bg-opacity-50 shadow-2xl rounded-lg p-8 w-full max-w-md transform transition duration-300 hover:scale-105 hover:bg-opacity-80 backdrop-filter backdrop-blur-lg'>
+          {/* Login Logo */}
           <div className='flex items-center justify-center mb-6'>
             <img
-              src='/photo/login-logo.png'
+              src='src/assets/photos/loginpage/login-logo.png'
               alt='Login Logo'
-              className='h-12 w-12 animate-bounce'
+              className='h-12 w-12'
             />
           </div>
+
+          {/* Title */}
           <h2 className='text-3xl font-extrabold text-gray-800 mb-2 text-center'>
             Welcome Back!
           </h2>
           <p className='text-gray-500 text-center mb-6'>
             Please login to your account.
           </p>
+
+          {/* Login Form */}
           <form className='space-y-4' onSubmit={handleLogin}>
             <div>
               <label className='block text-gray-700 font-medium flex items-center'>
                 <img
-                  src='../photo/username.png'
+                  src='src/assets/photos/loginpage/username.png'
                   alt='Username Icon'
                   className='h-5 w-5 mr-2'
                 />
@@ -89,6 +103,7 @@ const LoginPage = () => {
                 onChange={(e) => setUsernameOrEmail(e.target.value)}
               />
             </div>
+
             <div>
               <label className='block text-gray-700 font-medium flex items-center'>
                 <img
@@ -98,7 +113,7 @@ const LoginPage = () => {
                 />
                 Password
               </label>
-              <div className="relative">
+              <div className='relative'>
                 <input
                   type={showPassword ? 'text' : 'password'}
                   placeholder='Enter your password'
@@ -107,14 +122,20 @@ const LoginPage = () => {
                   onChange={(e) => setPassword(e.target.value)}
                 />
                 <button
-                  type="button"
+                  type='button'
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-1 top-5 transform -translate-y-1/2 text-black bg-transparent  focus:outline-none hover:bg-transparent"
+                  className='absolute right-1 top-5 transform -translate-y-1/2 text-black bg-transparent focus:outline-none hover:bg-transparent'
                 >
-                {showPassword ? (<FaEyeSlash className="h-5 w-5" />) : (<FaEye className="h-5 w-5" />)}
+                  {showPassword ? (
+                    <FaEyeSlash className='h-5 w-5' />
+                  ) : (
+                    <FaEye className='h-5 w-5' />
+                  )}
                 </button>
               </div>
             </div>
+
+            {/* Remember Me & Forgot Password */}
             <div className='flex justify-between items-center text-sm text-gray-600'>
               <label className='flex items-center'>
                 <input
@@ -132,7 +153,11 @@ const LoginPage = () => {
                 Forgot Password?
               </a>
             </div>
+
+            {/* Error Message */}
             {error && <p className='text-red-500 text-sm'>{error}</p>}
+
+            {/* Submit Button */}
             <button
               type='submit'
               className={`w-full py-2 rounded bg-gradient-to-r from-purple-500 to-pink-500 text-white flex items-center justify-center space-x-3 hover:opacity-50 transition-all duration-300 transform hover:scale-105
@@ -140,19 +165,20 @@ const LoginPage = () => {
               disabled={isLoading}
             >
               <img
-              src='https://img.icons8.com/?size=100&id=bSYAgL542A4K&format=png&color=000000'
-              alt='Logo'
-              className='h-5 w-5'
+                src='https://img.icons8.com/?size=100&id=bSYAgL542A4K&format=png&color=000000'
+                alt='Logo'
+                className='h-5 w-5'
               />
-              {isLoading && <span className="animate-spin">🔄</span>}
+              {isLoading && <span className='animate-spin'>🔄</span>}
               <span>{isLoading ? 'Logging in...' : 'Login'}</span>
             </button>
           </form>
 
+          {/* Google Login Button */}
           <div className='mt-6'>
             <button
               onClick={handleGoogleLogin}
-              className='w-full py-2 rounded border border-gray-300 flex items-center justify-center hover:bg-gray-10 transition'
+              className='w-full py-2 rounded border border-gray-300 flex items-center justify-center hover:bg-gray-100 transition'
             >
               <img
                 src='https://img.icons8.com/?size=100&id=17949&format=png'
@@ -162,6 +188,8 @@ const LoginPage = () => {
               Login with Google
             </button>
           </div>
+
+          {/* Signup Link */}
           <p className='text-center text-sm text-gray-600 mt-6'>
             Don’t have an account?{' '}
             <a href='/register' className='text-pink-500 hover:underline'>
