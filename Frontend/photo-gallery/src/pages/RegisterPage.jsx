@@ -48,13 +48,21 @@ const SignupPage = () => {
   };
 
   return (
-    <div className='min-h-screen bg-gradient-to-r from-violet-600 via-violet-400  flex items-center justify-center'>
-      <div className='flex-1'></div>
+    <div className='min-h-screen bg-gradient-to-r from-white-100  flex items-center justify-center'>
+      <div className='flex-1 bg-cover bg-center'>
+        {/* Left Side Background */}
+
+        <img
+          src='src/assets/photos/registerPage/signup.jpg'
+          alt='Login Logo'
+          className='bg-cover'
+        />
+      </div>
       <div className='flex-1 flex items-center justify-center'>
         <div className='bg-white bg-opacity-50 shadow-2xl rounded-lg p-8 w-full max-w-md transform transition duration-300 hover:scale-90 hover:bg-opacity-70 backdrop-filter backdrop-blur-lg'>
           <div className='text-center mb-6'>
             <img
-              src='/photo/login-logo.png'
+              src='src/assets/photos/registerPage/login-logo.png'
               alt='Logo'
               className='h-12 mx-auto mb-4'
             />
