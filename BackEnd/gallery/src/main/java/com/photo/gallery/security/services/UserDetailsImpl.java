@@ -6,16 +6,12 @@ import java.util.Objects;
 
 import com.photo.gallery.model.Role;
 import com.photo.gallery.model.User;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-@NoArgsConstructor
-@Data
 public class UserDetailsImpl implements UserDetails {
     private static final long serialVersionUID = 1L;
 
@@ -37,7 +33,6 @@ public class UserDetailsImpl implements UserDetails {
         this.authorities = authorities;
     }
 
-
     // Build method to map the User and Role to UserDetailsImpl
     public static UserDetailsImpl build(User user) {
         // Get role from the User object (Role is a reference to Role entity)
@@ -52,14 +47,11 @@ public class UserDetailsImpl implements UserDetails {
                 user.getUserName(),
                 user.getEmail(),
                 user.getPassword(),
-                List.of(authority)  // List of authorities (roles)
-        );
+                List.of(authority));  // List of authorities (roles)
     }
-
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-
         return authorities;
     }
 
@@ -104,7 +96,7 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o)
+    	if (this == o)
             return true;
         if (o == null || getClass() != o.getClass())
             return false;
