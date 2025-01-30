@@ -5,15 +5,9 @@ import { Link } from "react-router-dom";
 
 const SignupPage = () => {
   const [formData, setFormData] = useState({
-<<<<<<< HEAD
-    userName: '',
-    email: '',
-    password: ''
-=======
     userName: "",
     email: "",
     password: "",
->>>>>>> 59cc755ddb6dfc7d994b60c90e075b5117cfc289
   });
   const [confirmpassword, setConfirmpassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");

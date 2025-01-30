@@ -28,24 +28,6 @@ const LoginPage = () => {
     try {
       const response = await AuthService.loginUser(usernameOrEmail, password);
       if (response) {
-<<<<<<< HEAD
-        console.log('Login successful:', response);
-        // Store token based on "Remember Me"
-        if (rememberMe) {
-          localStorage.setItem('token', response.token); // Persistent storage
-        } else {
-          sessionStorage.setItem('token', response.token); // Session-based storage
-        }
-        const greet = response.message;
-        alert(`${greet}\nLogin successful!\nRedirecting to HomePage...`);
-        window.location.href = "/"; // Redirect if needed
-      }
-    }catch (err) {
-      console.error('Login failed:', err);
-      setError('Invalid Credential');
-    }finally {
-      setIsLoading(false); // Hide loading state
-=======
         const name = response.user;
         alert(`Hello ${name}\nLogin successful!\nRedirecting to HomePage...`);
         if (rememberMe) {
@@ -60,7 +42,6 @@ const LoginPage = () => {
       setError("Invalid Credentials");
     } finally {
       setIsLoading(false);
->>>>>>> 59cc755ddb6dfc7d994b60c90e075b5117cfc289
     }
   };
 
