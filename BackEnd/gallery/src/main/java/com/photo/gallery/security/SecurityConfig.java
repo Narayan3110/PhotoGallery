@@ -41,7 +41,8 @@ public class SecurityConfig {
 		.authorizeHttpRequests((requests) -> requests.requestMatchers("/contact/**").permitAll()
 				.requestMatchers("/api/users/register").permitAll()
 				.requestMatchers("/api/users/login").permitAll()
-				.requestMatchers("/api/photo").permitAll()
+				.requestMatchers("/api/photo/**").permitAll()
+				.requestMatchers("/api/userprofile/**").permitAll()
 				.requestMatchers("/api/photo/upload").permitAll()
 				.requestMatchers("/api/admin/**").hasAuthority("ADMIN").anyRequest().authenticated());
 

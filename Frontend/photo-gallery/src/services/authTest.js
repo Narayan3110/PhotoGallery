@@ -22,6 +22,7 @@ export class AuthService {
   // Register user
   static async registerUser(userData) {
     try {
+      
       const response = await apiClient.post("/users/register", userData);
       return response.data;
     } catch (error) {
