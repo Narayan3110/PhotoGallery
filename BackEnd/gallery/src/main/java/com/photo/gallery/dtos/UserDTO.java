@@ -1,11 +1,9 @@
 package com.photo.gallery.dtos;
 
 import com.photo.gallery.model.Role;
+
 import java.time.LocalDateTime;
 
-import org.springframework.stereotype.Component;
-
-@Component
 public class UserDTO {
 
     private Long userId;
@@ -24,60 +22,12 @@ public class UserDTO {
         this.updatedDate = updatedDate;
     }
     
-//  No Arguments Constructor
+//	No ArgsConstructor
     public UserDTO() {
-    	
-    }
-//    Getter and Setter
-    public Long getUserId() {
-		return userId;
-	}
-
-	public void setUserId(Long userId) {
-		this.userId = userId;
-	}
-
-	public String getUserName() {
-		return userName;
-	}
-
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public Role getRole() {
-		return role;
-	}
-
-	public void setRole(Role role) {
-		this.role = role;
-	}
-
-	public LocalDateTime getCreatedDate() {
-		return createdDate;
-	}
-
-	public void setCreatedDate(LocalDateTime createdDate) {
-		this.createdDate = createdDate;
-	}
-
-	public LocalDateTime getUpdatedDate() {
-		return updatedDate;
-	}
-
-	public void setUpdatedDate(LocalDateTime updatedDate) {
-		this.updatedDate = updatedDate;
-	}
-
-	@Override
+    
+    }    
+    
+    @Override
     public String toString() {
         return "UserDTO{" +
                 "userId=" + userId +
@@ -88,8 +38,6 @@ public class UserDTO {
                 ", updatedDate=" + updatedDate +
                 '}';
     }
-
-
 
 
 

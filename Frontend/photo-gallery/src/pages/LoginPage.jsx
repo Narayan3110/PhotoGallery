@@ -1,7 +1,6 @@
 import { useState } from 'react';
-import AuthService from '../services/authService';
-import { FaEye, FaEyeSlash } from 'react-icons/fa'; // Importing FontAwesome icons for eye and eye-slash
-
+import AuthService from '../services/authTest';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 const LoginPage = () => {
   const [usernameOrEmail, setUsernameOrEmail] = useState('');
@@ -14,190 +13,133 @@ const LoginPage = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    // Basic client-side validation
     if (!usernameOrEmail) {
-      setError('UserName Or Email are required');
+      setError('Username or Email is required');
       return;
     }
     if (!password) {
-      setError('Password are required');
+      setError('Password is required');
       return;
     }
 
     setError('');
-    setIsLoading(true); // Show loading state
+    setIsLoading(true);
 
     try {
       const response = await AuthService.loginUser(usernameOrEmail, password);
       if (response) {
-        console.log('Login successful:', response);
-        // Assuming `response.data.username` contains the user's name
-        const name = response.user.userName;
+        const name = response.user;
         alert(`Hello ${name}\nLogin successful!\nRedirecting to HomePage...`);
-        // Store token based on "Remember Me"
         if (rememberMe) {
-          localStorage.setItem('token', response.token); // Persistent storage
+          localStorage.setItem('token', response.token);
         } else {
-          sessionStorage.setItem('token', response.token); // Session-based storage
+          sessionStorage.setItem('token', response.token);
         }
-        window.location.href = '/'; // Redirect if needed
+        window.location.href = '/';
       }
     } catch (err) {
       console.error('Login failed:', err);
-      setError('Invalid Credential');
+      setError('Invalid Credentials');
     } finally {
-      setIsLoading(false); // Hide loading state
+      setIsLoading(false);
     }
   };
 
-  const handleGoogleLogin = () => {
-    window.location.href = 'http://localhost:8080/oauth2/authorize/google';
-  };
-
   return (
-    <div className='min-h-screen flex items-center justify-center'>
-      {/* Left Side Background */}
-      <div className='flex-1 bg-cover bg-center'>
-        <img
-          src='src/assets/photos/loginpage/loginleft.jpg'
-          alt='Login Logo'
-          className='bg-cover'
-        />
-      </div>
-
-      {/* Right Side Login Form */}
-      <div className='flex-1 min-h-screen flex items-center justify-center'>
-        <div className='bg-white bg-opacity-50 shadow-2xl rounded-lg p-8 w-full max-w-md transform transition duration-300 hover:scale-105 hover:bg-opacity-80 backdrop-filter backdrop-blur-lg'>
-          {/* Login Logo */}
-          <div className='flex items-center justify-center mb-6'>
-            <img
-              src='src/assets/photos/loginpage/login-logo.png'
-              alt='Login Logo'
-              className='h-12 w-12'
-            />
-          </div>
-
-          {/* Title */}
-          <h2 className='text-3xl font-extrabold text-gray-800 mb-2 text-center'>
-            Welcome Back!
-          </h2>
-          <p className='text-gray-500 text-center mb-6'>
-            Please login to your account.
+    <div className='flex flex-col lg:flex-row min-h-screen w-screen bg-gray-100'>
+      {/* Left Section: Form */}
+      <div className='flex flex-1 flex-col justify-center items-center bg-white shadow-lg'>
+        <div className='p-12 flex flex-col items-center w-[30rem]'>
+          <h1 className='text-5xl font-bold mb-4 font-[Satisfy] text-black'>
+            Welcome
+          </h1>
+          <p className='text-gray-500 mb-6'>
+            We are glad to see you back with us
           </p>
-
-          {/* Login Form */}
-          <form className='space-y-4' onSubmit={handleLogin}>
+          <form className='w-full space-y-4' onSubmit={handleLogin}>
             <div>
-              <label className='block text-gray-700 font-medium flex items-center'>
-                <img
-                  src='src/assets/photos/loginpage/username.png'
-                  alt='Username Icon'
-                  className='h-5 w-5 mr-2'
+              <label className='block text-sm mb-1'>Username</label>
+              <div className='relative'>
+                <input
+                  type='text'
+                  placeholder='Username'
+                  className='w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500'
+                  value={usernameOrEmail}
+                  onChange={(e) => setUsernameOrEmail(e.target.value)}
                 />
-                Username
-              </label>
-              <input
-                type='text'
-                placeholder='Enter your username'
-                className='form-input w-full border-gray-300 rounded shadow-sm focus:ring focus:ring-pink-300'
-                value={usernameOrEmail}
-                onChange={(e) => setUsernameOrEmail(e.target.value)}
-              />
+              </div>
             </div>
-
             <div>
-              <label className='block text-gray-700 font-medium flex items-center'>
-                <img
-                  src='https://img.icons8.com/?size=100&id=17948&format=png'
-                  alt='Password Icon'
-                  className='h-5 w-5 mr-2'
-                />
-                Password
-              </label>
+              <label className='block text-sm mb-1'>Password</label>
               <div className='relative'>
                 <input
                   type={showPassword ? 'text' : 'password'}
-                  placeholder='Enter your password'
-                  className='form-input w-full border-gray-300 rounded shadow-sm focus:ring focus:ring-pink-300'
+                  placeholder='Password'
+                  className='w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500'
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
                 <button
                   type='button'
                   onClick={() => setShowPassword(!showPassword)}
-                  className='absolute right-1 top-5 transform -translate-y-1/2 text-black bg-transparent focus:outline-none hover:bg-transparent'
+                  className='absolute right-1 top-1/7 text-gray-500 bg-transparent hover:bg-transparent focus:outline-none'
                 >
-                  {showPassword ? (
-                    <FaEyeSlash className='h-5 w-5' />
-                  ) : (
-                    <FaEye className='h-5 w-5' />
-                  )}
+                  {showPassword ? <FaEyeSlash /> : <FaEye />}
                 </button>
               </div>
             </div>
-
-            {/* Remember Me & Forgot Password */}
-            <div className='flex justify-between items-center text-sm text-gray-600'>
-              <label className='flex items-center'>
-                <input
-                  type='checkbox'
-                  className='form-checkbox text-pink-500 mr-2'
-                  checked={rememberMe}
-                  onChange={() => setRememberMe(!rememberMe)}
-                />
-                Remember me
-              </label>
-              <a
-                href='/forgot-password'
-                className='text-pink-500 hover:underline'
-              >
-                Forgot Password?
-              </a>
-            </div>
-
-            {/* Error Message */}
-            {error && <p className='text-red-500 text-sm'>{error}</p>}
-
-            {/* Submit Button */}
+            {error && <p className='text-sm text-red-500'>{error}</p>}
             <button
               type='submit'
-              className={`w-full py-2 rounded bg-gradient-to-r from-purple-500 to-pink-500 text-white flex items-center justify-center space-x-3 hover:opacity-50 transition-all duration-300 transform hover:scale-105
-              ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+              className='w-full py-2 text-white bg-black rounded-md hover:bg-gray-800'
               disabled={isLoading}
             >
-              <img
-                src='https://img.icons8.com/?size=100&id=bSYAgL542A4K&format=png&color=000000'
-                alt='Logo'
-                className='h-5 w-5'
-              />
-              {isLoading && <span className='animate-spin'>🔄</span>}
-              <span>{isLoading ? 'Logging in...' : 'Login'}</span>
+              {isLoading ? 'Loading...' : 'Next'}
             </button>
           </form>
-
-          {/* Google Login Button */}
-          <div className='mt-6'>
-            <button
-              onClick={handleGoogleLogin}
-              className='w-full py-2 rounded border border-gray-300 flex items-center justify-center hover:bg-gray-100 transition'
-            >
+          <div className='flex items-center justify-center p-2 mt-1 mb-0 '>
+            <p className='text-base text-gray-700'>
+              New here?{' '}
+              <a
+                href='/register'
+                className='text-blue-500 hover:underline font-medium'
+              >
+                Create an account
+              </a>
+            </p>
+          </div>
+          <p className='text-center text-gray-500 mt-0 mb-0'>
+            ---Login with Others---
+          </p>
+          <div className='flex space-x-4 mt-2'>
+            <button className='flex items-center justify-center px-4 py-2 border rounded-md shadow-sm text-sm'>
               <img
                 src='https://img.icons8.com/?size=100&id=17949&format=png'
-                alt='Google Logo'
-                className='h-5 w-5 mr-2'
+                alt='Google'
+                className='w-4 h-4 mr-2'
               />
               Login with Google
             </button>
+            {/* <button className="flex items-center justify-center px-4 py-2 border rounded-md shadow-sm text-sm">
+            <img
+              src="/icons/facebook.svg"
+              alt="Facebook"
+              className="w-4 h-4 mr-2"
+            />
+            Login with Git
+          </button> */}
           </div>
-
-          {/* Signup Link */}
-          <p className='text-center text-sm text-gray-600 mt-6'>
-            Don’t have an account?{' '}
-            <a href='/register' className='text-pink-500 hover:underline'>
-              Signup
-            </a>
-          </p>
         </div>
+      </div>
+
+      {/* Right Section: Image */}
+      <div className='hidden lg:flex lg:w-1/2 justify-center items-center bg-white'>
+        {/* Display the cropped image */}
+        <img
+          src='/photo/LoginPage/LoginMain.jpg' // Replace with the actual path
+          alt='Login illustration'
+          className='h-screen w-full object-cover bg-white p-4 rounded-lg shadow-lg'
+        />
       </div>
     </div>
   );
