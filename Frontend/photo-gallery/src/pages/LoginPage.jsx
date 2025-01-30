@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import AuthService from '../services/authTest';
+import AuthService from '../services/authService';
 import { FaEye, FaEyeSlash } from 'react-icons/fa'; // Importing FontAwesome icons for eye and eye-slash
+
 
 const LoginPage = () => {
   const [usernameOrEmail, setUsernameOrEmail] = useState('');

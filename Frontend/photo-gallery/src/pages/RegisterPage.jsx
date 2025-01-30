@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import AuthService from '../services/authTest';
+import AuthService from '../services/authService';
 import { FaEye, FaEyeSlash } from 'react-icons/fa'; // Importing FontAwesome icons for eye and eye-slash
 import { Link } from 'react-router-dom'; // Importing Link from react-router-dom for routing
 
