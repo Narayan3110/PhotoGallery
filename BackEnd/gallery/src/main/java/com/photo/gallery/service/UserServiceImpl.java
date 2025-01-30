@@ -9,11 +9,15 @@ import com.photo.gallery.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -28,9 +32,12 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
     
-    @Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
-    
+	@Autowired
+	private AuthenticationManager authenticationManager;
+	
+	@Autowired
+	private JWTService jwtService;
+	
     @Override
     public List<User> getAllUsers() {
         return userRepository.findAll();
@@ -101,7 +108,6 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(user);
     }
 
-	
 	@Override
 	public Optional<User> findUserByUserEmail(String email) {
 		// TODO Auto-generated method stub
@@ -111,6 +117,47 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public Optional<User> getUserUserName(String userName) {
 		return userRepository.findByUserName(userName);
+	}
+
+	@Override
+	public  ResponseEntity<Map<String, String>> loginUser(String userNameOrEmail,String password) {
+		try {
+			 User foundUser;
+				
+			    // Determine if input is an email or a username
+			    if (userNameOrEmail.contains("@")) {
+			        // Find user by email
+			        foundUser = findUserByUserEmail(userNameOrEmail)
+			                .orElseThrow(() -> new RuntimeException("User not found with email: " + userNameOrEmail));
+			    } else {
+			        // Find user by username
+			        foundUser = getUserUserName(userNameOrEmail)
+			                .orElseThrow(() -> new RuntimeException("User not found with username: " + userNameOrEmail));
+			    }
+			    
+			// Authenticate user credentials
+	        Authentication authentication = authenticationManager.authenticate(
+	                new UsernamePasswordAuthenticationToken(
+	                		foundUser.getUserName(), 
+	                		password
+	                )
+	        );
+	        if(authentication.isAuthenticated()) {
+	        	Map< String, String> response =new HashMap<>();
+	        	String token = jwtService.generateToken(foundUser.getUserName());
+	        	response.put("message", "Hello Mr." + foundUser.getUserName());
+	        	response.put("token", token);
+	        	return ResponseEntity.ok(response);
+	        }
+	        else {
+	        	Map<String, String> errorResponse = new HashMap<>();
+		        errorResponse.put("message", "Invalid username or password");
+		        errorResponse.put("token", null);
+		        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
+	        }
+		} catch (Exception e) {
+	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+		}
 	}
 	
 }

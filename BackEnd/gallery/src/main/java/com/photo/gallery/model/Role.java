@@ -1,10 +1,9 @@
 package com.photo.gallery.model;
 
 import jakarta.persistence.*;
-import lombok.Data;
 
 @Entity
-@Data
+//@Data
 @Table(name = "roles")
 public class Role {
 

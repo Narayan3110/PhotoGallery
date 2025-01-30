@@ -1,169 +1,150 @@
-import { useState } from 'react';
-import AuthService from '../services/authTest';
-import { FaEye, FaEyeSlash } from 'react-icons/fa'; // Importing FontAwesome icons for eye and eye-slash
-import { Link } from 'react-router-dom'; // Importing Link from react-router-dom for routing
+import { useState } from "react";
+import AuthService from "../services/authTest";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 const SignupPage = () => {
   const [formData, setFormData] = useState({
-    userName: '',
-    email: '',
-    password: '',
+    userName: "",
+    email: "",
+    password: "",
   });
-  const [confirmpassword, setConfirmpassword] = useState('');
-  const [errorMessage, setErrorMessage] = useState(''); // To handle error messages
+  const [confirmpassword, setConfirmpassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  // Handle form data changes
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
-  // Handle form submission
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Validate form data
     if (formData.password !== confirmpassword) {
-      setErrorMessage('Passwords do not match!');
-      //      alert("Passwords do not match!");
+      setErrorMessage("Passwords do not match!");
       return;
     }
-
-    setErrorMessage('');
-    setIsLoading(true); // Show loading state
+    setErrorMessage("");
+    setIsLoading(true);
 
     try {
-      // Call AuthService to register the user
       const response = await AuthService.registerUser(formData);
-      alert('Signup successful!');
-      console.log('User registered successfully:', response);
-      window.location.href = '/login';
+      alert("Signup successful!");
+      window.location.href = "/login";
     } catch (error) {
-      setErrorMessage('Error during registration. Please try again.');
-      console.error('Error during registration:', error);
+      setErrorMessage("Error during registration. Please try again.");
     } finally {
-      setIsLoading(false); // Hide loading state
+      setIsLoading(false);
     }
   };
 
   return (
-    <div className='min-h-screen bg-gradient-to-r from-blue-500 via-purple-500 to-indigo-600 flex items-center justify-center'>
-      <div className='flex-1'></div>
-      <div className='flex-1 flex items-center justify-center'>
-        <div className='bg-white bg-opacity-50 shadow-2xl rounded-lg p-8 w-full max-w-md transform transition duration-300 hover:scale-90 hover:bg-opacity-70 backdrop-filter backdrop-blur-lg'>
-          <div className='text-center mb-6'>
-            <img
-              src='/photo/login-logo.png'
-              alt='Logo'
-              className='h-12 mx-auto mb-4'
-            />
-            <h2 className='text-3xl font-bold text-gray-800 mb-2'>Sign Up</h2>
-            <p className='text-sm text-gray-600'>
-              Join us and start your journey!
-            </p>
-          </div>
+    <div className="flex flex-col lg:flex-row min-h-screen w-screen bg-gray-100">
+      {/* Left Section: Form */}
+      <div className="flex flex-1 flex-col justify-center items-center bg-white shadow-lg">
+        <div className="p-12 flex flex-col items-center w-[30rem]">
+        <h1 className="text-5xl font-bold mb-4 font-satisfy text-black">
+  नमस्ते
+</h1>
 
-          <form className='space-y-4' onSubmit={handleSubmit}>
+          <p className="text-gray-500 mb-6">Join us and start your journey!</p>
+          <form className="w-full space-y-4" onSubmit={handleSubmit}>
             <div>
-              <label className='block text-gray-700 font-medium'>
-                Username
-              </label>
+              <label className="block text-sm mb-1">Username</label>
               <input
-                type='text'
-                name='userName'
-                placeholder='Enter your username'
-                className='form-input w-full border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500'
+                type="text"
+                name="userName"
+                placeholder="Enter your username"
+                className="w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                 value={formData.userName}
                 onChange={handleChange}
               />
             </div>
             <div>
-              <label className='block text-gray-700 font-medium'>Email</label>
+              <label className="block text-sm mb-1">Email</label>
               <input
-                type='email'
-                name='email'
-                placeholder='Enter your email'
-                className='form-input w-full border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500'
+                type="email"
+                name="email"
+                placeholder="Enter your email"
+                className="w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                 value={formData.email}
                 onChange={handleChange}
               />
             </div>
             <div>
-              <label className='block text-gray-700 font-medium'>
-                Password
-              </label>
-              <div className='relative'>
+              <label className="block text-sm mb-1">Password</label>
+              <div className="relative">
                 <input
-                  type={showPassword ? 'text' : 'password'}
-                  name='password'
-                  placeholder='Enter your password'
-                  className='form-input w-full border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500'
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  placeholder="Enter your password"
+                  className="w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                   value={formData.password}
                   onChange={handleChange}
                 />
                 <button
-                  type='button'
+                  type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className='absolute right-1 top-5 transform -translate-y-1/2 text-black bg-transparent  focus:outline-none hover:bg-transparent'
+                  className="absolute right-1 top-1/3 transform -translate-y-1/2 text-gray-500 bg-transparent hover:bg-transparent focus:outline-none"
                 >
-                  {showPassword ? (
-                    <FaEyeSlash className='h-5 w-5' />
-                  ) : (
-                    <FaEye className='h-5 w-5' />
-                  )}
+                  {showPassword ? <FaEyeSlash /> : <FaEye />}
                 </button>
               </div>
             </div>
             <div>
-              <label className='block text-gray-700 font-medium'>
-                Confirm Password
-              </label>
-              <div className='relative'>
+              <label className="block text-sm mb-1">Confirm Password</label>
+              <div className="relative">
                 <input
-                  type={showConfirmPassword ? 'text' : 'password'}
-                  name='confirmPassword'
-                  placeholder='Confirm your password'
-                  className='form-input w-full border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500'
-                  value={formData.confirmPassword}
+                  type={showConfirmPassword ? "text" : "password"}
+                  name="confirmPassword"
+                  placeholder="Confirm your password"
+                  className="w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  value={confirmpassword}
                   onChange={(e) => setConfirmpassword(e.target.value)}
                 />
                 <button
-                  type='button'
+                  type="button"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  className='absolute right-1 top-5 transform -translate-y-1/2 text-black bg-transparent  focus:outline-none hover:bg-transparent'
+                  className="absolute right-1 top-1/3 transform -translate-y-1/2 text-gray-500 bg-transparent hover:bg-transparent focus:outline-none"
                 >
-                  {showConfirmPassword ? (
-                    <FaEyeSlash className='h-5 w-5' />
-                  ) : (
-                    <FaEye className='h-5 w-5' />
-                  )}
+                  {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
                 </button>
               </div>
             </div>
             {errorMessage && (
-              <p className='text-red-500 text-center'>{errorMessage}</p>
+              <p className="text-sm text-red-500">{errorMessage}</p>
             )}
-
             <button
-              type='submit'
-              className={`w-full py-2 rounded bg-gradient-to-r from-blue-500 to-purple-500 text-white font-bold hover:opacity-90 transition-opacity
-              ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+              type="submit"
+              className="w-full py-2 text-white bg-black rounded-md hover:bg-gray-800"
               disabled={isLoading}
             >
-              {isLoading && <span className='animate-spin'>🔄</span>}
-              <span>{isLoading ? 'Signing Up...' : 'Sign Up'}</span>
+              {isLoading ? "Signing Up..." : "Sign Up"}
             </button>
           </form>
-
-          <p className='text-center text-sm text-gray-600 mt-6'>
-            Already have an account?{' '}
-            {/* <a href='/login' className='text-blue-500 hover:underline'>
-              Login
-            </a> */}
-            <Link to='/login'>Login</Link>
-          </p>
+          <div className="flex items-center justify-center p-2 mt-4">
+            <p className="text-base text-gray-700">
+              Already have an account?{" "}
+              <Link
+                to="/login"
+                className="text-blue-500 hover:underline font-medium"
+              >
+                Login
+              </Link>
+            </p>
+          </div>
         </div>
+      </div>
+
+      {/* Right Section: Image */}
+      <div className="hidden lg:flex lg:w-1/2 justify-center items-center bg-white">
+        <img
+          src="/photo/registrationPage/registrationMain.jpg"
+          alt="Signup illustration"
+          className="h-screen w-full object-cover bg-white p-4 rounded-lg shadow-lg"
+        />
       </div>
     </div>
   );
