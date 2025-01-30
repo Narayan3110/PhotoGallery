@@ -39,7 +39,6 @@ public class User {
     @NotBlank
     @Size(max = 120)
     @Column(name = "password")
-//    @JsonIgnore
     private String password;
 
     @CreationTimestamp
@@ -56,6 +55,15 @@ public class User {
     @ToString.Exclude
     private Role role;  // Linking to the Role class (Admin/User)
 
+    // Adding One-to-One relationship with UserProfile
+//    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+//    @ToString.Exclude
+//    private UserProfile userProfile;
+//    @JsonBackReference	
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
+    private UserProfile userProfile;
+
     // Constructors
     public User(String userName, String email, String password) {
         this.userName = userName;
@@ -67,10 +75,19 @@ public class User {
         this.userName = userName;
         this.email = email;
     }
-    
-    public User(){
-    	
+
+    public User(Long userId, String userName, String email, String password, UserProfile userProfile) {
+    	super();
+    	this.userName = userName;
+    	this.email = email;
+    	this.password = password;
+    	this.userProfile = userProfile;
     }
+
+    public User() {
+    }
+
+    // Getters and Setters
 
     public Long getUserId() {
         return userId;
@@ -128,5 +145,21 @@ public class User {
         this.role = role;
     }
 
+    public UserProfile getUserProfile() {
+        return userProfile;
+    }
 
+    public void setUserProfile(UserProfile userProfile) {
+        this.userProfile = userProfile;
+    }
+
+	@Override
+	public String toString() {
+		return "User [userId=" + userId + ", userName=" + userName + ", email=" + email + ", password=" + password
+				+ ", createdDate=" + createdDate + ", updatedDate=" + updatedDate + ", role=" + role + ", userProfile="
+				+ userProfile + "]";
+	}
+
+    
+	
 }
