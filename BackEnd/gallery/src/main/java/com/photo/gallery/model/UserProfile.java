@@ -2,9 +2,7 @@ package com.photo.gallery.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
-
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
@@ -16,16 +14,11 @@ public class UserProfile {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "profile_id")
     private Long profileId;  // Primary key
-
-//    @OneToOne
-//    @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
-//    private User user;  // Reference to the User entity
+    
     @JsonBackReference
     @OneToOne
-    @JoinColumn(name = "user_id",referencedColumnName = "user_id", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private User user;
-
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
+    private User user;  // Reference to the User entity
 
     private String fullName;
     private String contact;
@@ -33,9 +26,14 @@ public class UserProfile {
     private String profileUrl;
     private LocalDate dob;  // Date of birth
 
-    // Constructors
-    public UserProfile() {
-    }
+
+@OneToMany(mappedBy = "userProfile", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+private List<Album> albums;  // When UserProfile is deleted, all its albums will be deleted.
+
+@OneToMany(mappedBy = "userProfile", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+private List<Photo> photos;  // When UserProfile is deleted, all its photos will be deleted.
+    // Constructors, Getters, and Setters
+    public UserProfile() {}
 
     public UserProfile(User user, String fullName, String contact, String address, String profileUrl, LocalDate dob) {
         this.user = user;
@@ -46,7 +44,6 @@ public class UserProfile {
         this.dob = dob;
     }
 
-    // Getters and Setters
     public Long getProfileId() {
         return profileId;
     }
@@ -61,14 +58,6 @@ public class UserProfile {
 
     public void setUser(User user) {
         this.user = user;
-    }
-
-    public String getEmail() {
-        return user != null ? user.getEmail() : null; // Auto-fetch email from User
-    }
-
-    public String getUsername() {
-        return user != null ? user.getUserName() : null; // Auto-fetch username from User
     }
 
     public String getFullName() {
@@ -111,10 +100,17 @@ public class UserProfile {
         this.dob = dob;
     }
 
+    public List<Album> getAlbums() {
+        return albums;
+    }
+
+    public void setAlbums(List<Album> albums) {
+        this.albums = albums;
+    }
+
     @Override
     public String toString() {
-        return "UserProfile [profileId=" + profileId + ", user=" + user + ", email=" + getEmail() + ", username=" + getUsername()
-                + ", fullName=" + fullName + ", contact=" + contact + ", address=" + address + ", profileUrl="
-                + profileUrl + ", dob=" + dob + "]";
+        return "UserProfile [profileId=" + profileId + ", user=" + user + ", fullName=" + fullName + ", contact=" + contact 
+               + ", address=" + address + ", profileUrl=" + profileUrl + ", dob=" + dob + "]";
     }
 }
