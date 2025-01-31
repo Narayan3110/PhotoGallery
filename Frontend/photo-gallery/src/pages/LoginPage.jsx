@@ -28,8 +28,8 @@ const LoginPage = () => {
     try {
       const response = await AuthService.loginUser(usernameOrEmail, password);
       if (response) {
-        const name = response.user;
-        alert(`Hello ${name}\nLogin successful!\nRedirecting to HomePage...`);
+        const greeting = response.message;
+        alert(`${greeting}\nLogin successful!\nRedirecting to HomePage...`);
         if (rememberMe) {
           localStorage.setItem("token", response.token);
         } else {
