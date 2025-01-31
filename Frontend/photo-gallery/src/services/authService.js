@@ -6,11 +6,11 @@ export class AuthService{
 
 // Service class interacts with REST API
 // Service method to post RESTAPI of user Information
-  static async registerUser(userData) {
-    console.log(userData);
+  static async registerUser(formData) {
+    console.log(formData);
 
     try {
-      const response = await axios.post('http://localhost:9090/api/users/register', userData);
+      const response = await axios.post('http://localhost:9090/api/users/register', formData);
       return response.data; // Return the response data (you can modify this as needed)
     } catch (error) {
       console.error("Error in Registration Process:", error);
