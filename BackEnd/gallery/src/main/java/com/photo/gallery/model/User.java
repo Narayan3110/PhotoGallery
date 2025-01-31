@@ -55,11 +55,7 @@ public class User {
     @ToString.Exclude
     private Role role;  // Linking to the Role class (Admin/User)
 
-    // Adding One-to-One relationship with UserProfile
-//    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-//    @ToString.Exclude
-//    private UserProfile userProfile;
-//    @JsonBackReference	
+    // Adding One-to-One relationship with UserProfile	
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
     private UserProfile userProfile;

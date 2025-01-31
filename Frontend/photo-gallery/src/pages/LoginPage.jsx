@@ -1,14 +1,19 @@
 import { useState } from "react";
 import AuthService from "../services/authTest";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { useDispatch } from "react-redux";
+import { login } from "../redux/authSlice"; // Import the login action
 
 const LoginPage = () => {
-  const [usernameOrEmail, setUsernameOrEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [usernameOrEmail, setUsernameOrEmail] = useState("Admin1");
+  const [password, setPassword] = useState("Sanm@3004");
   const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+
+  // Get the dispatch function from Redux
+  const dispatch = useDispatch();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -26,8 +31,13 @@ const LoginPage = () => {
     setIsLoading(true);
 
     try {
-      const response = await AuthService.loginUser(usernameOrEmail, password);
+      const response = await AuthService.loginUser(
+        usernameOrEmail,
+        password,
+        dispatch
+      ); // Pass dispatch to AuthService
       if (response) {
+
         const greeting = response.message;
         alert(`${greeting}\nLogin successful!\nRedirecting to HomePage...`);
         if (rememberMe) {
@@ -36,6 +46,7 @@ const LoginPage = () => {
           sessionStorage.setItem("token", response.token);
         }
         window.location.href = "/";
+
       }
     } catch (err) {
       console.error("Login failed:", err);
@@ -97,16 +108,16 @@ const LoginPage = () => {
               {isLoading ? "Loading..." : "Next"}
             </button>
           </form>
-          <div className="flex items-center justify-center p-2 mt-1 mb-0 ">
-          <p className="text-base text-gray-700">
-        New here?{" "}
-        <a
-          href="/register"
-          className="text-blue-500 hover:underline font-medium"
-        >
-          Create an account
-        </a>
-      </p>
+          <div className="flex items-center justify-center p-2 mt-1 mb-0">
+            <p className="text-base text-gray-700">
+              New here?{" "}
+              <a
+                href="/register"
+                className="text-blue-500 hover:underline font-medium"
+              >
+                Create an account
+              </a>
+            </p>
           </div>
           <p className="text-center text-gray-500 mt-0 mb-0">
             ---Login with Others---
@@ -120,21 +131,12 @@ const LoginPage = () => {
               />
               Login with Google
             </button>
-            {/* <button className="flex items-center justify-center px-4 py-2 border rounded-md shadow-sm text-sm">
-            <img
-              src="/icons/facebook.svg"
-              alt="Facebook"
-              className="w-4 h-4 mr-2"
-            />
-            Login with Git
-          </button> */}
           </div>
         </div>
       </div>
 
       {/* Right Section: Image */}
       <div className="hidden lg:flex lg:w-1/2 justify-center items-center bg-white">
-        {/* Display the cropped image */}
         <img
           src="/photo/LoginPage/LoginMain.jpg" // Replace with the actual path
           alt="Login illustration"

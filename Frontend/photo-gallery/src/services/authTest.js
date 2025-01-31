@@ -1,4 +1,6 @@
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import { login } from "../redux/authSlice"; // Import the login action
 
 // Create an Axios instance with base URL and interceptors
 const apiClient = axios.create({
@@ -31,13 +33,24 @@ export class AuthService {
   }
 
   // Login user
-  static async loginUser(usernameOrEmail, password) {
+  static async loginUser(usernameOrEmail, password, dispatch) {
     try {
       const response = await apiClient.post("/users/login", {
         userName: usernameOrEmail,
         password,
       });
-      return response.data;
+      console.log(response.data.user);
+      if (response.data) {
+        // After login success, dispatch the login action to Redux
+        dispatch(
+          login({
+            token: response.data.token,
+            user: response.data.user,
+          })
+        );
+
+        return response.data;
+      }
     } catch (error) {
       console.error("Error during login process:", error);
       throw error.response?.data?.message || new Error("Login failed.");
