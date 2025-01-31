@@ -119,45 +119,50 @@ public class UserServiceImpl implements UserService {
 		return userRepository.findByUserName(userName);
 	}
 
+	
 	@Override
-	public  ResponseEntity<Map<String, String>> loginUser(String userNameOrEmail,String password) {
-		try {
-			 User foundUser;
-				
-			    // Determine if input is an email or a username
-			    if (userNameOrEmail.contains("@")) {
-			        // Find user by email
-			        foundUser = findUserByUserEmail(userNameOrEmail)
-			                .orElseThrow(() -> new RuntimeException("User not found with email: " + userNameOrEmail));
-			    } else {
-			        // Find user by username
-			        foundUser = getUserUserName(userNameOrEmail)
-			                .orElseThrow(() -> new RuntimeException("User not found with username: " + userNameOrEmail));
-			    }
-			    
-			// Authenticate user credentials
+	public ResponseEntity<Map<String, Object>> loginUser(String userNameOrEmail, String password) {
+	    try {
+	        User foundUser;
+
+	        // Determine if input is an email or a username
+	        if (userNameOrEmail.contains("@")) {
+	            // Find user by email
+	            foundUser = findUserByUserEmail(userNameOrEmail)
+	                    .orElseThrow(() -> new RuntimeException("User not found with email: " + userNameOrEmail));
+	        } else {
+	            // Find user by username
+	            foundUser = getUserUserName(userNameOrEmail)
+	                    .orElseThrow(() -> new RuntimeException("User not found with username: " + userNameOrEmail));
+	        }
+
+	        // Authenticate user credentials
 	        Authentication authentication = authenticationManager.authenticate(
 	                new UsernamePasswordAuthenticationToken(
-	                		foundUser.getUserName(), 
-	                		password
+	                        foundUser.getUserName(),
+	                        password
 	                )
 	        );
-	        if(authentication.isAuthenticated()) {
-	        	Map< String, String> response =new HashMap<>();
-	        	String token = jwtService.generateToken(foundUser.getUserName());
-	        	response.put("message", "Hello Mr." + foundUser.getUserName());
-	        	response.put("token", token);
-	        	return ResponseEntity.ok(response);
+
+	        if (authentication.isAuthenticated()) {
+	            Map<String, Object> response = new HashMap<>();
+	            String token = jwtService.generateToken(foundUser.getUserName());
+	            response.put("message", "Hello Mr." + foundUser.getUserName());
+	            response.put("token", token);
+	            response.put("user", foundUser); // Adding user object to the response
+	            return ResponseEntity.ok(response); // Return ResponseEntity with both user and token
+	        } else {
+	            Map<String, Object> errorResponse = new HashMap<>();
+	            errorResponse.put("message", "Invalid username or password");
+	            errorResponse.put("token", null); // Use `null` for the token in error case
+	            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse); // Return error response with status 401
 	        }
-	        else {
-	        	Map<String, String> errorResponse = new HashMap<>();
-		        errorResponse.put("message", "Invalid username or password");
-		        errorResponse.put("token", null);
-		        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
-	        }
-		} catch (Exception e) {
-	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-		}
+	    } catch (Exception e) {
+	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null); // Return bad request in case of any error
+	    }
 	}
+
+
+
 	
 }

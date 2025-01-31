@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class PhotoService {
@@ -61,4 +62,61 @@ public class PhotoService {
         // Fetch and return all URLs for the given profileId
         return photoRepository.findUrlsByProfileId(profileId);
     }
+    
+
+    // Method to delete a photo from Cloudinary and remove its database entry
+//    public boolean deletePhoto(Long profileId, String photoUrl) {
+//        try {
+//            // Find the photo by profileId and photoUrl
+//            Optional<Photo> photoOptional = photoRepository.findByUserProfile_ProfileIdAndPhotoUrl(profileId, photoUrl);
+//
+//            if (photoOptional.isPresent()) {
+//                Photo photo = photoOptional.get();
+//
+//                // Extract the public_id from the Cloudinary URL
+//                String publicId = extractPublicId(photoUrl);
+//
+//                if (publicId != null) {
+//                    // Delete the photo from Cloudinary
+//                    Map result = cloudinary.uploader().destroy(publicId, ObjectUtils.emptyMap());
+//
+//                    if ("ok".equals(result.get("result"))) {
+//                        // Delete the photo from the database
+//                        photoRepository.delete(photo);
+//                        return true;
+//                    }
+//                }
+//            }
+//            return false;
+//        } catch (Exception e) {
+//            System.err.println("Error deleting photo: " + e.getMessage());
+//            return false;
+//        }
+//    }
+//
+//    // Helper method to extract the Cloudinary public_id from the photo URL
+//    private String extractPublicId(String photoUrl) {
+//        try {
+//            // Cloudinary image URLs usually follow this format:
+//            // https://res.cloudinary.com/<cloud-name>/image/upload/v123456789/<folder>/<filename>.jpg
+//            String[] parts = photoUrl.split("/");
+//            int length = parts.length;
+//
+//            if (length > 1) {
+//                // Extract the filename with extension
+//                String filenameWithExtension = parts[length - 1];
+//
+//                // Extract only the filename (without extension)
+//                String filename = filenameWithExtension.substring(0, filenameWithExtension.lastIndexOf('.'));
+//
+//                // Extract the folder name if applicable
+//                String folderPath = parts[length - 2]; // Assuming folder is always before filename
+//
+//                return folderPath + "/" + filename; // public_id format: folder/filename
+//            }
+//        } catch (Exception e) {
+//            System.err.println("Error extracting public_id from URL: " + e.getMessage());
+//        }
+//        return null;
+//    }
 }

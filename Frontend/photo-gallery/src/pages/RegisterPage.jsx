@@ -41,7 +41,7 @@ const SignupPage = () => {
   };
 
   return (
-    <div className="flex flex-col lg:flex-row min-h-screen w-screen bg-gray-100">
+    <div className="flex flex-col lg:flex-row min-h-screen w-screen bg-gray-100 pt-12">
       {/* Left Section: Form */}
       <div className="flex flex-1 flex-col justify-center items-center bg-white shadow-lg">
         <div className="p-12 flex flex-col items-center w-[30rem]">

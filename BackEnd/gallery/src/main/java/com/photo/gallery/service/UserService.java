@@ -37,6 +37,6 @@ public interface UserService {
 
 	Optional<User> getUserUserName(String userName);
 
-	ResponseEntity<Map<String, String>> loginUser(String userName,String password);
+	ResponseEntity<Map<String, Object>> loginUser(String userName,String password);
  
 }

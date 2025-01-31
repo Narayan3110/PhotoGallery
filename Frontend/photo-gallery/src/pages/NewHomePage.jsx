@@ -46,7 +46,7 @@ const NewHomePage = () => {
   ];
   return (
     <div>
-      <section className='relative flex flex-col md:flex-row items-center justify-between px-6 md:px-16 py-12 bg-white'>
+      <section className='relative flex flex-col md:flex-row items-center justify-between px-6 md:px-16 py-12 bg-white pt-16'>
         <div className='max-w-lg space-y-6'>
           <h3 className='text-orange-600 font-bold uppercase text-sm'>
             📸 Explore Stunning Moments Around the World

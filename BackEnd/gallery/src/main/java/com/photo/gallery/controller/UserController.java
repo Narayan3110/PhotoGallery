@@ -21,22 +21,7 @@ public class UserController {
 
 	@Autowired
 	private UserService userService;
-	
-//	@PostMapping("/register")
-//	public ResponseEntity<User> registerUser(@RequestBody User user) {
-////		user.setUserProfile(null);
-//	    // Ensure the bidirectional relationship is set
-//		System.out.println(user);
-//	    if (user.getUserProfile() != null) {
-//	    	System.out.println(user.getUserProfile());
-//	        user.getUserProfile().setUser(user); 
-//	    }
-//	    
-//	    // Save the user and profile
-//	    User savedUser = userService.saveUser(user);
-//	    return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
-//	}
-	
+
 	@PostMapping("/register")
 	public ResponseEntity<User> registerUser(@RequestBody User user) {
 	    // Log for debugging
@@ -45,7 +30,7 @@ public class UserController {
 	    // If user doesn't already have a profile, create one
 	    if (user.getUserProfile() == null) {
 	        UserProfile newProfile = new UserProfile();
-	        newProfile.setFullName(user.getEmail()); // Set fullName as email
+	        newProfile.setFullName(user.getUserName()); // Set fullName as email
 	        user.setUserProfile(newProfile); // Assign the new profile to user
 	    }
 	    
@@ -61,7 +46,7 @@ public class UserController {
 
 
 	@PostMapping("/login")
-	public ResponseEntity<Map<String,String>> login(@RequestBody User user) {
+	public ResponseEntity<Map<String,Object>> login(@RequestBody User user) {
 		return userService.loginUser( user.getUserName(),user.getPassword());
 	        
 	}

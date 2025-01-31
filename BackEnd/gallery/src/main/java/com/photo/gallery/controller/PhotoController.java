@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/api/photo")
 public class PhotoController {
@@ -51,4 +52,19 @@ public class PhotoController {
         // Return the list of URLs if photos are found
         return new ResponseEntity<>(urls, HttpStatus.OK);
     }
+    
+ // Endpoint to delete a photo
+//    @DeleteMapping("/delete/{profileId}")
+//    public ResponseEntity<String> deletePhoto(@PathVariable Long profileId, @RequestBody String photoUrl) {
+//        try {
+//            boolean isDeleted = photoService.deletePhoto(profileId, photoUrl);
+//            if (isDeleted) {
+//                return ResponseEntity.ok("Photo deleted successfully!");
+//            } else {
+//                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to delete photo.");
+//            }
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error deleting photo.");
+//        }
+//    }
 }
