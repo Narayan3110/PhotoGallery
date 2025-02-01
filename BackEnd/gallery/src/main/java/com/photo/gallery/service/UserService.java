@@ -38,5 +38,9 @@ public interface UserService {
 	Optional<User> getUserUserName(String userName);
 
 	ResponseEntity<Map<String, Object>> loginUser(String userName,String password);
+
+	boolean verifyUser(String token);
+	
+	void deleteUnverifiedUsers();
  
 }

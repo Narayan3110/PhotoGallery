@@ -4,7 +4,6 @@ import {
   fetchPhotos,
   deletePhoto,
 } from "../services/photoService"; // Import deletePhoto function
-import { useDispatch } from "react-redux"; // For managing upload success/failure state
 
 const GalleryPage = () => {
   const [photos, setPhotos] = useState([]); // To hold the fetched photos
@@ -12,7 +11,7 @@ const GalleryPage = () => {
   const [file, setFile] = useState(null); // To hold the selected file
   const [loading, setLoading] = useState(false); // To track upload status
   const [selectedPhoto, setSelectedPhoto] = useState(null); // To store the clicked photo
-  const dispatch = useDispatch(); // Assuming you might use it for updating any state (optional)
+  const [selectedPhotoId, setSelectedPhotoId] = useState(null); // To store the publicId of the clicked photo
 
   // Fetch photos for the logged-in user's profile
   const fetchUserPhotos = async () => {
@@ -89,27 +88,21 @@ const GalleryPage = () => {
   };
 
   // Open the modal to view the selected photo
-  const openModal = (photoUrl) => {
-    setSelectedPhoto(photoUrl);
+  const openModal = (photoUrl, publicId) => {
+    setSelectedPhoto(photoUrl); // Store the photo URL
+    setSelectedPhotoId(publicId); // Store the publicId for deletion
   };
 
   // Close the modal
   const closeModal = () => {
     setSelectedPhoto(null);
+    setSelectedPhotoId(null);
   };
 
   // Handle photo deletion
   const handleDeletePhoto = async () => {
     try {
-      const user = JSON.parse(localStorage.getItem("user"));
-      const profileId = user?.userProfile?.profileId;
-
-      if (!profileId) {
-        setMessage("Profile ID not found.");
-        return;
-      }
-
-      const response = await deletePhoto(profileId, selectedPhoto);
+      const response = await deletePhoto(selectedPhotoId); // Use selected publicId for deletion
 
       if (response) {
         setMessage("Photo deleted successfully!");
@@ -165,14 +158,14 @@ const GalleryPage = () => {
               No photos available.
             </p>
           ) : (
-            photos.map((photoUrl, index) => (
+            photos.map((photo, index) => (
               <div
-                key={index}
+                key={photo.publicId} // Use publicId for key
                 className="relative overflow-hidden rounded-lg shadow-xl transition-transform transform hover:scale-105 cursor-pointer"
-                onClick={() => openModal(photoUrl)} // Open the modal on photo click
+                onClick={() => openModal(photo.photoUrl, photo.publicId)} // Pass photoUrl and publicId
               >
                 <img
-                  src={photoUrl}
+                  src={photo.photoUrl}
                   alt={`Photo ${index + 1}`}
                   className="w-full h-64 object-cover rounded-lg"
                 />

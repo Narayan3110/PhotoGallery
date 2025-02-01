@@ -1,5 +1,4 @@
 package com.photo.gallery.service;
-
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.photo.gallery.model.Photo;
@@ -7,9 +6,10 @@ import com.photo.gallery.model.UserProfile;
 import com.photo.gallery.repository.PhotoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -26,97 +26,85 @@ public class PhotoService {
     @Autowired
     private UserProfileService userProfileService;
 
-    // Method to upload a photo to Cloudinary and save photo details in the database
+    // Upload photo and store publicId
     public String uploadPhoto(Long profileId, byte[] fileBytes, String originalFilename, String contentType, long fileSize) {
         try {
-            // Fetch UserProfile using the profileId
-            System.out.println("Profile ID: " + profileId);
+            // Fetch user profile
             UserProfile userProfile = userProfileService.findByProfileId(profileId);
 
-            // Upload photo to Cloudinary and get the upload result
+            // Upload to Cloudinary
             Map uploadResult = cloudinary.uploader().upload(fileBytes,
                     ObjectUtils.asMap("folder", "user_photos/" + profileId));
 
-            // Create a new Photo object and set its properties
+            String publicId = uploadResult.get("public_id").toString();
+            String photoUrl = uploadResult.get("secure_url").toString();
+
+            // Save photo details in the database
             Photo photo = new Photo();
             photo.setUserProfile(userProfile);
             photo.setFilename(originalFilename);
-            photo.setPhotoUrl(uploadResult.get("secure_url").toString());
+            photo.setPublicId(publicId); // Store publicId
+            photo.setPhotoUrl(photoUrl);
             photo.setFileSize(fileSize);
             photo.setPhotoType(contentType);
             photo.setUploadedAt(LocalDateTime.now());
 
-            // Save the photo object in the database
+            // Save the photo to the repository
             photoRepository.save(photo);
 
-            return "Photo successfully uploaded!";
+            // Return the publicId after successful upload and save
+            return publicId;
         } catch (IOException e) {
-            // Log error and return the error message
+            // Log the error and return null in case of an error
             System.err.println("Error uploading photo: " + e.getMessage());
-            return "Error uploading photo: " + e.getMessage();
+            return null;
         }
     }
 
-    // Method to retrieve photo URLs for a given profileId
-    public List<String> getUrls(Long profileId) {
-        // Fetch and return all URLs for the given profileId
-        return photoRepository.findUrlsByProfileId(profileId);
+
+//  Delete Method For photos
+    public boolean deletePhoto(String profileId) {
+        try {
+            Optional<Photo> photoOptional = photoRepository.findByPublicId(profileId);
+
+            if (photoOptional.isPresent()) {
+                Photo photo = photoOptional.get();
+                String pId = photo.getPublicId();
+                // Delete the photo from Cloudinary
+                Map result = cloudinary.uploader().destroy(pId, ObjectUtils.emptyMap());
+                System.out.println("Cloudinary delete response: " + result);
+
+                if ("ok".equals(result.get("result"))) {
+                    // Delete the photo record from the repository
+                    photoRepository.delete(photo);
+//                    System.out.println("Photo deleted from repository: " + photo.getId());
+                    return true;
+                } else {
+                    System.out.println("Failed to delete from Cloudinary: " + result.get("result"));
+                    return false; // Failed to delete from Cloudinary
+                }
+            } else {
+                System.out.println("Photo not found in repository.");
+                return false; // Photo not found
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false; // Error occurred during deletion
+        }
     }
     
+    public List<Map<String, String>> getPhotosWithPublicId(Long profileId) {
+        List<Object[]> result = photoRepository.findPhotoUrlsAndPublicIdsByProfileId(profileId);
+        List<Map<String, String>> photos = new ArrayList<>();
+        
+        for (Object[] row : result) {
+            Map<String, String> photo = new HashMap<>();
+            photo.put("publicId", (String) row[0]); // publicId is the first item
+            photo.put("photoUrl", (String) row[1]); // photoUrl is the second item
+            photos.add(photo);
+        }
+        
+        return photos;
+    }
 
-    // Method to delete a photo from Cloudinary and remove its database entry
-//    public boolean deletePhoto(Long profileId, String photoUrl) {
-//        try {
-//            // Find the photo by profileId and photoUrl
-//            Optional<Photo> photoOptional = photoRepository.findByUserProfile_ProfileIdAndPhotoUrl(profileId, photoUrl);
-//
-//            if (photoOptional.isPresent()) {
-//                Photo photo = photoOptional.get();
-//
-//                // Extract the public_id from the Cloudinary URL
-//                String publicId = extractPublicId(photoUrl);
-//
-//                if (publicId != null) {
-//                    // Delete the photo from Cloudinary
-//                    Map result = cloudinary.uploader().destroy(publicId, ObjectUtils.emptyMap());
-//
-//                    if ("ok".equals(result.get("result"))) {
-//                        // Delete the photo from the database
-//                        photoRepository.delete(photo);
-//                        return true;
-//                    }
-//                }
-//            }
-//            return false;
-//        } catch (Exception e) {
-//            System.err.println("Error deleting photo: " + e.getMessage());
-//            return false;
-//        }
-//    }
-//
-//    // Helper method to extract the Cloudinary public_id from the photo URL
-//    private String extractPublicId(String photoUrl) {
-//        try {
-//            // Cloudinary image URLs usually follow this format:
-//            // https://res.cloudinary.com/<cloud-name>/image/upload/v123456789/<folder>/<filename>.jpg
-//            String[] parts = photoUrl.split("/");
-//            int length = parts.length;
-//
-//            if (length > 1) {
-//                // Extract the filename with extension
-//                String filenameWithExtension = parts[length - 1];
-//
-//                // Extract only the filename (without extension)
-//                String filename = filenameWithExtension.substring(0, filenameWithExtension.lastIndexOf('.'));
-//
-//                // Extract the folder name if applicable
-//                String folderPath = parts[length - 2]; // Assuming folder is always before filename
-//
-//                return folderPath + "/" + filename; // public_id format: folder/filename
-//            }
-//        } catch (Exception e) {
-//            System.err.println("Error extracting public_id from URL: " + e.getMessage());
-//        }
-//        return null;
-//    }
 }

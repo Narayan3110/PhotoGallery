@@ -33,14 +33,15 @@ export const fetchPhotos = async (profileId) => {
 };
 
 //Delete Photo By Id and Url
-export const deletePhoto = async (profileId, photoUrl) => {
+export const deletePhoto = async (publicId) => {
   try {
+    // console.log("Public ID:", publicId);
+
     const response = await axios.delete(
-      `http://localhost:9090/api/photo/${profileId}`,
-      {
-        data: { photoUrl },
-      }
+      `http://localhost:9090/api/photo/delete`,
+      { params: { publicId } } // Send publicId as a query parameter
     );
+
     return response.data;
   } catch (error) {
     console.error("Error deleting photo:", error);
