@@ -26,12 +26,14 @@ public class Photo {
     )
     private Set<Album> albums;  // ❌ No CascadeType.REMOVE to prevent album deletion when a photo is deleted.
 
-
     @Column(name = "filename")
     private String filename; // Original file name
 
     @Column(name = "photo_url")
     private String photoUrl; // Cloudinary URL
+
+    @Column(name = "public_id", nullable = false, unique = true)
+    private String publicId; // ✅ Cloudinary public ID
 
     @Column(name = "file_size")
     private Long fileSize; // File size in bytes
@@ -45,10 +47,11 @@ public class Photo {
     // Constructors
     public Photo() {}
 
-    public Photo(UserProfile userProfile, String filename, String photoUrl, Long fileSize, String photoType, LocalDateTime uploadedAt) {
+    public Photo(UserProfile userProfile, String filename, String photoUrl, String publicId, Long fileSize, String photoType, LocalDateTime uploadedAt) {
         this.userProfile = userProfile;
         this.filename = filename;
         this.photoUrl = photoUrl;
+        this.publicId = publicId; // ✅ Include publicId in constructor
         this.fileSize = fileSize;
         this.photoType = photoType;
         this.uploadedAt = uploadedAt;
@@ -95,6 +98,14 @@ public class Photo {
         this.photoUrl = photoUrl;
     }
 
+    public String getPublicId() {  // ✅ Getter for publicId
+        return publicId;
+    }
+
+    public void setPublicId(String publicId) {  // ✅ Setter for publicId
+        this.publicId = publicId;
+    }
+
     public Long getFileSize() {
         return fileSize;
     }
@@ -121,7 +132,8 @@ public class Photo {
 
     @Override
     public String toString() {
-        return "Photo [photoId=" + photoId + ", userProfile=" + userProfile + ", filename=" + filename + ", photoUrl=" + photoUrl
-                + ", fileSize=" + fileSize + ", photoType=" + photoType + ", uploadedAt=" + uploadedAt + "]";
+        return "Photo [photoId=" + photoId + ", userProfile=" + userProfile + ", filename=" + filename + 
+               ", photoUrl=" + photoUrl + ", publicId=" + publicId + ", fileSize=" + fileSize + 
+               ", photoType=" + photoType + ", uploadedAt=" + uploadedAt + "]";
     }
 }

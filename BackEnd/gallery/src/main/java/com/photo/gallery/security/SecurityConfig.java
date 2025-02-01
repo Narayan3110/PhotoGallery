@@ -20,6 +20,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @EnableWebSecurity
@@ -44,6 +46,7 @@ public class SecurityConfig {
 				.requestMatchers("/api/photo/**").permitAll()
 				.requestMatchers("/api/userprofile/**").permitAll()
 //				.requestMatchers("/api/photo/upload").permitAll()
+				.requestMatchers("/api/photo/delete/**").permitAll()
 				.requestMatchers("/api/admin/**").hasAuthority("ADMIN").anyRequest().authenticated());
 
 		http.csrf(AbstractHttpConfigurer::disable); // Disable CSRF protection (useful for stateless apps or when using
@@ -60,8 +63,6 @@ public class SecurityConfig {
 									.permitAll());
 		return http.build();
 	}
-	
-	
 	
 	@Bean
 	CommandLineRunner initData(RoleRepository roleRepository, UserRepository userRepository,

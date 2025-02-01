@@ -15,6 +15,11 @@ public interface PhotoRepository extends JpaRepository<Photo, Long> {
 	@Query("SELECT p.photoUrl FROM Photo p WHERE p.userProfile.id = :profileId")
 	List<String> findUrlsByProfileId(@Param("profileId") Long profileId);
 
-//	Optional<Photo> findByUserProfile_ProfileIdAndPhotoUrl(Long profileId, String photoUrl);
+	Optional<Photo> findByPublicId(String publicId);
+	
+	
+	@Query("SELECT p.publicId, p.photoUrl FROM Photo p WHERE p.userProfile.profileId = :profileId")
+	List<Object[]> findPhotoUrlsAndPublicIdsByProfileId(Long profileId);
+
 
 }

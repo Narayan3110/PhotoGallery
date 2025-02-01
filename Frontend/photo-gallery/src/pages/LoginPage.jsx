@@ -37,16 +37,14 @@ const LoginPage = () => {
         dispatch
       ); // Pass dispatch to AuthService
       if (response) {
-
         const greeting = response.message;
-        alert(`${greeting}\nLogin successful!\nRedirecting to HomePage...`);
+        // alert(`${greeting}\nLogin successful!\nRedirecting to HomePage...`);
         if (rememberMe) {
           localStorage.setItem("token", response.token);
         } else {
           sessionStorage.setItem("token", response.token);
         }
         window.location.href = "/";
-
       }
     } catch (err) {
       console.error("Login failed:", err);
