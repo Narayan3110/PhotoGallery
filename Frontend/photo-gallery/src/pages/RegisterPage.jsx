@@ -31,6 +31,7 @@ const SignupPage = () => {
 
     try {
       const response = await AuthService.registerUser(formData);
+      console.log(response);
       alert("Signup successful!");
       window.location.href = "/login";
     } catch (error) {
@@ -45,9 +46,9 @@ const SignupPage = () => {
       {/* Left Section: Form */}
       <div className="flex flex-1 flex-col justify-center items-center bg-white shadow-lg">
         <div className="p-12 flex flex-col items-center w-[30rem]">
-        <h1 className="text-5xl font-bold mb-4 font-satisfy text-black">
-  नमस्ते
-</h1>
+          <h1 className="text-5xl font-bold mb-4 font-satisfy text-black">
+            नमस्ते
+          </h1>
 
           <p className="text-gray-500 mb-6">Join us and start your journey!</p>
           <form className="w-full space-y-4" onSubmit={handleSubmit}>

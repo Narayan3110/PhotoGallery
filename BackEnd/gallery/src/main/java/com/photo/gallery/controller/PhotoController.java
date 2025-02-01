@@ -48,18 +48,9 @@ public class PhotoController {
 
 
     // Delete photo by publicId
-//    @DeleteMapping("/delete/{publicId}")
-//    public ResponseEntity<String> deletePhoto(@PathVariable String publicId) {
-//    	System.out.println(publicId);
-//        boolean isDeleted = photoService.deletePhoto(publicId);
-//        return isDeleted 
-//                ? ResponseEntity.ok("Photo deleted successfully!")
-//                : ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to delete photo.");
-//    }
-    
     @DeleteMapping("/delete")
     public ResponseEntity<String> deletePhoto(@RequestParam String publicId) {
-        System.out.println("Deleting photo with publicId: " + publicId);
+//        System.out.println("Deleting photo with publicId: " + publicId);
         boolean isDeleted = photoService.deletePhoto(publicId);
         return isDeleted 
                 ? ResponseEntity.ok("Photo deleted successfully!")
