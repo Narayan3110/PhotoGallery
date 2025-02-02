@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
 @Table(name = "albums")
 public class Album {
@@ -14,6 +16,7 @@ public class Album {
     private Long albumId;
 
     // Add the ManyToOne relationship with UserProfile
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "profile_id", referencedColumnName = "profile_id", nullable = false)
     private UserProfile userProfile;  // ✅ Each album belongs to one user profile
