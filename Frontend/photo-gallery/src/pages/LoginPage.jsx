@@ -37,8 +37,6 @@ const LoginPage = () => {
         dispatch
       ); // Pass dispatch to AuthService
       if (response) {
-        const greeting = response.message;
-        // alert(`${greeting}\nLogin successful!\nRedirecting to HomePage...`);
         if (rememberMe) {
           localStorage.setItem("token", response.token);
         } else {
@@ -96,6 +94,24 @@ const LoginPage = () => {
                   {showPassword ? <FaEyeSlash /> : <FaEye />}
                 </button>
               </div>
+            </div>
+            {/* Remember Me and Forgot Password */}
+            <div className="flex justify-between items-center text-sm">
+              <label className="flex items-center">
+                <input
+                  type="checkbox"
+                  className="mr-2"
+                  checked={rememberMe}
+                  onChange={() => setRememberMe(!rememberMe)}
+                />
+                Remember Me
+              </label>
+              <a
+                href="/reset-email"
+                className="text-blue-500 hover:underline"
+              >
+                Forgot Password?
+              </a>
             </div>
             {error && <p className="text-sm text-red-500">{error}</p>}
             <button

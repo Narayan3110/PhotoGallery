@@ -42,5 +42,6 @@ public interface UserService {
 	boolean verifyUser(String token);
 	
 	void deleteUnverifiedUsers();
- 
+
+    boolean resetPassword(String token, String newPassword);
 }

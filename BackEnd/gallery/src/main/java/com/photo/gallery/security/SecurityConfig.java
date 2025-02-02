@@ -44,9 +44,9 @@ public class SecurityConfig {
 		http
 		.csrf(csrf-> csrf.disable())
 		.authorizeHttpRequests((requests) -> requests.requestMatchers("/contact/**").permitAll()
-				.requestMatchers("/api/users/register").permitAll()
-				.requestMatchers("/api/users/login").permitAll()
-				.requestMatchers("/api/users/verify").permitAll()
+				.requestMatchers("/api/users/**").permitAll()
+//				.requestMatchers("/api/users/login").permitAll()
+//				.requestMatchers("/api/users/verify").permitAll()
 				.requestMatchers("/api/photo/**").permitAll()
 				.requestMatchers("/api/userprofile/**").permitAll()
 //				.requestMatchers("/api/photo/upload").permitAll()
