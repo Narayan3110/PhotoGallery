@@ -6,20 +6,15 @@ import com.photo.gallery.model.User;
 import com.photo.gallery.repository.RoleRepository;
 import com.photo.gallery.repository.UserRepository;
 
-import jakarta.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -124,98 +119,45 @@ public class UserServiceImpl implements UserService {
 		return userRepository.findByUserName(userName);
 	}
 
-	
 	@Override
-	public ResponseEntity<Map<String, Object>> loginUser(String userNameOrEmail, String password) {
-	    try {
-	        User foundUser;
-
-	        // Determine if input is an email or a username
-	        if (userNameOrEmail.contains("@")) {
-	            foundUser = findUserByUserEmail(userNameOrEmail)
-	                    .orElseThrow(() -> new RuntimeException("User not found with email: " + userNameOrEmail));
-	        } else {
-	            foundUser = getUserUserName(userNameOrEmail)
-	                    .orElseThrow(() -> new RuntimeException("User not found with username: " + userNameOrEmail));
+	public  ResponseEntity<Map<String, String>> loginUser(String userNameOrEmail,String password) {
+		try {
+			 User foundUser;
+				
+			    // Determine if input is an email or a username
+			    if (userNameOrEmail.contains("@")) {
+			        // Find user by email
+			        foundUser = findUserByUserEmail(userNameOrEmail)
+			                .orElseThrow(() -> new RuntimeException("User not found with email: " + userNameOrEmail));
+			    } else {
+			        // Find user by username
+			        foundUser = getUserUserName(userNameOrEmail)
+			                .orElseThrow(() -> new RuntimeException("User not found with username: " + userNameOrEmail));
+			    }
+			    
+			// Authenticate user credentials
+	        Authentication authentication = authenticationManager.authenticate(
+	                new UsernamePasswordAuthenticationToken(
+	                		foundUser.getUserName(), 
+	                		password
+	                )
+	        );
+	        if(authentication.isAuthenticated()) {
+	        	Map< String, String> response =new HashMap<>();
+	        	String token = jwtService.generateToken(foundUser.getUserName());
+	        	response.put("message", "Hello Mr." + foundUser.getUserName());
+	        	response.put("token", token);
+	        	return ResponseEntity.ok(response);
 	        }
-
-	        if (foundUser.isVerified()) {
-	            // Authenticate user credentials
-	            Authentication authentication = authenticationManager.authenticate(
-	                    new UsernamePasswordAuthenticationToken(foundUser.getUserName(), password)
-	            );
-
-	            if (authentication.isAuthenticated()) {
-	                String token = jwtService.generateToken(foundUser.getUserName());
-	                Map<String, Object> response = new HashMap<>();
-	                response.put("message", "Hello " + foundUser.getUserName());
-	                response.put("token", token);
-	                response.put("user", foundUser);
-	                return ResponseEntity.ok(response);
-	            } else {
-	                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-	                        .body(Map.of("message", "Invalid username or password", "token", null));
-	            }
-	        } else {
-	            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "Not Verified"));
+	        else {
+	        	Map<String, String> errorResponse = new HashMap<>();
+		        errorResponse.put("message", "Invalid username or password");
+		        errorResponse.put("token", null);
+		        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
 	        }
-	    } catch (RuntimeException e) {
-	        // Log exception details (better logging)
-	        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-	                .body(Map.of("message", "Error during login: " + e.getMessage()));
-	    } catch (Exception e) {
-	        // Catch all other exceptions for a more generic error
-	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-	                .body(Map.of("message", "Something went wrong. Please try again later."));
-	    }
+		} catch (Exception e) {
+	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+		}
 	}
-
-
-	@Transactional
-    public boolean verifyUser(String token) {
-        // Find user by verification token
-        User user = userRepository.findByVerificationToken(token).orElse(null);
-
-        if (user == null) {
-            // If the user with the given token doesn't exist, return false
-            return false;
-        }
-
-        // Set the user as verified
-        user.setVerified(true);
-
-        // Optionally, clear the verification token after it's used
-        user.setVerificationToken(null);
-
-        // Save the updated user to the database
-        userRepository.save(user);
-
-        return true;
-    }
-
-    @Override
-    @Scheduled(fixedRate = 60000) // Every minute
-    public void deleteUnverifiedUsers() {
-        LocalDateTime oneHourAgo = LocalDateTime.now().minusHours(1);
-        List<User> usersToDelete = userRepository.findByVerifiedFalseAndCreatedDateBefore(oneHourAgo);
-
-        if (!usersToDelete.isEmpty()) {
-            userRepository.deleteAll(usersToDelete);
-            // Optional: log the deletion or take additional actions as needed
-            System.out.println("Deleted " + usersToDelete.size() + " unverified users.");
-        }
-    }
-
-    @Override
-    public boolean resetPassword(String token, String newPassword) {
-        Optional<User> user = userRepository.findByVerificationToken(token);
-        if(user.isPresent()){
-            User u = user.get();
-            u.setPassword(passwordEncoder.encode(newPassword));
-            return true ;
-        }
-        return false;
-    }
-
-
+	
 }
