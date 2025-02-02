@@ -1,52 +1,88 @@
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { logout } from "../redux/authSlice";
+// import logo from "../assets/logo.jpg";
 
 const Navbar = () => {
+  const user = useSelector((state) => state.auth.user);
+  const dispatch = useDispatch();
+
+  const handleLogout = () => {
+    dispatch(logout());
+    localStorage.removeItem("token");
+    sessionStorage.removeItem("token");
+    window.location.href = "/login";
+  };
+
   return (
-    <nav className='bg-gray-900 text-white shadow-lg h-20 flex items-center justify-center'>
-      <div className='container mx-auto flex justify-between items-center px-6'>
-        {/* Logo */}
-        <h1 className='font-heading text-4xl font-bold bg-gradient-to-r from-blue-500 via-purple-500 to-indigo-600 text-transparent bg-clip-text'>
-          Photo<span className='text-pink-500'>Gallery</span>
-        </h1>
+    <div className="relative">
+      <nav className="bg-white shadow-sm fixed w-full top-0 z-50 py-2">
+        <div className="container mx-auto flex items-center justify-between px-4 max-w-5xl">
+          {/* Left Section - Navigation Links */}
+          <ul className="flex space-x-4 text-gray-800 font-medium">
+            <li>
+              <Link to="/" className="hover:text-orange-500">
+                Home
+              </Link>
+            </li>
+            <li>
+              <Link to="/about" className="hover:text-orange-500">
+                Team
+              </Link>
+            </li>
+            <li>
+              <Link to="/contact" className="hover:text-orange-500">
+                Contact
+              </Link>
+            </li>
+            {/* Conditionally render Gallery link if user is logged in */}
+            {user && (
+              <li>
+                <Link to="/gallery" className="hover:text-orange-500">
+                  Gallery
+                </Link>
+              </li>
+            )}
+          </ul>
 
-        {/* Navigation Links */}
-        <ul className='flex space-x-6'>
-          <li>
-            <Link to='/' className='hover:text-accent transition-colors'>
-              Home
-            </Link>
-          </li>
-          <li>
-            <Link to='/gallery' className='hover:text-accent transition-colors'>
-              Gallery
-            </Link>
-          </li>
-          <li>
-            <Link to='/about' className='hover:text-accent transition-colors'>
-              About Us
-            </Link>
-          </li>
-          <li>
-            <Link to='/contact' className='hover:text-accent transition-colors'>
-              Contact
-            </Link>
-          </li>
-        </ul>
+          {/* Center Section - Logo */}
+          <div className="mx-4">
+            <img
+              src="src/assets/photos/logo/logo.png"
+              alt="Logo"
+              className="h-8 w-auto"
+            />
+          </div>
 
-        {/* Login Button */}
-        <Link
-          to='/login'
-          className='flex items-center justify-center text-white font-medium hover:opacity-90 transition-all duration-300 transform hover:scale-105 space-x-3 shadow-lg'
-        >
-          <img
-            src='https://img.icons8.com/?size=100&id=g7IgcLvs4JT6&format=png&color=000000'
-            alt='Logo'
-            className='h-5 w-5'
-          />
-          <span>Login</span>
-        </Link>
-      </div>
-    </nav>
+          {/* Right Section - Register/Login Button */}
+          <div>
+            {user ? (
+              <button
+                onClick={handleLogout}
+                className="bg-red-500 text-white px-3 py-1 rounded-lg hover:bg-red-600 transition"
+              >
+                Logout
+              </button>
+            ) : (
+              <>
+                <Link
+                  to="/login"
+                  className="bg-orange-500 text-white px-3 py-1 rounded-lg hover:bg-orange-600 transition"
+                >
+                  Log In
+                </Link>
+                <Link
+                  to="/register"
+                  className="bg-orange-500 text-white px-3 py-1 rounded-lg hover:bg-orange-600 transition ml-2"
+                >
+                  Register
+                </Link>
+              </>
+            )}
+          </div>
+        </div>
+      </nav>
+    </div>
   );
 };
 

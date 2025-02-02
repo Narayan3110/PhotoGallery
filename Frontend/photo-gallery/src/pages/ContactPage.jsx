@@ -1,31 +1,66 @@
 const ContactPage = () => {
   return (
-    <div className='min-h-screen items-center justify-center mx-auto mt-10 p-6 text-center bg-gray-100 border border-gray-300 rounded-lg shadow-lg '>
-      <h1 className='text-3xl font-bold text-gray-80'>Contact Us</h1>
-      <p className='text-gray-600 mb-6'>
-        We&apos;re here to help! Feel free to reach out to us with any
-        questions, concerns, or feedback.
+    <div className="flex flex-col items-centre flex flex-col items-center py-20">
+      <h1 className="text-black font-poppins font-bold text-[40px] leading-[60px]">
+        Contact Us
+      </h1>
+      <p className="text-[#717171] font-poppins font-medium text-[18px] leading-[27px] text-center">
+        Any question or remarks? Just write us a message!
       </p>
-      <div className='text-left space-y-2'>
-        <p>
-          <span className='font-semibold text-gray-800'>Email:</span>{' '}
-          <a
-            href='mailto:contact@yourwebsite.com'
-            className='text-blue-500 hover:underline'
+      <div className="bg-white p-8 rounded-2xl shadow-md w-full max-w-lg mx-auto">
+        {/* <h2 className="text-2xl font-semibold text-gray-900 mb-6">
+          
+        </h2> */}
+        <form>
+          <div className="mb-4">
+            <label
+              className="block text-gray-700 text-sm font-medium mb-2"
+              htmlFor="name"
+            >
+              Name
+            </label>
+            <input
+              type="text"
+              id="name"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg text-gray-900 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              placeholder="Enter your name"
+            />
+          </div>
+          <div className="mb-4">
+            <label
+              className="block text-gray-700 text-sm font-medium mb-2"
+              htmlFor="email"
+            >
+              Email
+            </label>
+            <input
+              type="email"
+              id="email"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg text-gray-900 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              placeholder="Enter your email"
+            />
+          </div>
+          <div className="mb-4">
+            <label
+              className="block text-gray-700 text-sm font-medium mb-2"
+              htmlFor="message"
+            >
+              Message
+            </label>
+            <textarea
+              id="message"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg text-gray-900 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              placeholder="Enter your message"
+              rows="4"
+            ></textarea>
+          </div>
+          <button
+            type="submit"
+            className="w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 transition"
           >
-            contact@yourwebsite.com
-          </a>
-        </p>
-        <p>
-          <span className='font-semibold text-gray-800'>Phone:</span>{' '}
-          <a href='tel:+1234567890' className='text-blue-500 hover:underline'>
-            +123 456 7890
-          </a>
-        </p>
-        <p>
-          <span className='font-semibold text-gray-800'>Address:</span> 123 Main
-          Street, Cityville, Country
-        </p>
+            Send Message
+          </button>
+        </form>
       </div>
     </div>
   );
