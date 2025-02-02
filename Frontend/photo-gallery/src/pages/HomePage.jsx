@@ -2,9 +2,9 @@ import { Link } from "react-router-dom";
 
 const HomePage = () => {
   return (
-    <div className="bg-gradient-to-b from-gray-400 to-gray-800 text-gray-50">
+    <div className="bg-gradient-to-b from-gray-400 to-gray-800 text-gray-50 ">
       {/* Hero Section */}
-      <div className="relative flex flex-col items-center justify-center min-h-screen bg-cover bg-center">
+      <div className="relative flex flex-col items-center justify-center min-h-screen bg-cover bg-center ">
         <img
           src="/src/assets/photos/homePage/g1.jpg"
           alt="Background"

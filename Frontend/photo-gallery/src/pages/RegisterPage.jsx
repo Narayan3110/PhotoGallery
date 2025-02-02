@@ -44,14 +44,14 @@ const SignupPage = () => {
   return (
     <div className="flex flex-col lg:flex-row min-h-screen w-screen bg-gray-100 pt-12">
       {/* Left Section: Form */}
-      <div className="flex flex-1 flex-col justify-center items-center bg-white shadow-lg">
+      <div className="flex flex-1 flex-col justify-center items-center bg-white ">
         <div className="p-12 flex flex-col items-center w-[30rem]">
-          <h1 className="text-5xl font-bold mb-4 font-satisfy text-black">
+          <h1 className="text-5xl font-bold mb-2 font-satisfy text-black">
             नमस्ते
           </h1>
 
-          <p className="text-gray-500 mb-6">Join us and start your journey!</p>
-          <form className="w-full space-y-4" onSubmit={handleSubmit}>
+          <p className="text-gray-500 mb-4">Join us and start your journey!</p>
+          <form className="w-full space-y-1" onSubmit={handleSubmit}>
             <div>
               <label className="block text-sm mb-1">Username</label>
               <input
@@ -140,11 +140,11 @@ const SignupPage = () => {
       </div>
 
       {/* Right Section: Image */}
-      <div className="hidden lg:flex lg:w-1/2 justify-center items-center bg-white">
+      <div className="hidden lg:flex lg:w-1/2 justify-center items-center bg-white mt-8">
         <img
           src="/photo/registrationPage/registrationMain.jpg"
           alt="Signup illustration"
-          className="h-screen w-full object-cover bg-white p-4 rounded-lg shadow-lg"
+          className="h-screen w-full object-cover bg-white p-4 rounded-lg "
         />
       </div>
     </div>

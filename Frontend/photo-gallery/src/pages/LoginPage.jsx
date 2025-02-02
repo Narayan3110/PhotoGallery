@@ -53,18 +53,18 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="flex flex-col lg:flex-row min-h-screen w-screen bg-gray-100">
+    <div className="flex flex-col lg:flex-row min-h-screen w-screen bg-gray-100  ">
       {/* Left Section: Form */}
-      <div className="flex flex-1 flex-col justify-center items-center bg-white shadow-lg">
-        <div className="p-12 flex flex-col items-center w-[30rem]">
+      <div className="flex flex-1 flex-col justify-center items-center bg-white ">
+        <div className="p-12 flex flex-col items-center w-[30rem] ">
           <h1 className="text-5xl font-bold mb-4 font-[Satisfy] text-black">
             Welcome
           </h1>
           <p className="text-gray-500 mb-6">
             We are glad to see you back with us
           </p>
-          <form className="w-full space-y-4" onSubmit={handleLogin}>
-            <div>
+          <form className="w-full  " onSubmit={handleLogin}>
+            <div className="">
               <label className="block text-sm mb-1">Username</label>
               <div className="relative">
                 <input
@@ -76,9 +76,10 @@ const LoginPage = () => {
                 />
               </div>
             </div>
+
             <div>
               <label className="block text-sm mb-1">Password</label>
-              <div className="relative">
+              <div className="relative ">
                 <input
                   type={showPassword ? "text" : "password"}
                   placeholder="Password"
@@ -95,20 +96,22 @@ const LoginPage = () => {
                 </button>
               </div>
             </div>
+
             {/* Remember Me and Forgot Password */}
-            <div className="flex justify-between items-center text-sm">
-              <label className="flex items-center">
+            <div className="flex justify-between text-sm items-center ">
+              <label className="flex items-center space-x-2">
                 <input
                   type="checkbox"
-                  className="mr-2"
+                  className="align-middle mb-0"
                   checked={rememberMe}
                   onChange={() => setRememberMe(!rememberMe)}
                 />
-                Remember Me
+                <span>Remember Me</span>
               </label>
+
               <a
                 href="/reset-email"
-                className="text-blue-500 hover:underline"
+                className="text-blue-500 hover:text-red-500 hover:underline"
               >
                 Forgot Password?
               </a>
@@ -116,26 +119,28 @@ const LoginPage = () => {
             {error && <p className="text-sm text-red-500">{error}</p>}
             <button
               type="submit"
-              className="w-full py-2 text-white bg-black rounded-md hover:bg-gray-800"
+              className="w-full py-2 text-white bg-black rounded-md hover:bg-gray-800 mt-6"
               disabled={isLoading}
             >
               {isLoading ? "Loading..." : "Next"}
             </button>
           </form>
-          <div className="flex items-center justify-center p-2 mt-1 mb-0">
-            <p className="text-base text-gray-700">
+          <div className="flex items-center mt-2 mb-0 ">
+            <p className="text-base text-gray-700 mb-0">
               New here?{" "}
               <a
                 href="/register"
-                className="text-blue-500 hover:underline font-medium"
+                className="text-blue-500 hover:text-red-500 hover:underline font-medium"
               >
                 Create an account
               </a>
             </p>
           </div>
-          <p className="text-center text-gray-500 mt-0 mb-0">
-            ---Login with Others---
-          </p>
+          <div>
+            <p className="text-center text-gray-500 mt-0 mb-0 ">
+              ---Login with Others---
+            </p>
+          </div>
           <div className="flex space-x-4 mt-2">
             <button className="flex items-center justify-center px-4 py-2 border rounded-md shadow-sm text-sm">
               <img
@@ -150,11 +155,11 @@ const LoginPage = () => {
       </div>
 
       {/* Right Section: Image */}
-      <div className="hidden lg:flex lg:w-1/2 justify-center items-center bg-white">
+      <div className="hidden lg:flex lg:w-1/2 justify-center items-center bg-white mt-8">
         <img
           src="/photo/LoginPage/LoginMain.jpg" // Replace with the actual path
           alt="Login illustration"
-          className="h-screen w-full object-cover bg-white p-4 rounded-lg shadow-lg"
+          className="h-screen w-full object-cover bg-white p-4 rounded-lg "
         />
       </div>
     </div>
