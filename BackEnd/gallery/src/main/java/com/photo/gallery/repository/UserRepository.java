@@ -22,4 +22,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	Optional<User> findByVerificationToken(String token);
 
     List<User> findByVerifiedFalseAndCreatedDateBefore(LocalDateTime dateTime);
+
+
 }

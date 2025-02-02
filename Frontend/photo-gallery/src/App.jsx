@@ -9,6 +9,8 @@ import AboutUsPage from "./pages/AboutUsPage.jsx";
 import NewHomePage from "./pages/NewHomePage.jsx";
 import VerifyPage from "./pages/VerifyPage.jsx";
 import { useSelector } from "react-redux";
+import NewPasswordPage from "./pages/NewPasswordPage.jsx";
+import ResetEmail from "./pages/ResetEmail.jsx";
 
 const App = () => {
   const user = useSelector((state) => state.auth.user); // Check if user is logged in
@@ -29,6 +31,8 @@ const App = () => {
         <Route path="/about" element={<AboutUsPage />} />
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/reset-email" element={<ResetEmail />} />
+        <Route path="/set-Password" element={<NewPasswordPage />} />
         <Route path="/register" element={<RegisterPage />} />
       </Routes>
 

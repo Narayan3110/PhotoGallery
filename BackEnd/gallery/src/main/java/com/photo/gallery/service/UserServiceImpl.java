@@ -206,5 +206,16 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    @Override
+    public boolean resetPassword(String token, String newPassword) {
+        Optional<User> user = userRepository.findByVerificationToken(token);
+        if(user.isPresent()){
+            User u = user.get();
+            u.setPassword(passwordEncoder.encode(newPassword));
+            return true ;
+        }
+        return false;
+    }
+
 
 }
