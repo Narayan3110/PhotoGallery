@@ -41,25 +41,26 @@ public class User {
     @Column(name = "password")
     private String password;
 
+    @Column(name = "verified", nullable = false)
+    private boolean verified = false;  // New Field: Email verification status (default: false)
+
+    @Column(name = "verification_token", unique = true, length = 255)
+    private String verificationToken;  // New Field: Stores the verification token
+
     @CreationTimestamp
     @Column(name = "created_at", updatable = false, nullable = false)
-    private LocalDateTime createdDate;  // Automatically populated, set as NOT NULL
+    private LocalDateTime createdDate;
 
     @UpdateTimestamp
     @Column(name = "updated_at", nullable = false)
-    private LocalDateTime updatedDate;  // Automatically populated, set as NOT NULL
+    private LocalDateTime updatedDate;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "role_id", referencedColumnName = "role_id")
     @JsonBackReference
     @ToString.Exclude
-    private Role role;  // Linking to the Role class (Admin/User)
+    private Role role;
 
-    // Adding One-to-One relationship with UserProfile
-//    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-//    @ToString.Exclude
-//    private UserProfile userProfile;
-//    @JsonBackReference	
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
     private UserProfile userProfile;
@@ -69,6 +70,7 @@ public class User {
         this.userName = userName;
         this.email = email;
         this.password = password;
+        this.verified = false;
     }
 
     public User(String userName, String email) {
@@ -77,19 +79,29 @@ public class User {
     }
 
     public User(Long userId, String userName, String email, String password, UserProfile userProfile) {
-    	super();
-    	this.userName = userName;
-    	this.email = email;
-    	this.password = password;
-    	this.userProfile = userProfile;
+        this.userId = userId;
+        this.userName = userName;
+        this.email = email;
+        this.password = password;
+        this.userProfile = userProfile;
     }
 
-    public User() {
+    public User(String userName, String email, String password, UserProfile userProfile) {
+        this.userName = userName;
+        this.email = email;
+        this.password = password;
+        this.userProfile = userProfile;
+        this.verified = true; // Make verified true by default for the admin user
     }
+
+
+    public User() {}
 
     // Getters and Setters
 
-    public Long getUserId() {
+    
+
+	public Long getUserId() {
         return userId;
     }
 
@@ -119,6 +131,22 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public boolean isVerified() {
+        return verified;
+    }
+
+    public void setVerified(boolean verified) {
+        this.verified = verified;
+    }
+
+    public String getVerificationToken() {
+        return verificationToken;
+    }
+
+    public void setVerificationToken(String verificationToken) {
+        this.verificationToken = verificationToken;
     }
 
     public LocalDateTime getCreatedDate() {
@@ -153,13 +181,11 @@ public class User {
         this.userProfile = userProfile;
     }
 
-	@Override
-	public String toString() {
-		return "User [userId=" + userId + ", userName=" + userName + ", email=" + email + ", password=" + password
-				+ ", createdDate=" + createdDate + ", updatedDate=" + updatedDate + ", role=" + role + ", userProfile="
-				+ userProfile + "]";
-	}
-
-    
-	
+    @Override
+    public String toString() {
+        return "User [userId=" + userId + ", userName=" + userName + ", email=" + email + 
+               ", verified=" + verified + ", verificationToken=" + verificationToken + 
+               ", createdDate=" + createdDate + ", updatedDate=" + updatedDate + 
+               ", role=" + role + ", userProfile=" + userProfile + "]";
+    }
 }

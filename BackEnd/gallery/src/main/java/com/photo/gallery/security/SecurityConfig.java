@@ -2,8 +2,11 @@ package com.photo.gallery.security;
 
 import com.photo.gallery.model.Role;
 import com.photo.gallery.model.User;
+import com.photo.gallery.model.UserProfile;
 import com.photo.gallery.repository.RoleRepository;
 import com.photo.gallery.repository.UserRepository;
+
+import java.time.LocalDate;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -20,6 +23,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @EnableWebSecurity
@@ -39,10 +44,14 @@ public class SecurityConfig {
 		http
 		.csrf(csrf-> csrf.disable())
 		.authorizeHttpRequests((requests) -> requests.requestMatchers("/contact/**").permitAll()
-				.requestMatchers("/api/users/register").permitAll()
-				.requestMatchers("/api/users/login").permitAll()
-				.requestMatchers("/api/photo").permitAll()
-				.requestMatchers("/api/photo/upload").permitAll()
+				.requestMatchers("/api/users/**").permitAll()
+//				.requestMatchers("/api/users/login").permitAll()
+//				.requestMatchers("/api/users/verify").permitAll()
+				.requestMatchers("/api/photo/**").permitAll()
+				.requestMatchers("/api/userprofile/**").permitAll()
+//				.requestMatchers("/api/photo/upload").permitAll()
+				.requestMatchers("/api/photo/delete/**").permitAll()
+				.requestMatchers("/api/album/**").permitAll()
 				.requestMatchers("/api/admin/**").hasAuthority("ADMIN").anyRequest().authenticated());
 
 		http.csrf(AbstractHttpConfigurer::disable); // Disable CSRF protection (useful for stateless apps or when using
@@ -59,8 +68,6 @@ public class SecurityConfig {
 									.permitAll());
 		return http.build();
 	}
-	
-	
 	
 	@Bean
 	CommandLineRunner initData(RoleRepository roleRepository, UserRepository userRepository,
@@ -85,12 +92,23 @@ public class SecurityConfig {
 
 			// Create an admin with ADMIN role if it doesn't exist
 			if (!userRepository.existsByUserName("Admin1")) {
-				// Encoding password before saving
-				String encodedPassword = passwordEncoder.encode("Sanm@3004");
-				User admin1 = new User("Admin1", "nikhil3004katoch@gmail.com", encodedPassword);
-				admin1.setRole(adminRole); // Set the role correctly
-				userRepository.save(admin1); // Save the admin user
+			    // Encoding password before saving
+			    String encodedPassword = passwordEncoder.encode("Sanm@3004");
+
+			    // Create the UserProfile object for the admin user
+//			    UserProfile userProfile = new UserProfile(null, "Nikhil Katoch", "7876662407", "CDAC", "profile_url", LocalDate.of(2000, 07, 20));
+
+			    // Create the User object and set the UserProfile and verified to true
+			    User admin1 = new User("Admin1", "nikhilkatoch@gmail.com", encodedPassword);
+			    admin1.setVerified(true); // Set verified to true for the admin user
+
+			    // Set the role correctly
+			    admin1.setRole(adminRole); // Set the role as the adminRole
+
+			    // Save the admin user (this will also save the associated UserProfile)
+			    userRepository.save(admin1);
 			}
+
 
 		};
 	}
