@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
+import rectangleImage from "../assets/photos/resetPassword/Rectangle.jpg";
 
 const NewPasswordPage = () => {
   const [password, setPassword] = useState("");
@@ -13,7 +14,8 @@ const NewPasswordPage = () => {
     return new URLSearchParams(location.search);
   };
 
-  const handlePasswordChange = async () => {
+  const handlePasswordChange = async (e) => {
+    e.preventDefault();
     if (password !== confirmPassword) {
       alert("Passwords do not match");
       return;
@@ -43,56 +45,51 @@ const NewPasswordPage = () => {
   };
 
   return (
-    <div style={{ display: "flex", height: "100vh" }}>
-      <div style={{ flex: 1, padding: "20px" }}>
-        <h1>Set a New Password</h1>
-        <p>Please set a new password for your account.</p>
-        <div>
-          <input
-            type="password"
-            placeholder="Create Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            style={{ width: "100%", padding: "10px", marginBottom: "10px" }}
-          />
-          <input
-            type="password"
-            placeholder="Re-enter Password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            style={{ width: "100%", padding: "10px", marginBottom: "10px" }}
-          />
-          <button
-            onClick={handlePasswordChange}
-            style={{
-              width: "100%",
-              padding: "10px",
-              backgroundColor: "#007bff",
-              color: "#fff",
-              border: "none",
-              cursor: "pointer",
-            }}
-          >
-            Set Password
-          </button>
+    <div className="flex min-h-screen items-center justify-center bg-gray-100">
+      <div className="w-full max-w-3xl flex bg-white rounded-2xl shadow-lg overflow-hidden">
+        {/* Left Side */}
+        <div className="w-1/2 p-6">
+          <h2 className="mt-4 text-2xl font-bold mb-4">Set a New Password</h2>
+          <p className="mt-2 text-gray-600">
+            Please set a new password for your account.
+          </p>
+          <form onSubmit={handlePasswordChange} className="mt-6 mb-2">
+            <div className="mb-4">
+              <input
+                type="password"
+                placeholder="Create Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="border rounded w-full p-2"
+                required
+              />
+            </div>
+            <div className="mb-4">
+              <input
+                type="password"
+                placeholder="Re-enter Password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                className="border rounded w-full p-2"
+                required
+              />
+            </div>
+            <button
+              type="submit"
+              className="mt-2 w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600"
+            >
+              Set Password
+            </button>
+          </form>
         </div>
-      </div>
-      <div
-        style={{
-          flex: 1,
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          backgroundColor: "#f5f5f5",
-        }}
-      >
-        <div style={{ textAlign: "center" }}>
+
+        {/* Right Side */}
+        <div className="w-1/2 bg-gray-50 flex items-center justify-center p-6">
           <img
-            src="padlock_image_url"
+            src={rectangleImage} // Replace with the correct image URL
             alt="Padlock"
-            style={{ width: "150px", marginBottom: "20px" }}
+            className="w-3/4"
           />
-          <p>Secure your account with a strong password</p>
         </div>
       </div>
     </div>
