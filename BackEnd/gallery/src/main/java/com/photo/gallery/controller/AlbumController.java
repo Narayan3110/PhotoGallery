@@ -50,21 +50,31 @@ public class AlbumController {
 	        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
 		}
 	}
-	
-	@PutMapping("/rename/{id}")
+
+	@PutMapping("/rename/{albumName}")
 	public ResponseEntity<?> renameAlbumName(
-			@PathVariable Long id,
+			@PathVariable String albumName,
 			@RequestBody JsonNode jsonNode) {
-		try{
-			Album responseAlbum = albumService.updateAlbumName(id,jsonNode);
-	        return ResponseEntity.ok(responseAlbum);
-		}catch (Exception e) {
-	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+		try {
+			// Extract the new album name and profileId from the request body
+			String newAlbumName = jsonNode.get("albumName").asText();
+			Long profileId = jsonNode.get("profileId").asLong();
+
+			// Call the service layer to update the album name for the specific profile
+			Album updatedAlbum = albumService.updateAlbumName(profileId, albumName, newAlbumName);
+
+			// Return the updated album
+			return ResponseEntity.ok(updatedAlbum);
+		} catch (Exception e) {
+			// Return an error response if something goes wrong
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
 		}
 	}
-	
+
+
 	@GetMapping("/all/{id}")
-	public ResponseEntity<?> listAllAlbums(@PathVariable Long id) {		
+	public ResponseEntity<?> listAllAlbums(@PathVariable Long id) {
+		System.out.println("Profile Id :"+id);
 		try{
 			List<Album> albums = albumService.getAllAlbum(id);
 		    return ResponseEntity.ok(albums);

@@ -11,6 +11,7 @@ import VerifyPage from "./pages/VerifyPage.jsx";
 import { useSelector } from "react-redux";
 import NewPasswordPage from "./pages/NewPasswordPage.jsx";
 import ResetEmail from "./pages/ResetEmail.jsx";
+import AlbumPage from "./pages/AlbumPage.jsx";
 
 const App = () => {
   const user = useSelector((state) => state.auth.user); // Check if user is logged in
@@ -27,6 +28,7 @@ const App = () => {
           path="/gallery"
           element={user ? <GalleryPage /> : <Navigate to="/login" />}
         />
+        <Route path="/albums" element={<AlbumPage />} />
         <Route path="/verify" element={<VerifyPage />} />
         <Route path="/about" element={<AboutUsPage />} />
         <Route path="/contact" element={<ContactPage />} />
