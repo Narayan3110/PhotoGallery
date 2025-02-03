@@ -2,14 +2,14 @@ package com.photo.gallery.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import com.photo.gallery.repository.AlbumRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.photo.gallery.model.Album;
 import com.photo.gallery.model.UserProfile;
-import com.photo.gallery.repository.AlbumRepository;
 
 @Service
 public class AlbumService {
@@ -66,29 +66,23 @@ public class AlbumService {
 	}
 
 //	Update Album
-	public Album updateAlbumName(Long id , JsonNode jsonNode) {
-		String currName=jsonNode.get("currName").asText();
-		String newName=jsonNode.get("newName").asText();
+public Album updateAlbumName(Long profileId, String albumName, String newAlbumName) {
+	// Find the album by the profileId and albumName
+	Optional<Album> optionalAlbum = albumRepository.findByUserProfile_ProfileIdAndAlbumName(profileId, albumName);
+//	if (!optionalAlbum.isPresent()) {
+//		throw new AlbumNotFoundException("Album not found for profileId: " + profileId + " and albumName: " + albumName);
+//	}
 
-		Album album = getAlbumByName(id, currName);
-		if (album == null) {
-	        throw new RuntimeException("Album with name:- "+currName+" Doesn't Exist Try Again..."); 
-		}else {
-			List<Album> albums = getAllAlbum(id);
-			if (albums.isEmpty()) {
-		        throw new RuntimeException("Albums of profileID :- "+id+" is Empty, Try Again...");
-			}
-			for (Album al : albums) {
-				if(al.getAlbumName().equals(newName)) {
-			        throw new RuntimeException("Album of name:- "+newName+" Already Present,try Again...");
-				}
-			}
-			album.setAlbumName(newName);
-			return albumRepository.save(album);
-		}
-	}
+	// Get the album and update its name
+	Album album = optionalAlbum.get();
+	album.setAlbumName(newAlbumName);
 
-//	Get Album With Jwt Token
+	// Save the updated album back to the database
+	return albumRepository.save(album);
+}
+
+
+	//	Get Album With Jwt Token
 	public  List<Album> getAllAlbum(Long id) {
 		UserProfile profile = profileService.findByProfileId(id);
 		List<Album> personalAlbums = new ArrayList<>();
