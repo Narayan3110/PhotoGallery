@@ -36,13 +36,10 @@ public class PhotoService {
     @Autowired
     private UserProfileService userProfileService;
 
-//    @Autowired
-//    private AlbumService albumService;
-
     @Autowired
     private AlbumRepository albumRepository;
     
-    
+//	Get Photo By id
     public Photo getPhotoById(Long profileId,Long id) {
     	Photo photo = photoRepository.findById(id)
     			.orElseThrow(() -> new RuntimeException("Photo of id:-"+id+" Not found"));
@@ -51,9 +48,7 @@ public class PhotoService {
 		}else {
             throw new RuntimeException("In ProfileID:- " + profileId+" Photo With Id:- "+id+" Not Found.");
 		}
-    	
 	}
-    
 
     // Upload photo and store publicId
     public String uploadPhoto(Long profileId, byte[] fileBytes, String originalFilename, String contentType, long fileSize , String albumName) {
@@ -81,6 +76,7 @@ public class PhotoService {
             // Save the photo to the repository
             photoRepository.save(photo);
             
+//          If AlbumName Is Present Then Photo Will Associate With Album Directly.
             if (albumName != null) {
                 // Fetch album by ID and associate it with the photo
                 Optional<Album> albumOptional = albumRepository.findByUserProfile_ProfileIdAndAlbumName(profileId, albumName);

@@ -20,7 +20,7 @@ public class PhotoController {
     @Autowired
     private PhotoService photoService;
 
- // Upload photo
+ // Upload photo Added AlbumName Optional attribute required = false
     @PostMapping("/upload")
     public ResponseEntity<String> uploadPhoto(
             @RequestParam("profile_id") Long profileId,

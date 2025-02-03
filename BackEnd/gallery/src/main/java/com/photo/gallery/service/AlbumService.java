@@ -34,9 +34,9 @@ public class AlbumService {
 	@Autowired
 	private PhotoService photoService;
 
-	//	Save Album
-	public Album saveAlbum(Long id,Album album){
-		List<Album> albums = getAllAlbum(id);
+//		Save Album With ProfileId And Album
+	public Album saveAlbum(Long profileId,Album album){
+		List<Album> albums = getAllAlbum(profileId);
 		if (!albums.isEmpty()) {
 			for (Album al : albums) {
 				if(al.getAlbumName().equals(album.getAlbumName())) {
@@ -44,16 +44,14 @@ public class AlbumService {
 				}
 			}		
 		}
-		
         if (album.getUserProfile() == null) {
 	        UserProfile newProfile = new UserProfile();
-	        newProfile.setProfileId(id);
+	        newProfile.setProfileId(profileId);
 	        album.setUserProfile(newProfile);
-	        
         }
         Album responseAlbum = albumRepository.save(album);
         if (responseAlbum == null) {
-	        throw new RuntimeException(" Try Again Some time...");
+	        throw new RuntimeException("There is Something Missing,Try Again Some time...");
 	    }
         return responseAlbum;
 	}
@@ -61,6 +59,14 @@ public class AlbumService {
 //	Add Photo to Album
 	public Photo addToAlbum(Long profileId,Long photoId,String albumName) {
 		Album album =getAlbumByName(profileId, albumName);
+		
+		Set<Photo> photos = album.getPhotos();
+		for (Photo photo : photos) {
+			if(photo.getPhotoId()==photoId){
+		        throw new RuntimeException("Photo Already Present in Album");
+			}
+		}
+		
 		Photo photo = photoService.getPhotoById(profileId, photoId);
             // Fetch album by ID and associate it with the photo
                 if (photo.getAlbums() == null) {
@@ -72,9 +78,9 @@ public class AlbumService {
 	}
 	
 	
-	
-	public Optional<Album> getAlbumById(Long album_id) {
-		Optional<Album> album = albumRepository.findById(album_id);
+//	Get Album By AlbumId
+	public Optional<Album> getAlbumById(Long albumId) {
+		Optional<Album> album = albumRepository.findById(albumId);
 		return album;
 	}
 	
@@ -92,27 +98,23 @@ public class AlbumService {
         throw new RuntimeException("Album with name:- "+albumName+" Doesn't Exist Try Again..."); 
 	}
 
-//	Update Album
-@Transactional
-public Album updateAlbumName(Long profileId, String albumName, String newAlbumName) {
-	// Find the album by the profileId and albumName
-	Optional<Album> optionalAlbum = albumRepository.findByUserProfile_ProfileIdAndAlbumName(profileId, albumName);
-//	if (!optionalAlbum.isPresent()) {
-//		throw new AlbumNotFoundException("Album not found for profileId: " + profileId + " and albumName: " + albumName);
-//	}
+//	Update Album Or Rename
+	@Transactional
+	public Album updateAlbumName(Long profileId, String albumName, String newAlbumName) {
+		List<Album> albums=getAllAlbum(profileId);
+		for (Album album : albums) {
+			if (album.getAlbumName().equals(newAlbumName)) {
+	        	throw  new RuntimeException("Album With name:- "+newAlbumName+" Is Already Present in Profile");
+			}
+		}
+		Album album = getAlbumByName(profileId, albumName);
+		album.setAlbumName(newAlbumName);
+		return albumRepository.save(album);
+	}
 
-	// Get the album and update its name
-	Album album = optionalAlbum.get();
-	album.setAlbumName(newAlbumName);
-
-	// Save the updated album back to the database
-	return albumRepository.save(album);
-}
-
-
-	//	Get Album With Jwt Token
-	public  List<Album> getAllAlbum(Long id) {
-		UserProfile profile = profileService.findByProfileId(id);
+//	Get Album With ProfileId
+	public  List<Album> getAllAlbum(Long profileId) {
+		UserProfile profile = profileService.findByProfileId(profileId);
 		List<Album> personalAlbums = new ArrayList<>();
 		List<Album> albums = albumRepository.findAll();
 		for (Album album : albums) {
@@ -120,76 +122,68 @@ public Album updateAlbumName(Long profileId, String albumName, String newAlbumNa
 				personalAlbums.add(album);
 			}
 		}
-		
 		return personalAlbums;
     }
 	
-	 @Transactional
-	    public void movePhotoFromAlbum(String currAlbumName, String newAlbumName,Long profileId, Long photoId) {
-	    	 // Fetching entities from the database
-	        Album currAlbum = getAlbumByName(profileId,currAlbumName);
-	        Photo photo = photoRepository.findById(photoId).orElseThrow(() -> new EntityNotFoundException("Photo not found"));
+//	Move Photo Album To another Album
+	@Transactional
+    public void movePhotoFromAlbum(String currAlbumName, String newAlbumName,Long profileId, Long photoId) {
+		Photo photo = photoRepository.findById(photoId).orElseThrow(() -> new EntityNotFoundException("Photo with Id:- "+photoId+" not found"));
+        Album currAlbum = getAlbumByName(profileId,currAlbumName);
+        if (photo.getAlbums().isEmpty()) {
+        	throw  new RuntimeException("Photo of id :- "+photoId+" is Not Associate with Album :- "+currAlbumName+" .");
+		}else {
+			Album newAlbum = getAlbumByName(profileId,newAlbumName);
+			Set<Album> album = photo.getAlbums();
+			for (Album a : album) {
+	            if (a.getAlbumName().equals(currAlbumName)) {
 
-	        
-	        if (photo.getAlbums().isEmpty()) {
-	        	throw  new RuntimeException("Photo of id :- "+photoId+" is Not Associate with Album :- "+currAlbumName+" .");
-			}else {
-				Album newAlbum = getAlbumByName(profileId,newAlbumName);
-				Set<Album> album = photo.getAlbums();
-				for (Album a : album) {
-		            if (a.getAlbumName().equals(currAlbumName)) {
+	            	// Modify the associations
+	            	currAlbum.getPhotos().remove(photo);  // Removing photo from album
+	    	        photo.getAlbums().remove(currAlbum);  // Removing album from photo
+	    	        if (photo.getAlbums() == null) {
+	    	        	photo.setAlbums(new HashSet<>());
+	    	        }
+	    	        photo.getAlbums().add(newAlbum);  // Add the newAlbum to the photo
 
-		            	// Modify the associations
-		            	currAlbum.getPhotos().remove(photo);  // Removing photo from album
-		    	        photo.getAlbums().remove(currAlbum);  // Removing album from photo
-		    	        if (photo.getAlbums() == null) {
-		    	        	photo.setAlbums(new HashSet<>());
-		    	        }
-		    	        photo.getAlbums().add(newAlbum);  // Add the newAlbum to the photo
-
-		    	        // Save the updated entities to the database
-		    	        albumRepository.save(currAlbum);
-		    	        albumRepository.save(newAlbum);	    	        
-	                    photoRepository.save(photo);  // Save the photo with album association
-		                
-		    	        
-		            }else {
-		            	throw  new RuntimeException("Photo of id :- "+photoId+" is Not Exist in Album id:- "+currAlbumName+" .");	                	            	
-		            }
-				}
-			}		
-		}
-	    
-	    
-	    @Transactional
-	    public void removePhotoFromAlbum(String albumName,Long profileId, Long photoId) {
-	        // Fetching entities from the database
-	    	Album album = getAlbumByName(profileId,albumName);
-	    	Photo photo = photoRepository.findById(photoId).orElseThrow(() -> new EntityNotFoundException("Photo not found"));
-
-	        
-	        if (photo.getAlbums().isEmpty()) {
-	        	throw  new RuntimeException("Photo of id :- "+photoId+" is Not Associate with Album :- "+albumName+" .");
-			}else {
-				Set<Album> album1 = photo.getAlbums();
-				for (Album a : album1) {
-		            if (a.getAlbumName().equals(albumName)) {
-		            	// Modify the associations
-		    			album.getPhotos().remove(photo);  // Removing photo from album
-		    	        photo.getAlbums().remove(album);  // Removing album from photo
-
-		    	        // Save the updated entities to the database
-		    	        albumRepository.save(album);
-		    	        photoRepository.save(photo);
-		            }else {
-		            	throw  new RuntimeException("Photo of id :- "+photoId+" is Not Exist in Album:- "+albumName+" .");	                	            	
-		            }
-				}
+	    	        // Save the updated entities to the database
+	    	        albumRepository.save(currAlbum);
+	    	        albumRepository.save(newAlbum);	    	        
+                    photoRepository.save(photo);  // Save the photo with album association
+	            }else {
+	            	throw  new RuntimeException("Photo of id :- "+photoId+" is Not Exist in Album id:- "+currAlbumName+" .");	                	            	
+	            }
 			}
-	    }
+		}		
+	}
+	    
+//	Remove Photo From albums
+    @Transactional
+    public void removePhotoFromAlbum(String albumName,Long profileId, Long photoId) {
+    	Photo photo = photoRepository.findById(photoId).orElseThrow(() -> new EntityNotFoundException("Photo not found"));
+    	// Fetching entities from the database
+    	Album album = getAlbumByName(profileId,albumName);
+        if (photo.getAlbums().isEmpty()) {
+        	throw  new RuntimeException("Photo of id :- "+photoId+" is Not Associate with Any Album.");
+		}else {
+			Set<Album> photoAlbums = photo.getAlbums();
+        
+	        // Check if the photo is in the specified album
+	        if (photoAlbums.contains(album)) {
+	            // Remove the photo from the album
+	            album.getPhotos().remove(photo);
+	            photo.getAlbums().remove(album);
+	            
+	            // Save the updated entities to the database
+	            albumRepository.save(album);
+	            photoRepository.save(photo);
+	        } else {
+	            throw new RuntimeException("Photo of id :- " + photoId + " is Not Associated with Album :- " + albumName + " .");
+	        }
+		}
+    }
 	
-
-
+//	Remove Entire Album.
 	public String removeAlbumByAlbumName(Long profileId, String albumName) {
 		Album fetchAlbum = getAlbumByName(profileId, albumName);
 		

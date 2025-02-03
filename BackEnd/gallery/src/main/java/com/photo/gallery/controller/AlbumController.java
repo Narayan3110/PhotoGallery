@@ -67,12 +67,12 @@ public class AlbumController {
     }
 
     // Rename an album
-    @PutMapping("/rename/{albumName}")
-    public ResponseEntity<?> renameAlbumName(@PathVariable String albumName, @RequestBody JsonNode jsonNode) {
+    @PutMapping("/rename/{profileId}")
+    public ResponseEntity<?> renameAlbumName(@PathVariable Long profileId, @RequestBody JsonNode jsonNode) {
         try {
-            String newAlbumName = jsonNode.get("albumName").asText();
-            Long profileId = jsonNode.get("profileId").asLong();
-            Album updatedAlbum = albumService.updateAlbumName(profileId, albumName, newAlbumName);
+        	String currAlbumName = jsonNode.get("currAlbumName").asText();
+            String newAlbumName = jsonNode.get("newAlbumName").asText();
+            Album updatedAlbum = albumService.updateAlbumName(profileId, currAlbumName, newAlbumName);
             return ResponseEntity.ok(updatedAlbum);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
