@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 import albumService from "../services/albumService";
 
 const AlbumPage = () => {
@@ -7,8 +8,10 @@ const AlbumPage = () => {
   const [selectedAlbum, setSelectedAlbum] = useState(null);
   const [renameModal, setRenameModal] = useState(false);
   const [newAlbumName, setNewAlbumName] = useState("");
-  const [createAlbumModal, setCreateAlbumModal] = useState(false); // State for add album modal
-  const [albumName, setAlbumName] = useState(""); // State for new album name
+  const [createAlbumModal, setCreateAlbumModal] = useState(false);
+  const [albumName, setAlbumName] = useState("");
+
+  const navigate = useNavigate(); // Initialize useNavigate
 
   // Get profileId from local storage
   const user = JSON.parse(localStorage.getItem("user"));
@@ -38,11 +41,20 @@ const AlbumPage = () => {
     });
   };
 
+  // Handle album click to redirect to album detail page
+  const handleAlbumClick = (albumId) => {
+    navigate(`/album/${albumId}`); // Redirect to the album detail page with the correct albumId
+  };
+
   // Rename Album
   const handleRenameAlbum = async () => {
     if (!newAlbumName.trim()) return;
     try {
-      await albumService.renameAlbum(profileId, selectedAlbum.albumName, newAlbumName);
+      await albumService.renameAlbum(
+        profileId,
+        selectedAlbum.albumName,
+        newAlbumName
+      );
       setRenameModal(false);
       setContextMenu(null);
       fetchAlbums(); // Refresh album list
@@ -67,7 +79,7 @@ const AlbumPage = () => {
   const handleCreateAlbum = async () => {
     if (!albumName.trim()) return;
     try {
-      await albumService.addAlbum(profileId, { albumName }); // Make the POST request to create the album
+      await albumService.addAlbum(profileId, { albumName });
       setCreateAlbumModal(false);
       setAlbumName(""); // Clear the input after creation
       fetchAlbums(); // Refresh album list
@@ -94,9 +106,10 @@ const AlbumPage = () => {
         {albums.length > 0 ? (
           albums.map((album) => (
             <div
-              key={album.id}
+              key={album.albumId} // Use albumId instead of id
               className="p-4 border rounded-lg bg-gray-100 cursor-pointer"
               onContextMenu={(e) => handleRightClick(e, album)}
+              onClick={() => handleAlbumClick(album.albumId)} // Pass the correct albumId here
             >
               📁 <span>{album.albumName}</span>
             </div>
