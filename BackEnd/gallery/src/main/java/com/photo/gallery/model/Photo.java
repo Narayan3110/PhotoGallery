@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "photos")
 public class Photo {
@@ -14,10 +16,12 @@ public class Photo {
     private Long photoId;
 
     // Many-to-one relationship with UserProfile
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "profile_id", referencedColumnName = "profile_id", nullable = false)
     private UserProfile userProfile;  // ✅ Each photo is linked to one user profile
 
+    @JsonIgnore
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
         name = "photo_album",

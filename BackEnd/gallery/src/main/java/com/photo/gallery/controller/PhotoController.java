@@ -1,5 +1,8 @@
 package com.photo.gallery.controller;
 import com.photo.gallery.service.PhotoService;
+
+import jakarta.persistence.EntityNotFoundException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,23 +20,27 @@ public class PhotoController {
     @Autowired
     private PhotoService photoService;
 
- // Upload photo
+ // Upload photo Added AlbumName Optional attribute required = false
     @PostMapping("/upload")
     public ResponseEntity<String> uploadPhoto(
             @RequestParam("profile_id") Long profileId,
-            @RequestParam("photo") MultipartFile file) throws IOException {
+            @RequestParam("photo") MultipartFile file,
+            @RequestParam(value = "album_name", required = false) String albumName) throws IOException {
 
         // Call the service method to upload the photo and get the result
-        String publicId = photoService.uploadPhoto(
-                profileId, file.getBytes(), file.getOriginalFilename(),
-                file.getContentType(), file.getSize()
-        );
-
-        if (publicId != null) {
-            return ResponseEntity.ok(publicId); // Return publicId as part of the response
-        } else {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error uploading photo.");
-        }
+		try {String publicId = photoService.uploadPhoto(
+				profileId, file.getBytes(), file.getOriginalFilename(),
+		        file.getContentType(), file.getSize(), albumName
+		        );
+		
+		        if (publicId != null) {
+		            return ResponseEntity.ok(publicId); // Return publicId as part of the response
+		        } else {
+		            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error uploading photo.");
+		        }
+		}catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+		}
     }
 
 
@@ -56,5 +63,4 @@ public class PhotoController {
                 ? ResponseEntity.ok("Photo deleted successfully!")
                 : ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to delete photo.");
     }
-
 }

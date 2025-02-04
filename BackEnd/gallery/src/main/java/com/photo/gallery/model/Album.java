@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Set;
 
+import org.hibernate.annotations.CreationTimestamp;
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
@@ -27,7 +29,8 @@ public class Album {
 
     @Column(name = "album_name")
     private String albumName; // Album name
-
+    
+    @CreationTimestamp
     @Column(name = "created_at")
     private LocalDateTime createdAt; // Timestamp when album was created
 

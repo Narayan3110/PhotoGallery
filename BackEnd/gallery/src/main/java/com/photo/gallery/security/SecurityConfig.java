@@ -49,7 +49,7 @@ public class SecurityConfig {
 //				.requestMatchers("/api/users/verify").permitAll()
 				.requestMatchers("/api/photo/**").permitAll()
 				.requestMatchers("/api/userprofile/**").permitAll()
-//				.requestMatchers("/api/photo/upload").permitAll()
+				.requestMatchers("/api/photo/upload").permitAll()
 				.requestMatchers("/api/photo/delete/**").permitAll()
 				.requestMatchers("/api/album/**").permitAll()
 				.requestMatchers("/api/admin/**").hasAuthority("ADMIN").anyRequest().authenticated());

@@ -1,17 +1,24 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../redux/authSlice";
-// import logo from "../assets/logo.jpg";
+import { useState } from "react";
+import { User, Settings, LogOut, Users, Bell, HelpCircle } from "lucide-react";
 
 const Navbar = () => {
   const user = useSelector((state) => state.auth.user);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const handleLogout = () => {
     dispatch(logout());
     localStorage.removeItem("token");
     sessionStorage.removeItem("token");
-    window.location.href = "/login";
+    navigate("/login");
+  };
+
+  const toggleDropdown = () => {
+    setIsDropdownOpen((prev) => !prev);
   };
 
   return (
@@ -35,7 +42,6 @@ const Navbar = () => {
                 Contact
               </Link>
             </li>
-            {/* Conditionally render Gallery link if user is logged in */}
             {user && (
               <li>
                 <Link to="/gallery" className="hover:text-orange-500">
@@ -54,17 +60,80 @@ const Navbar = () => {
             />
           </div>
 
-          {/* Right Section - Register/Login Button */}
-          <div>
+          {/* Right Section - Profile or Login/Register */}
+          <div className="relative flex items-center space-x-4">
             {user ? (
-              <button
-                onClick={handleLogout}
-                className="bg-red-500 text-white px-3 py-1 rounded-lg hover:bg-red-600 transition"
-              >
-                Logout
-              </button>
-            ) : (
               <>
+                <img
+                  src={user.profilePic || "https://via.placeholder.com/40"}
+                  alt="Profile"
+                  className="h-10 w-10 rounded-full cursor-pointer border-2 border-gray-300 hover:border-blue-500"
+                  onClick={toggleDropdown}
+                />
+
+                <button
+                  onClick={handleLogout}
+                  className="flex items-center bg-red-500 text-white px-3 py-1 rounded-lg hover:bg-red-600 transition"
+                >
+                  <LogOut className="h-5 w-5 mr-1" /> Logout
+                </button>
+
+                {isDropdownOpen && (
+                  <div>
+                  <div className="absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-lg border p-4">
+                    <div className="flex items-center space-x-3 border-b pb-3 mb-3">
+                      <img
+                        src={user.profilePic || "https://via.placeholder.com/40"}
+                        alt="Profile"
+                        className="h-10 w-10 rounded-full"
+                      />
+                      <div>
+                        <p className="font-semibold text-gray-800">{user.name || "John Doe"}</p>
+                        <p className="text-sm text-gray-500">{user.email || "email@example.com"}</p>
+                      </div>
+                    </div>
+
+                    <ul className="space-y-2">
+                      <li>
+                        <Link to="/profile" className="flex items-center p-2 hover:bg-gray-100 rounded-md">
+                          <User className="h-5 w-5 mr-2" /> View Profile
+                        </Link>
+                      </li>
+                      <li>
+                        <Link to="/settings" className="flex items-center p-2 hover:bg-gray-100 rounded-md">
+                          <Settings className="h-5 w-5 mr-2" /> Settings
+                        </Link>
+                      </li>
+                      <li>
+                        <Link to="/notifications" className="flex items-center p-2 hover:bg-gray-100 rounded-md">
+                          <Bell className="h-5 w-5 mr-2" /> Notifications
+                        </Link>
+                      </li>
+                      <li>
+                        <Link to="/team" className="flex items-center p-2 hover:bg-gray-100 rounded-md">
+                          <Users className="h-5 w-5 mr-2" /> Team
+                        </Link>
+                      </li>
+                      <li>
+                        <Link to="/support" className="flex items-center p-2 hover:bg-gray-100 rounded-md">
+                          <HelpCircle className="h-5 w-5 mr-2" /> Support
+                        </Link>
+                      </li>
+                    </ul>
+                    </div>
+                    <div className="border-t pt-3 mt-3">
+                      <button
+                        onClick={handleLogout}
+                        className="w-full flex items-center justify-center py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
+                      >
+                        <LogOut className="h-5 w-5 mr-2" /> Sign Out
+                      </button>
+                  </div>
+                  </div>
+                )}
+              </>
+            ) : (
+              <div className="flex space-x-2">
                 <Link
                   to="/login"
                   className="bg-orange-500 text-white px-3 py-1 rounded-lg hover:bg-orange-600 transition"
@@ -73,11 +142,11 @@ const Navbar = () => {
                 </Link>
                 <Link
                   to="/register"
-                  className="bg-orange-500 text-white px-3 py-1 rounded-lg hover:bg-orange-600 transition ml-2"
+                  className="bg-orange-500 text-white px-3 py-1 rounded-lg hover:bg-orange-600 transition"
                 >
                   Register
                 </Link>
-              </>
+              </div>
             )}
           </div>
         </div>
