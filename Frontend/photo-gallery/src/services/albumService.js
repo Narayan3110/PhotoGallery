@@ -26,7 +26,7 @@ const albumService = {
   // },
   getAlbumPhotos: async (albumId) => {
     try {
-      const response = await axios.get(`${API_BASE_URL}/get/${albumId}`);
+      const response = await axios.get(`${API_BASE_URL}/get/photos/${albumId}`);
 
       // Return both album details and photo URLs
       const albumData = {
