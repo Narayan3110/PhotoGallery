@@ -9,8 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/album")
@@ -45,15 +48,17 @@ public class AlbumController {
     }
 
     // Get an album by ID
-    @GetMapping("/get/{id}")
-    public ResponseEntity<?> getAlbumById(@PathVariable Long id) {
-        Optional<Album> album = albumService.getAlbumById(id);
-        if (album.isPresent()) {
-        	return ResponseEntity.ok(album); 
-        }else{
-        	return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Album of Id:- "+id+" Is Not Found");
+    @GetMapping("/all/{id}")
+    public ResponseEntity<?> listAllAlbums(@PathVariable Long id) {
+        System.out.println("Profile Id :"+id);
+        try{
+            List<Album> albums = albumService.getAllAlbum(id);
+            return ResponseEntity.ok(albums);
+        }catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
+
 
     // Search for an album
     @GetMapping("/search/{id}/{albumName}")
@@ -67,28 +72,64 @@ public class AlbumController {
     }
 
     // Rename an album
-    @PutMapping("/rename/{profileId}")
-    public ResponseEntity<?> renameAlbumName(@PathVariable Long profileId, @RequestBody JsonNode jsonNode) {
+    @PutMapping("/rename/{albumName}")
+    public ResponseEntity<?> renameAlbumName(
+            @PathVariable String albumName,
+            @RequestBody JsonNode jsonNode) {
         try {
-        	String currAlbumName = jsonNode.get("currAlbumName").asText();
-            String newAlbumName = jsonNode.get("newAlbumName").asText();
-            Album updatedAlbum = albumService.updateAlbumName(profileId, currAlbumName, newAlbumName);
+            // Extract the new album name and profileId from the request body
+            String newAlbumName = jsonNode.get("albumName").asText();
+            Long profileId = jsonNode.get("profileId").asLong();
+
+            // Call the service layer to update the album name for the specific profile
+            Album updatedAlbum = albumService.updateAlbumName(profileId, albumName, newAlbumName);
+
+            // Return the updated album
             return ResponseEntity.ok(updatedAlbum);
         } catch (Exception e) {
+            // Return an error response if something goes wrong
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 
     // List all albums for a profile
-    @GetMapping("/all/{id}")
-    public ResponseEntity<?> listAllAlbums(@PathVariable Long id) {
-        try {
-            List<Album> albums = albumService.getAllAlbum(id);
-            return ResponseEntity.ok(albums);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+//    @GetMapping("/all/{id}")
+//    public ResponseEntity<?> listAllAlbums(@PathVariable Long id) {
+//        try {
+//            List<Album> albums = albumService.getAllAlbum(id);
+//            return ResponseEntity.ok(albums);
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+//        }
+//    }
+
+    @GetMapping("/get/photos/{id}")
+    public ResponseEntity<?> getAlbumPhotoById(@PathVariable Long id) {
+        Optional<Album> albumOpt = albumService.getAlbumById(id);
+
+        if (albumOpt.isPresent()) {
+            Album album = albumOpt.get();
+
+            // Extract photo URLs
+            List<String> photoUrls = album.getPhotos().stream()
+                    .map(Photo::getPhotoUrl)
+                    .collect(Collectors.toList());
+
+            // Create a response object with album details and photo URLs
+            Map<String, Object> response = new HashMap<>();
+            response.put("albumName", album.getAlbumName());
+            response.put("createdAt", album.getCreatedAt());
+            response.put("photoUrls", photoUrls);
+
+            return ResponseEntity.ok(response);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Album with ID " + id + " not found.");
         }
     }
+
+
+
 
     // Move a photo from one album to another
     @PutMapping("/move-from-album")
