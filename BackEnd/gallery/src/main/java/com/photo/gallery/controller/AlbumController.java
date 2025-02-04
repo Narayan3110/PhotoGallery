@@ -82,7 +82,6 @@ public class AlbumController {
     // List all albums for a profile
     @GetMapping("/all/{id}")
     public ResponseEntity<?> listAllAlbums(@PathVariable Long id) {
-        System.out.println("Profile ID: " + id);
         try {
             List<Album> albums = albumService.getAllAlbum(id);
             return ResponseEntity.ok(albums);
