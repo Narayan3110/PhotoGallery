@@ -4,6 +4,7 @@ import {
   fetchPhotos,
   deletePhoto,
 } from "../services/photoService"; // Import deletePhoto function
+import GalleryNavbar from "../components/GalleryNavbar"; // Import GalleryNavbar
 
 const GalleryPage = () => {
   const [photos, setPhotos] = useState([]); // To hold the fetched photos
@@ -118,87 +119,92 @@ const GalleryPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-r from-blue-400 via-purple-500 to-pink-600 text-white p-6">
-      <h1 className="text-3xl font-semibold text-center mb-8">
-        Your Photo Gallery
-      </h1>
+    <div className="flex">
+      {/* Gallery Navbar on the left */}
+      <GalleryNavbar />
 
-      {/* Upload photo button and file input */}
-      <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg text-gray-800">
-        <h2 className="text-xl font-semibold text-center mb-4">
-          Upload New Photo
-        </h2>
-        <div className="flex justify-center items-center gap-4">
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleFileChange}
-            className="p-2 border border-gray-300 rounded-lg"
-          />
-          <button
-            onClick={handleFileUpload}
-            className="bg-blue-600 text-white p-2 rounded-lg transition-all duration-300 hover:bg-blue-700"
-            disabled={loading}
-          >
-            {loading ? "Uploading..." : "Upload Photo"}
-          </button>
-        </div>
-      </div>
+      <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-r from-blue-400 via-purple-500 to-pink-600 text-white p-6 ml-64 w-full">
+        <h1 className="text-3xl font-semibold text-center mb-8">
+          Your Photo Gallery
+        </h1>
 
-      {/* Display success/error message */}
-      {message && (
-        <p className="mt-6 text-xl text-center text-yellow-200">{message}</p>
-      )}
-
-      {/* Display photos */}
-      <div className="mt-8 w-full">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {photos.length === 0 ? (
-            <p className="col-span-full text-center text-lg text-gray-200">
-              No photos available.
-            </p>
-          ) : (
-            photos.map((photo, index) => (
-              <div
-                key={photo.publicId} // Use publicId for key
-                className="relative overflow-hidden rounded-lg shadow-xl transition-transform transform hover:scale-105 cursor-pointer"
-                onClick={() => openModal(photo.photoUrl, photo.publicId)} // Pass photoUrl and publicId
-              >
-                <img
-                  src={photo.photoUrl}
-                  alt={`Photo ${index + 1}`}
-                  className="w-full h-64 object-cover rounded-lg"
-                />
-              </div>
-            ))
-          )}
-        </div>
-      </div>
-
-      {/* Modal for viewing the clicked photo */}
-      {selectedPhoto && (
-        <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50">
-          <div className="relative max-w-4xl max-h-[90vh]">
-            <button
-              onClick={closeModal}
-              className="absolute top-4 right-4 text-white text-3xl bg-black p-2 rounded-full"
-            >
-              ×
-            </button>
-            <img
-              src={selectedPhoto}
-              alt="Selected Photo"
-              className="w-full h-auto rounded-lg shadow-2xl"
+        {/* Upload photo button and file input */}
+        <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg text-gray-800">
+          <h2 className="text-xl font-semibold text-center mb-4">
+            Upload New Photo
+          </h2>
+          <div className="flex justify-center items-center gap-4">
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
+              className="p-2 border border-gray-300 rounded-lg"
             />
             <button
-              onClick={handleDeletePhoto}
-              className="absolute bottom-4 right-4 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition"
+              onClick={handleFileUpload}
+              className="bg-blue-600 text-white p-2 rounded-lg transition-all duration-300 hover:bg-blue-700"
+              disabled={loading}
             >
-              Delete Photo
+              {loading ? "Uploading..." : "Upload Photo"}
             </button>
           </div>
         </div>
-      )}
+
+        {/* Display success/error message */}
+        {message && (
+          <p className="mt-6 text-xl text-center text-yellow-200">{message}</p>
+        )}
+
+        {/* Display photos */}
+        <div className="mt-8 w-full">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {photos.length === 0 ? (
+              <p className="col-span-full text-center text-lg text-gray-200">
+                No photos available.
+              </p>
+            ) : (
+              photos.map((photo, index) => (
+                <div
+                  key={photo.publicId} // Use publicId for key
+                  className="relative overflow-hidden rounded-lg shadow-xl transition-transform transform hover:scale-105 cursor-pointer"
+                  onClick={() => openModal(photo.photoUrl, photo.publicId)} // Pass photoUrl and publicId
+                >
+                  <img
+                    src={photo.photoUrl}
+                    alt={`Photo ${index + 1}`}
+                    className="w-full h-64 object-cover rounded-lg"
+                  />
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+
+        {/* Modal for viewing the clicked photo */}
+        {selectedPhoto && (
+          <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50">
+            <div className="relative max-w-4xl max-h-[90vh]">
+              <button
+                onClick={closeModal}
+                className="absolute top-4 right-4 text-white text-3xl bg-black p-2 rounded-full"
+              >
+                ×
+              </button>
+              <img
+                src={selectedPhoto}
+                alt="Selected Photo"
+                className="w-full h-auto rounded-lg shadow-2xl"
+              />
+              <button
+                onClick={handleDeletePhoto}
+                className="absolute bottom-4 right-4 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition"
+              >
+                Delete Photo
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

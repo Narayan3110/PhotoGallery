@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import Navbar from "./components/Navbar.jsx";
 import GalleryPage from "./pages/GalleryPage.jsx";
 import ContactPage from "./pages/ContactPage.jsx";
@@ -12,13 +12,20 @@ import { useSelector } from "react-redux";
 import NewPasswordPage from "./pages/NewPasswordPage.jsx";
 import ResetEmail from "./pages/ResetEmail.jsx";
 import AlbumPage from "./pages/AlbumPage.jsx";
+import AlbumDetailPage from "./pages/AlbumDetailPage.jsx";
+import GalleryNavbar from "./components/GalleryNavbar.jsx"; // Import GalleryNavbar
 
 const App = () => {
   const user = useSelector((state) => state.auth.user); // Check if user is logged in
+  const location = useLocation(); // Get current route
+
+  // Check if the current path is related to the gallery (you can customize this further if needed)
+  const isGalleryPage = location.pathname.startsWith("/gallery");
 
   return (
     <>
-      <Navbar />
+      {/* Conditionally render Navbar or GalleryNavbar based on the route */}
+      {isGalleryPage ? <GalleryNavbar /> : <Navbar />}
 
       <Routes>
         <Route path="/" element={<NewHomePage />} />
@@ -29,6 +36,7 @@ const App = () => {
           element={user ? <GalleryPage /> : <Navigate to="/login" />}
         />
         <Route path="/albums" element={<AlbumPage />} />
+        <Route path="/album/:albumId" element={<AlbumDetailPage />} />
         <Route path="/verify" element={<VerifyPage />} />
         <Route path="/about" element={<AboutUsPage />} />
         <Route path="/contact" element={<ContactPage />} />
