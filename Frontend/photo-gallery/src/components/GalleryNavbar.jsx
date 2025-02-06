@@ -8,17 +8,17 @@ const GalleryNavbar = () => {
 
   const handleLogout = () => {
     dispatch(logout());
-    localStorage.removeItem("token");
-    sessionStorage.removeItem("token");
+    localStorage.clear();
+    sessionStorage.clear();
     window.location.href = "/login";
   };
 
   return (
     <div className="relative">
-      <nav className="bg-white shadow-sm fixed h-screen w-64 top-0 z-50 py-4">
+      <nav className="bg-white shadow-md justify-center fixed h-screen w-48 top-0 z-50 py-4 pl-8 pt-12 grid grid-rows-3 gap-y-4">
         <div className="flex flex-col items-start px-6 space-y-6">
           {/* Left Section - Navigation Links */}
-          <ul className="flex flex-col space-y-4 text-gray-800 font-medium">
+          <ul className="flex flex-col space-y-12 text-gray-800 font-medium ">
             <li>
               <Link to="/" className="hover:text-orange-500">
                 Home
@@ -47,7 +47,7 @@ const GalleryNavbar = () => {
           </ul>
 
           {/* Logout Button at the bottom */}
-          <div className="mt-auto">
+          <div className="mt-auto pt-12">
             {user ? (
               <button
                 onClick={handleLogout}
