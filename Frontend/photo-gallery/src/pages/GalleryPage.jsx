@@ -110,6 +110,7 @@ const GalleryPage = () => {
   };
 
   const handleDeletePhoto = async () => {
+    console.log("Selecgted photo id :" + selectedPhotoId);
     try {
       const response = await deletePhoto(selectedPhotoId);
       if (response) {
