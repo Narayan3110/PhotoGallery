@@ -12,8 +12,10 @@ const Navbar = () => {
 
   const handleLogout = () => {
     dispatch(logout());
-    localStorage.removeItem("token");
-    sessionStorage.removeItem("token");
+    // Remove all authentication-related storage
+    localStorage.clear();
+    sessionStorage.clear();
+
     navigate("/login");
   };
 
@@ -80,46 +82,67 @@ const Navbar = () => {
 
                 {isDropdownOpen && (
                   <div>
-                  <div className="absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-lg border p-4">
-                    <div className="flex items-center space-x-3 border-b pb-3 mb-3">
-                      <img
-                        src={user.profilePic || "https://via.placeholder.com/40"}
-                        alt="Profile"
-                        className="h-10 w-10 rounded-full"
-                      />
-                      <div>
-                        <p className="font-semibold text-gray-800">{user.name || "John Doe"}</p>
-                        <p className="text-sm text-gray-500">{user.email || "email@example.com"}</p>
+                    <div className="absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-lg border p-4">
+                      <div className="flex items-center space-x-3 border-b pb-3 mb-3">
+                        <img
+                          src={
+                            user.profilePic || "https://via.placeholder.com/40"
+                          }
+                          alt="Profile"
+                          className="h-10 w-10 rounded-full"
+                        />
+                        <div>
+                          <p className="font-semibold text-gray-800">
+                            {user.name || "John Doe"}
+                          </p>
+                          <p className="text-sm text-gray-500">
+                            {user.email || "email@example.com"}
+                          </p>
+                        </div>
                       </div>
-                    </div>
 
-                    <ul className="space-y-2">
-                      <li>
-                        <Link to="/profile" className="flex items-center p-2 hover:bg-gray-100 rounded-md">
-                          <User className="h-5 w-5 mr-2" /> View Profile
-                        </Link>
-                      </li>
-                      <li>
-                        <Link to="/settings" className="flex items-center p-2 hover:bg-gray-100 rounded-md">
-                          <Settings className="h-5 w-5 mr-2" /> Settings
-                        </Link>
-                      </li>
-                      <li>
-                        <Link to="/notifications" className="flex items-center p-2 hover:bg-gray-100 rounded-md">
-                          <Bell className="h-5 w-5 mr-2" /> Notifications
-                        </Link>
-                      </li>
-                      <li>
-                        <Link to="/team" className="flex items-center p-2 hover:bg-gray-100 rounded-md">
-                          <Users className="h-5 w-5 mr-2" /> Team
-                        </Link>
-                      </li>
-                      <li>
-                        <Link to="/support" className="flex items-center p-2 hover:bg-gray-100 rounded-md">
-                          <HelpCircle className="h-5 w-5 mr-2" /> Support
-                        </Link>
-                      </li>
-                    </ul>
+                      <ul className="space-y-2">
+                        <li>
+                          <Link
+                            to="/profile"
+                            className="flex items-center p-2 hover:bg-gray-100 rounded-md"
+                          >
+                            <User className="h-5 w-5 mr-2" /> View Profile
+                          </Link>
+                        </li>
+                        <li>
+                          <Link
+                            to="/settings"
+                            className="flex items-center p-2 hover:bg-gray-100 rounded-md"
+                          >
+                            <Settings className="h-5 w-5 mr-2" /> Settings
+                          </Link>
+                        </li>
+                        <li>
+                          <Link
+                            to="/notifications"
+                            className="flex items-center p-2 hover:bg-gray-100 rounded-md"
+                          >
+                            <Bell className="h-5 w-5 mr-2" /> Notifications
+                          </Link>
+                        </li>
+                        <li>
+                          <Link
+                            to="/team"
+                            className="flex items-center p-2 hover:bg-gray-100 rounded-md"
+                          >
+                            <Users className="h-5 w-5 mr-2" /> Team
+                          </Link>
+                        </li>
+                        <li>
+                          <Link
+                            to="/support"
+                            className="flex items-center p-2 hover:bg-gray-100 rounded-md"
+                          >
+                            <HelpCircle className="h-5 w-5 mr-2" /> Support
+                          </Link>
+                        </li>
+                      </ul>
                     </div>
                     <div className="border-t pt-3 mt-3">
                       <button
@@ -128,7 +151,7 @@ const Navbar = () => {
                       >
                         <LogOut className="h-5 w-5 mr-2" /> Sign Out
                       </button>
-                  </div>
+                    </div>
                   </div>
                 )}
               </>

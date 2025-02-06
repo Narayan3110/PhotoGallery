@@ -5,8 +5,8 @@ import { useDispatch } from "react-redux";
 import { login } from "../redux/authSlice"; // Import the login action
 
 const LoginPage = () => {
-  const [usernameOrEmail, setUsernameOrEmail] = useState("Admin1");
-  const [password, setPassword] = useState("Sanm@3004");
+  const [usernameOrEmail, setUsernameOrEmail] = useState("TestEmail");
+  const [password, setPassword] = useState("123");
   const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -42,7 +42,7 @@ const LoginPage = () => {
         } else {
           sessionStorage.setItem("token", response.token);
         }
-        window.location.href = "/";
+        window.location.href = "/gallery";
       }
     } catch (err) {
       console.error("Login failed:", err);

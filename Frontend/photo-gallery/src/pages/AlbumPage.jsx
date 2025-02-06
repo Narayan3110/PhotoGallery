@@ -43,7 +43,8 @@ const AlbumPage = () => {
 
   // Handle album click to redirect to album detail page
   const handleAlbumClick = (albumId) => {
-    navigate(`/album/${albumId}`); // Redirect to the album detail page with the correct albumId
+    navigate(`/album/${albumId}`);
+    // Redirect to the album detail page with the correct albumId
   };
 
   // Rename Album
