@@ -35,12 +35,7 @@ const albumService = {
   getAlbumPhotos: async (albumId) => {
     try {
       const response = await api.get(`/get/photos/${albumId}`); // Uses Axios instance
-      const albumData = {
-        albumName: response.data.albumName,
-        createdAt: response.data.createdAt,
-        photoUrls: response.data.photoUrls,
-      };
-      return albumData;
+      return response.data; // Return the entire response data as is
     } catch (error) {
       console.error("Error fetching album photos:", error);
       throw error;
@@ -95,10 +90,60 @@ const albumService = {
       console.log("Album Id :" + albumId);
       console.log("Photo Id (publicId):" + publicId);
 
-      const response = await api.post(`/add-photo/${albumId}`, { publicId });
+      const response = await api.post(`/add-photo/${albumId}`, { publicId }); // Correctly formatted
       return response.data;
     } catch (error) {
       console.error("Error adding photo to album:", error);
+      throw error;
+    }
+  },
+
+  removePhotoFromAlbum: async (albumName, profileId, publicId) => {
+    console.log(
+      "albumName :" + albumName,
+      "profileId :" + profileId,
+      "publicId :" + publicId
+    );
+    try {
+      const response = await api.delete(`/remove-from-album`, {
+        params: { albumName, profileId, publicId },
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Error removing photo:", error);
+      throw error;
+    }
+  },
+
+  uploadPhotoToAlbum: async (profileId, file, albumName) => {
+    const formData = new FormData();
+    formData.append("profile_id", profileId);
+    formData.append("photo", file);
+    formData.append("album_name", albumName);
+
+    try {
+      const response = await api.post(
+        `http://localhost:9090/api/photo/upload`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error uploading photo:", error);
+      throw error;
+    }
+  },
+
+  searchAlbum: async (profileId, albumName) => {
+    try {
+      const response = await api.get(`/search/${profileId}/${albumName}`);
+      return response.data;
+    } catch (error) {
+      console.error("Error searching for album:", error);
       throw error;
     }
   },

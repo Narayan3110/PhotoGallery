@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { useNavigate } from "react-router-dom";
 import albumService from "../services/albumService";
 
 const AlbumPage = () => {
@@ -10,8 +10,10 @@ const AlbumPage = () => {
   const [newAlbumName, setNewAlbumName] = useState("");
   const [createAlbumModal, setCreateAlbumModal] = useState(false);
   const [albumName, setAlbumName] = useState("");
+  const [searchTerm, setSearchTerm] = useState(""); // State for search term
+  const [searchResults, setSearchResults] = useState(null); // State for search results
 
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate();
 
   // Get profileId from local storage
   const user = JSON.parse(localStorage.getItem("user"));
@@ -31,7 +33,6 @@ const AlbumPage = () => {
     }
   };
 
-  // Handle right-click to show context menu
   const handleRightClick = (event, album) => {
     event.preventDefault();
     setSelectedAlbum(album);
@@ -41,13 +42,10 @@ const AlbumPage = () => {
     });
   };
 
-  // Handle album click to redirect to album detail page
   const handleAlbumClick = (albumId) => {
     navigate(`/album/${albumId}`);
-    // Redirect to the album detail page with the correct albumId
   };
 
-  // Rename Album
   const handleRenameAlbum = async () => {
     if (!newAlbumName.trim()) return;
     try {
@@ -64,7 +62,6 @@ const AlbumPage = () => {
     }
   };
 
-  // Delete Album
   const handleDeleteAlbum = async () => {
     if (!selectedAlbum) return;
     try {
@@ -76,7 +73,6 @@ const AlbumPage = () => {
     }
   };
 
-  // Create Album
   const handleCreateAlbum = async () => {
     if (!albumName.trim()) return;
     try {
@@ -86,6 +82,17 @@ const AlbumPage = () => {
       fetchAlbums(); // Refresh album list
     } catch (error) {
       console.error("Error creating album:", error);
+    }
+  };
+
+  const handleSearchAlbum = async () => {
+    if (!searchTerm.trim()) return;
+    try {
+      const result = await albumService.searchAlbum(profileId, searchTerm);
+      setSearchResults(result);
+    } catch (error) {
+      console.error("Error searching for album:", error);
+      setSearchResults(null);
     }
   };
 
@@ -102,23 +109,54 @@ const AlbumPage = () => {
         </button>
       </div>
 
-      {/* Display Albums */}
-      <div className="grid grid-cols-4 gap-4">
-        {albums.length > 0 ? (
-          albums.map((album) => (
-            <div
-              key={album.albumId} // Use albumId instead of id
-              className="p-4 border rounded-lg bg-gray-100 cursor-pointer"
-              onContextMenu={(e) => handleRightClick(e, album)}
-              onClick={() => handleAlbumClick(album.albumId)} // Pass the correct albumId here
-            >
-              📁 <span>{album.albumName}</span>
-            </div>
-          ))
-        ) : (
-          <p>No albums found</p>
-        )}
+      {/* Search Bar */}
+      <div className="mb-8">
+        <input
+          type="text"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          placeholder="Search by album name"
+          className="border p-2 mr-2"
+        />
+        <button
+          onClick={handleSearchAlbum}
+          className="bg-green-500 text-white px-4 py-2 rounded"
+        >
+          Search
+        </button>
       </div>
+
+      {/* Display Search Results */}
+      {searchResults ? (
+        <div className="grid grid-cols-4 gap-4">
+          <div
+            className="p-4 border rounded-lg bg-gray-100 cursor-pointer"
+            onClick={() => handleAlbumClick(searchResults.albumId)}
+          >
+            📁 <span>{searchResults.albumName}</span>
+          </div>
+        </div>
+      ) : (
+        <>
+          {/* Display Albums */}
+          <div className="grid grid-cols-4 gap-4">
+            {albums.length > 0 ? (
+              albums.map((album) => (
+                <div
+                  key={album.albumId} // Use albumId instead of id
+                  className="p-4 border rounded-lg bg-gray-100 cursor-pointer"
+                  onContextMenu={(e) => handleRightClick(e, album)}
+                  onClick={() => handleAlbumClick(album.albumId)} // Pass the correct albumId here
+                >
+                  📁 <span>{album.albumName}</span>
+                </div>
+              ))
+            ) : (
+              <p>No albums found</p>
+            )}
+          </div>
+        </>
+      )}
 
       {/* Context Menu */}
       {contextMenu && (
