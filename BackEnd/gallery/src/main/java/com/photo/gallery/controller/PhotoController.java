@@ -1,8 +1,6 @@
 package com.photo.gallery.controller;
+
 import com.photo.gallery.service.PhotoService;
-
-import jakarta.persistence.EntityNotFoundException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,29 +18,21 @@ public class PhotoController {
     @Autowired
     private PhotoService photoService;
 
- // Upload photo Added AlbumName Optional attribute required = false
+    // Upload photo with optional album name
     @PostMapping("/upload")
     public ResponseEntity<String> uploadPhoto(
             @RequestParam("profile_id") Long profileId,
             @RequestParam("photo") MultipartFile file,
-            @RequestParam(value = "album_name", required = false) String albumName) throws IOException {
-
-        // Call the service method to upload the photo and get the result
-		try {String publicId = photoService.uploadPhoto(
-				profileId, file.getBytes(), file.getOriginalFilename(),
-		        file.getContentType(), file.getSize(), albumName
-		        );
-		
-		        if (publicId != null) {
-		            return ResponseEntity.ok(publicId); // Return publicId as part of the response
-		        } else {
-		            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error uploading photo.");
-		        }
-		}catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-		}
+            @RequestParam(value = "album_name", required = false) String albumName) {
+        try {
+            String publicId = photoService.uploadPhoto(profileId, file, albumName);
+            return publicId != null
+                    ? ResponseEntity.ok(publicId)
+                    : ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error uploading photo.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
-
 
     // Get all photo URLs by profileId
     @GetMapping("/{profileId}")
@@ -53,13 +43,10 @@ public class PhotoController {
                 : ResponseEntity.ok(photos);
     }
 
-
     // Delete photo by publicId
     @DeleteMapping("/delete")
-    public ResponseEntity<String> deletePhoto(@RequestParam String publicId) {
-//        System.out.println("Deleting photo with publicId: " + publicId);
-        boolean isDeleted = photoService.deletePhoto(publicId);
-        return isDeleted 
+    public ResponseEntity<String> deletePhoto(@RequestParam String publicId) throws IOException {
+        return photoService.deletePhoto(publicId)
                 ? ResponseEntity.ok("Photo deleted successfully!")
                 : ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to delete photo.");
     }
