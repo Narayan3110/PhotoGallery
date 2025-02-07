@@ -1,5 +1,6 @@
 package com.photo.gallery.service;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,7 @@ public class UserProfileService {
 	}
 	
 	// Method to update profile information (conditionally update based on input)
-    public String updateUserProfile(Long profileId, String address, String contact, String fullName, String profileUrl) {
+    public String updateUserProfile(Long profileId, String address, String contact, String fullName, String profileUrl,LocalDate dob, boolean removeProfile) {
         UserProfile userProfile = userProfileReposiotry.findById(profileId)
                 .orElseThrow(() -> new RuntimeException("UserProfile not found"));
 
@@ -42,6 +43,12 @@ public class UserProfileService {
         }
         if (profileUrl != null && !profileUrl.isEmpty()) {
             userProfile.setProfileUrl(profileUrl);
+        }
+        if (removeProfile) {
+        	userProfile.setProfileUrl(null);
+        }
+        if (dob != null) {
+        	userProfile.setDob(dob);
         }
 
         // Save updated profile

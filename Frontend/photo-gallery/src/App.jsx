@@ -14,6 +14,7 @@ import ResetEmail from "./pages/ResetEmail.jsx";
 import AlbumPage from "./pages/AlbumPage.jsx";
 import AlbumDetailPage from "./pages/AlbumDetailPage.jsx";
 import GalleryNavbar from "./components/GalleryNavbar.jsx"; // Import GalleryNavbar
+import Profile from "./pages/Profile.jsx";
 
 const App = () => {
   const user = useSelector((state) => state.auth.user); // Check if user is logged in
@@ -35,6 +36,7 @@ const App = () => {
           path="/gallery"
           element={user ? <GalleryPage /> : <Navigate to="/login" />}
         />
+        <Route path="/Profile" element={<Profile />} />
         <Route path="/albums" element={<AlbumPage />} />
         <Route path="/album/:albumId" element={<AlbumDetailPage />} />
         <Route path="/verify" element={<VerifyPage />} />
