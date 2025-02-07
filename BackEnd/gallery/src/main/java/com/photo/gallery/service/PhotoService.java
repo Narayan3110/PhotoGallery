@@ -1,4 +1,5 @@
 package com.photo.gallery.service;
+
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.photo.gallery.model.Album;
@@ -6,23 +7,12 @@ import com.photo.gallery.model.Photo;
 import com.photo.gallery.model.UserProfile;
 import com.photo.gallery.repository.AlbumRepository;
 import com.photo.gallery.repository.PhotoRepository;
-
-import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.awt.desktop.SystemEventListener;
+import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class PhotoService {
@@ -38,112 +28,97 @@ public class PhotoService {
 
     @Autowired
     private AlbumRepository albumRepository;
-    
-//	Get Photo By id
-    public Photo getPhotoById(Long profileId,Long id) {
-    	Photo photo = photoRepository.findById(id)
-    			.orElseThrow(() -> new RuntimeException("Photo of id:-"+id+" Not found"));
-    	if (photo.getUserProfile().getProfileId()==profileId) {
-    		return photo;			
-		}else {
-            throw new RuntimeException("In ProfileID:- " + profileId+" Photo With Id:- "+id+" Not Found.");
-		}
-	}
 
-    // Upload photo and store publicId
-    public String uploadPhoto(Long profileId, byte[] fileBytes, String originalFilename, String contentType, long fileSize , String albumName) {
-        try {
-            // Fetch user profile
-            UserProfile userProfile = userProfileService.findByProfileId(profileId);
+    // Upload photo
+    public String uploadPhoto(Long profileId, MultipartFile file, String albumName) throws IOException {
+        UserProfile userProfile = userProfileService.findByProfileId(profileId);
 
-            // Upload to Cloudinary
-            Map uploadResult = cloudinary.uploader().upload(fileBytes,
-                    ObjectUtils.asMap("folder", "user_photos/" + profileId));
+        // Upload photo to Cloudinary
+        Map uploadResult = cloudinary.uploader().upload(file.getBytes(),
+                ObjectUtils.asMap("folder", "user_photos/" + profileId));
 
-            String publicId = uploadResult.get("public_id").toString();
-            String photoUrl = uploadResult.get("secure_url").toString();
+        String publicId = uploadResult.get("public_id").toString();
+        String photoUrl = uploadResult.get("secure_url").toString();
 
-            // Save photo details in the database
-            Photo photo = new Photo();
-            photo.setUserProfile(userProfile);
-            photo.setFilename(originalFilename);
-            photo.setPublicId(publicId); // Store publicId
-            photo.setPhotoUrl(photoUrl);
-            photo.setFileSize(fileSize);
-            photo.setPhotoType(contentType);
-            photo.setUploadedAt(LocalDateTime.now());
+        // Save photo details
+        Photo photo = new Photo();
+        photo.setUserProfile(userProfile);
+        photo.setFilename(file.getOriginalFilename());
+        photo.setPublicId(publicId);
+        photo.setPhotoUrl(photoUrl);
+        photo.setFileSize(file.getSize());
+        photo.setPhotoType(file.getContentType());
+        photo.setUploadedAt(LocalDateTime.now());
 
-            // Save the photo to the repository
+        // Save the photo in the repository
+        photoRepository.save(photo);
+
+        // Associate photo with album if albumName is provided
+        if (albumName != null) {
+            associatePhotoWithAlbum(profileId, albumName, photo);
+        }
+
+        return publicId;
+    }
+
+    // Associate a photo with an album
+    private void associatePhotoWithAlbum(Long profileId, String albumName, Photo photo) {
+        Optional<Album> albumOptional = albumRepository.findByUserProfile_ProfileIdAndAlbumName(profileId, albumName);
+        if (albumOptional.isPresent()) {
+            Album album = albumOptional.get();
+            if (photo.getAlbums() == null) {
+                photo.setAlbums(new HashSet<>());
+            }
+            photo.getAlbums().add(album);
             photoRepository.save(photo);
-            
-//          If AlbumName Is Present Then Photo Will Associate With Album Directly.
-            if (albumName != null) {
-                // Fetch album by ID and associate it with the photo
-                Optional<Album> albumOptional = albumRepository.findByUserProfile_ProfileIdAndAlbumName(profileId, albumName);
-                if (albumOptional.isPresent()) {
-                    Album album = albumOptional.get();
-                    if (photo.getAlbums() == null) {
-                        photo.setAlbums(new HashSet<>());
-                    }
-                    photo.getAlbums().add(album);  // Add the album to the photo
-                    photoRepository.save(photo);  // Save the photo with album association
-                } else {
-                    // If album is not found, throw an exception or handle accordingly
-                    throw new RuntimeException("Album not found with Name:- " + albumName);
-                }
-            }
-            // Return the publicId after successful upload and save
-            return publicId;
-        } catch (IOException e) {
-            // Log the error and return null in case of an error
-            System.err.println("Error uploading photo: " + e.getMessage());
-            return null;
+        } else {
+            throw new RuntimeException("Album not found with Name: " + albumName);
         }
     }
-    
-//  Delete Method For photos
-    public boolean deletePhoto(String profileId) {
-        try {
-            Optional<Photo> photoOptional = photoRepository.findByPublicId(profileId);
 
-            if (photoOptional.isPresent()) {
-                Photo photo = photoOptional.get();
-                String pId = photo.getPublicId();
-                // Delete the photo from Cloudinary
-                Map result = cloudinary.uploader().destroy(pId, ObjectUtils.emptyMap());
-                System.out.println("Cloudinary delete response: " + result);
+    // Get a photo by ID and profileId
+    public Photo getPhotoById(Long profileId, Long id) {
+        Photo photo = photoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Photo with ID " + id + " not found"));
 
-                if ("ok".equals(result.get("result"))) {
-                    // Delete the photo record from the repository
-                    photoRepository.delete(photo);
-//                    System.out.println("Photo deleted from repository: " + photo.getId());
-                    return true;
-                } else {
-                    System.out.println("Failed to delete from Cloudinary: " + result.get("result"));
-                    return false; // Failed to delete from Cloudinary
-                }
-            } else {
-                System.out.println("Photo not found in repository.");
-                return false; // Photo not found
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false; // Error occurred during deletion
+        if (photo.getUserProfile().getProfileId().equals(profileId)) {
+            return photo;
+        } else {
+            throw new RuntimeException("Photo with ID " + id + " not found for Profile ID " + profileId);
         }
     }
-    
+
+    // Delete photo
+    public boolean deletePhoto(String publicId) throws IOException {
+        Optional<Photo> photoOptional = photoRepository.findByPublicId(publicId);
+
+        if (photoOptional.isPresent()) {
+            Photo photo = photoOptional.get();
+
+            // Delete from Cloudinary
+            Map result = cloudinary.uploader().destroy(photo.getPublicId(), ObjectUtils.emptyMap());
+
+            if ("ok".equals(result.get("result"))) {
+                // Delete from the database
+                photoRepository.delete(photo);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // Get all photos with publicId for a profileId
     public List<Map<String, String>> getPhotosWithPublicId(Long profileId) {
         List<Object[]> result = photoRepository.findPhotoUrlsAndPublicIdsByProfileId(profileId);
         List<Map<String, String>> photos = new ArrayList<>();
-        
+
         for (Object[] row : result) {
             Map<String, String> photo = new HashMap<>();
-            photo.put("publicId", (String) row[0]); // publicId is the first item
-            photo.put("photoUrl", (String) row[1]); // photoUrl is the second item
+            photo.put("publicId", (String) row[0]);
+            photo.put("photoUrl", (String) row[1]);
             photos.add(photo);
         }
-        
+
         return photos;
     }
-
 }
