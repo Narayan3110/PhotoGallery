@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/api/userprofile")
 public class UserProfileController {
@@ -24,11 +25,12 @@ public class UserProfileController {
             @RequestParam(required = false) String contact,
             @RequestParam(required = false) String fullName,
             @RequestParam(required = false) String profileUrl,
-            @RequestParam(required = false) LocalDate dob) {
+            @RequestParam(required = false) LocalDate dob,	//support yyyy-mm-dd format
+	    	@RequestParam(required = false) boolean removeProfile) {
     	
-    	System.out.println(profileId +" "+ address +" "+ fullName +" "+ profileUrl+" "+ dob);
+    	System.out.println(profileId +" "+ address +" "+ fullName +" "+contact+" "+ profileUrl+" "+ dob+" "+removeProfile);
         // Call the service to update the profile details
-        String message = userProfileService.updateUserProfile(profileId, address, contact, fullName, profileUrl);
+        String message = userProfileService.updateUserProfile(profileId, address, contact, fullName, profileUrl, dob, removeProfile);
 
         // Return the response
         return new ResponseEntity<>(message, HttpStatus.OK);

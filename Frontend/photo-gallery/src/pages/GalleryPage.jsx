@@ -4,9 +4,11 @@ import {
   fetchPhotos,
   deletePhoto,
 } from "../services/photoService";
+import { updateUserProfile } from "@/services/profileUpdateService";
 import albumService from "../services/albumService";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation  }from "react-router-dom";
 import GalleryNavbar from "../components/GalleryNavbar";
+import {useDispatch } from 'react-redux';
 
 const GalleryPage = () => {
   const [photos, setPhotos] = useState([]);
@@ -19,6 +21,9 @@ const GalleryPage = () => {
   const [selectedAlbumId, setSelectedAlbumId] = useState(null);
   const [showAlbumDropdown, setShowAlbumDropdown] = useState(false); // Control visibility of the album dropdown
   const navigate = useNavigate();
+  const location = useLocation();
+  const isProfileEditing = location.state || false; 
+  const dispatch = useDispatch();
 
   useEffect(() => {
     fetchUserPhotos();
@@ -148,6 +153,32 @@ const GalleryPage = () => {
     }
   };
 
+  // updated Profile Picture
+  const handleAddtoProfilePicture = async (e) => {
+    e.preventDefault();
+    const user = JSON.parse(localStorage.getItem("user"));
+    const profileId = user?.userProfile?.profileId;
+    // updated Data to send
+       const updatedUserData = {
+        profileUrl:selectedPhoto,
+       };
+       setMessage('');
+       setLoading(true);
+       try {
+         const response = await updateUserProfile(
+           profileId,
+           updatedUserData,
+           dispatch
+         );
+         alert(response);
+         navigate(`/profile`); 
+       } catch (error) {
+         setMessage("Error during updating Profile Picture. Please try again.");
+       } finally {
+         setLoading(false);
+       }
+     };
+
   return (
     <div className="flex">
       <GalleryNavbar />
@@ -156,9 +187,16 @@ const GalleryPage = () => {
           Your Photo Gallery
         </h1>
         <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg text-gray-800">
-          <h2 className="text-xl font-semibold text-center mb-4">
-            Upload New Photo
-          </h2>
+        { Boolean(isProfileEditing) ? (
+            <h2 className="text-xl font-semibold text-center mb-4">
+              Upload New Photo And Add to Profile Picture
+            </h2>
+            ) : (
+              <h2 className="text-xl font-semibold text-center mb-4">
+                Upload New Photo
+              </h2>
+            )
+          }
           <div className="flex justify-center items-center gap-4">
             <input
               type="file"
@@ -237,6 +275,14 @@ const GalleryPage = () => {
                 </div>
               )}
               <div className="absolute bottom-4 right-4 flex gap-4">
+                {isProfileEditing && (
+                  <button
+                    onClick={handleAddtoProfilePicture}
+                    className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700"
+                  >
+                    Add to ProfilePhoto
+                  </button> 
+                )}
                 <button
                   onClick={handleUploadToAlbum}
                   className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700"
