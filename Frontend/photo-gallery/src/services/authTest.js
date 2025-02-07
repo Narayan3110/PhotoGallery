@@ -34,6 +34,7 @@ export class AuthService {
 
   // Login user
   static async loginUser(usernameOrEmail, password, dispatch) {
+    console.log("Credentials : " + usernameOrEmail + " " + password);
     try {
       const response = await apiClient.post("/users/login", {
         userName: usernameOrEmail,
