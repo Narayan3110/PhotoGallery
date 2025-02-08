@@ -198,7 +198,7 @@ const Profile = () => {
         
         {/* Sidebar Nav */}
         <div className='flex mt-28 mb-10 p-10'>
-        <div className='w-1/6 ml-10 bg-white text-center p-4 rounded-lg shadow'>
+          <div className='w-1/6 ml-10 bg-white text-center p-4 rounded-lg shadow'>
             <aside className="bg-white">
               <nav className="flex flex-col gap-6 p-4">
                 <button

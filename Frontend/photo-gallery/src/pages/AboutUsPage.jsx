@@ -26,7 +26,7 @@ const MapMarker = ({ style ,locationName }) => {
 };
 const AboutUsPage = () => {
     return (
-      <div className='flex flex-col items-center py-20 md:py-[50px] gap-3 md:gap-10 w-full'>
+      <div className='flex flex-col mt-10 items-center py-20 md:py-[50px] gap-3 md:gap-10 w-full'>
         <div className='flex flex-col p-10 pt-0 gap-8 w-full max-w-7xl mx-auto'>
           <h1 className='text-[32px] md:text-[80px] font-bold text-center text-neutral-900 leading-[1.38] md:leading-[88px]'>
           <span> About </span><span className='text-blue-600'>Photo Gallery</span>
