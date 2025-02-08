@@ -41,10 +41,18 @@ public class AlbumController {
     }
 
     // Get all albums for a profile
+//    @GetMapping("/all/{id}")
+//    public ResponseEntity<?> listAllAlbums(@PathVariable Long id) {
+//        try {
+//            return ResponseEntity.ok(albumService.getAllAlbum(id));
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+//        }
+//    }
     @GetMapping("/all/{id}")
-    public ResponseEntity<?> listAllAlbums(@PathVariable Long id) {
+    public ResponseEntity<?> listAllAlbums(@PathVariable Long id, @RequestParam(defaultValue = "desc") String order) {
         try {
-            return ResponseEntity.ok(albumService.getAllAlbum(id));
+            return ResponseEntity.ok(albumService.getAllAlbums(id, order));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }

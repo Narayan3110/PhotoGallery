@@ -1,11 +1,13 @@
 package com.photo.gallery.controller;
 
+import com.photo.gallery.model.Photo;
 import com.photo.gallery.service.PhotoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -34,13 +36,21 @@ public class PhotoController {
         }
     }
 
-    // Get all photo URLs by profileId
+    // Get all photos (with optional sorting by updatedTime)
     @GetMapping("/{profileId}")
-    public ResponseEntity<?> getPhotos(@PathVariable Long profileId) {
-        List<Map<String, String>> photos = photoService.getPhotosWithPublicId(profileId);
-        return photos.isEmpty()
-                ? ResponseEntity.ok("No Photos To Display")
-                : ResponseEntity.ok(photos);
+    public ResponseEntity<?> getPhotos(@PathVariable Long profileId, @RequestParam(value = "order", required = false) String order) {
+        List<Photo> photos;
+
+        if (order != null && (order.equalsIgnoreCase("asc") || order.equalsIgnoreCase("desc"))) {
+            photos = photoService.getPhotosSortedByUploadTime(profileId, order);
+        } else {
+            List<Map<String, String>> photoData = photoService.getPhotosWithPublicId(profileId);
+            return photoData.isEmpty()
+                    ? ResponseEntity.ok("No Photos To Display")
+                    : ResponseEntity.ok(photoData);
+        }
+
+        return ResponseEntity.ok(photos);
     }
 
     // Delete photo by publicId

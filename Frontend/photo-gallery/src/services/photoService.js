@@ -1,70 +1,110 @@
+// import axios from "axios";
+
+// const API_BASE_URL = "http://localhost:9090/api/photo";
+
+// // Retrieve JWT token from localStorage
+// const getAuthToken = () => localStorage.getItem("token");
+
+// // Upload photo to the backend
+// export const uploadPhoto = async (formData) => {
+//   try {
+//     const token = getAuthToken();
+//     const response = await axios.post(
+//       `${API_BASE_URL}/upload`,
+//       formData,
+//       {
+//         headers: {
+//           "Content-Type": "multipart/form-data",
+//           Authorization: `Bearer ${token}`,
+//         },
+//       }
+//     );
+//     return response.data;
+//   } catch (error) {
+//     console.error("Failed to upload photo:", error);
+//     throw error;
+//   }
+// };
+
+// // Fetch photos for a given profile ID
+// export const fetchPhotos = async (profileId) => {
+//   try {
+//     const token = getAuthToken();
+//     const response = await axios.get(`${API_BASE_URL}/${profileId}`, {
+//       headers: { Authorization: `Bearer ${token}` },
+//     });
+//     return response.data;
+//   } catch (error) {
+//     console.error("Failed to fetch photos:", error);
+//     throw error;
+//   }
+// };
+
+// // Delete photo by public ID
+// export const deletePhoto = async (publicId) => {
+//   try {
+//     const token = getAuthToken();
+//     const response = await axios.delete(`${API_BASE_URL}/delete`, {
+//       params: { publicId },
+//       headers: { Authorization: `Bearer ${token}` },
+//     });
+//     return response.data;
+//   } catch (error) {
+//     console.error("Failed to delete photo:", error);
+//     return false;
+//   }
+// };
+
 import axios from "axios";
 
-// Function to get the JWT token from localStorage
-const getAuthToken = () => {
-  return localStorage.getItem("token"); // Get token from localStorage (or sessionStorage)
+const API_BASE_URL = "http://localhost:9090/api/photo";
+
+// Retrieve JWT token from localStorage
+const getAuthToken = () => localStorage.getItem("token");
+
+// Fetch and optionally sort photos for a given profile ID
+export const fetchPhotos = async (profileId, order = "desc") => {
+  try {
+    const token = getAuthToken();
+    const response = await axios.get(`${API_BASE_URL}/${profileId}`, {
+      params: { order },
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Failed to fetch photos:", error);
+    throw error;
+  }
 };
 
 // Upload photo to the backend
 export const uploadPhoto = async (formData) => {
   try {
-    const token = getAuthToken(); // Get JWT token
-
-    const response = await axios.post(
-      "http://localhost:9090/api/photo/upload",
-      formData,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data", // Ensure it's multipart/form-data
-          Authorization: `Bearer ${token}`, // Add JWT token to headers
-        },
-      }
-    );
-    return response.data; // Return the server's response (success message)
-  } catch (error) {
-    console.error("Error uploading photo:", error);
-    throw error; // Propagate the error
-  }
-};
-
-// Fetch photos for a given profileId
-export const fetchPhotos = async (profileId) => {
-  try {
-    const token = getAuthToken(); // Get JWT token
-
-    const response = await axios.get(
-      `http://localhost:9090/api/photo/${profileId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`, // Add JWT token to headers
-        },
-      }
-    );
-    return response.data; // Return the list of photo URLs
-  } catch (error) {
-    console.error("Error fetching photos:", error);
-    throw error; // Propagate the error
-  }
-};
-
-// Delete Photo By Id and Url
-export const deletePhoto = async (publicId) => {
-  try {
-    const token = getAuthToken(); // Get JWT token
-
-    const response = await axios.delete(
-      `http://localhost:9090/api/photo/delete`,
-      {
-        params: { publicId }, // Send publicId as a query parameter
-        headers: {
-          Authorization: `Bearer ${token}`, // Add JWT token to headers
-        },
-      }
-    );
-
+    const token = getAuthToken();
+    const response = await axios.post(`${API_BASE_URL}/upload`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${token}`,
+      },
+    });
     return response.data;
   } catch (error) {
-    console.error("Error deleting photo:", error);
+    console.error("Failed to upload photo:", error);
+    throw error;
+  }
+};
+
+// Delete photo by public ID
+export const deletePhoto = async (publicId) => {
+  try {
+    const token = getAuthToken();
+    const response = await axios.delete(`${API_BASE_URL}/delete`, {
+      params: { publicId },
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Failed to delete photo:", error);
     return false;
   }
 };

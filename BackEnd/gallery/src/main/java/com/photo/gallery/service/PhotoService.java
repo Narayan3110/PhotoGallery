@@ -121,4 +121,13 @@ public class PhotoService {
 
         return photos;
     }
+
+    //Sort photos
+    public List<Photo> getPhotosSortedByUploadTime(Long profileId, String order) {
+        if ("asc".equalsIgnoreCase(order)) {
+            return photoRepository.findByUserProfile_ProfileIdOrderByUploadedAtAsc(profileId);
+        } else {
+            return photoRepository.findByUserProfile_ProfileIdOrderByUploadedAtDesc(profileId);
+        }
+    }
 }

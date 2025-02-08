@@ -44,7 +44,8 @@ public class AlbumService {
 
 	// Validate album name uniqueness
 	private void validateAlbumName(Long profileId, String albumName) {
-		List<Album> albums = getAllAlbum(profileId);
+
+		List<Album> albums = getAllAlbums(profileId , "desc" );
 		if (albums.stream().anyMatch(al -> al.getAlbumName().equals(albumName))) {
 			throw new RuntimeException("Album name already exists.");
 		}
@@ -63,7 +64,7 @@ public class AlbumService {
 
 	// Get Album By Name
 	public Album getAlbumByName(Long profileId, String albumName) {
-		return getAllAlbum(profileId).stream()
+		return getAllAlbums(profileId , "desc").stream()
 				.filter(album -> album.getAlbumName().equals(albumName))
 				.findFirst()
 				.orElseThrow(() -> new RuntimeException("Album not found"));
@@ -77,11 +78,18 @@ public class AlbumService {
 	}
 
 	// Get All Albums for Profile
-	public List<Album> getAllAlbum(Long profileId) {
-		UserProfile profile = profileService.findByProfileId(profileId);
-		return albumRepository.findAll().stream()
-				.filter(album -> album.getUserProfile().equals(profile))
-				.collect(Collectors.toList());
+//	public List<Album> getAllAlbum(Long profileId) {
+//		UserProfile profile = profileService.findByProfileId(profileId);
+//		return albumRepository.findAll().stream()
+//				.filter(album -> album.getUserProfile().equals(profile))
+//				.collect(Collectors.toList());
+//	}
+	public List<Album> getAllAlbums(Long profileId, String order) {
+		if ("asc".equalsIgnoreCase(order)) {
+			return albumRepository.findAllByProfileIdSortedAsc(profileId);
+		} else {
+			return albumRepository.findAllByProfileIdSortedDesc(profileId);
+		}
 	}
 
 	// Get Album with Photos
