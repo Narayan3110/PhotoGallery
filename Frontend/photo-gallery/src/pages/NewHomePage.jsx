@@ -1,14 +1,8 @@
-import {
-  FaPlayCircle,
-  FaCloudUploadAlt,
-  FaSort,
-  FaRegShareSquare,
-} from 'react-icons/fa';
+import { FaCloudUploadAlt, FaSort, FaRegShareSquare } from 'react-icons/fa';
 import { FcOrganization, FcShare } from 'react-icons/fc';
 import { RiMemoriesFill } from 'react-icons/ri';
 import { HiOutlineWrenchScrewdriver } from 'react-icons/hi2';
-
-// import Rectangle from '@/assets/photos/homePage/Rectangle.png';
+import { FaUpload } from 'react-icons/fa6';
 import Header from '@/assets/photos/homePage/Header.png';
 import user1 from '@/assets/photos/homePage/users/user1.jpg';
 import user2 from '@/assets/photos/homePage/users/user2.jpg';
@@ -17,9 +11,6 @@ import Head from '@/assets/photos/homePage/head.png';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { CarouselPlugin } from '@/components/CarouselPlugin';
-
-
-
 
 const NewHomePage = () => {
   const steps = [
@@ -68,9 +59,9 @@ const NewHomePage = () => {
             <Button className='bg-orange-500 text-white px-6 py-3 rounded-lg shadow-lg hover:bg-orange-600 transition-all'>
               Find out more
             </Button>
-            <button className='flex items-center space-x-2 text-gray-900 hover:text-orange-600 transition-all'>
-              <FaPlayCircle className='w-6 h-6 text-white' />
-              <span>Play Demo</span>
+            <button className='flex items-center space-x-2 text-gray-900 text-white transition-all bg-indigo-600 p-2 rounded-lg hover:bg-indigo-500'>
+              <FaUpload className='w-6 h-6 text-white' />
+              <span>Upload Now !</span>
             </button>
           </div>
         </div>
@@ -94,8 +85,6 @@ const NewHomePage = () => {
         </h2>
         <div className='grid grid-cols-1 md:grid-cols-4 gap-10 max-w-5xl mx-auto'>
           <div className='flex flex-col items-center text-gray-800'>
-            {/* <Image src='/satellite.png' alt='Weather' width={60} height={60} /> */}
-            {/* <img src={satellite} /> */}
             <FcOrganization className='w-16 h-18 ' />
             <h4 className='text-lg font-bold mt-4'>📷 Smart Organization</h4>
             <p className='text-gray-600'>
@@ -104,8 +93,6 @@ const NewHomePage = () => {
             </p>
           </div>
           <div className='flex flex-col items-center text-gray-800'>
-            {/* <Image src={satellite} alt='Best Flights' width={60} height={60} /> */}
-            {/* <img src={satellite} /> */}
             <FcShare className='w-16 h-18 ' />
             <h4 className='text-lg font-bold mt-4'>🌍 Seamless Sharing</h4>
             <p className='text-gray-600'>
@@ -114,14 +101,6 @@ const NewHomePage = () => {
             </p>
           </div>
           <div className='flex flex-col items-center text-gray-800'>
-            {/* <Image
-            //   src='/microphone.png'
-              alt='Local Events'
-              width={60}
-              height={60}
-            /> */}
-
-            {/* <img src={satellite} /> */}
             <RiMemoriesFill className='w-16 h-18 text-red-600' />
             <h4 className='text-lg font-bold mt-4'>🎉 Memories Reimagined</h4>
             <p className='text-gray-600'>
@@ -130,13 +109,6 @@ const NewHomePage = () => {
             </p>
           </div>
           <div className='flex flex-col items-center text-gray-800'>
-            {/* <Image
-            //   src='/customization.png'
-              alt='Customization'
-              width={60}
-              height={60}
-            /> */}
-            {/* <img src={satellite} /> */}
             <HiOutlineWrenchScrewdriver className='w-16 h-18 ' />
             <h4 className='text-lg font-bold mt-4'>🎨 Customization</h4>
             <p className='text-gray-600'>
@@ -147,17 +119,15 @@ const NewHomePage = () => {
         </div>
       </section>
 
-      {/* {Top DestinationCard} */}
-      <section className='text-center flex item-center justify-center py-12 px-4 '>
-        <div className='w-full max-w-4xl'>
-          {' '}
-          {/* Adjust max width as needed */}
+      {/* Top Destination Section */}
+      <section className='flex justify-center items-center py-8 bg-gray-200'>
+        <div className='w-full max-w-5xl px-4'>
           <CarouselPlugin />
         </div>
       </section>
 
       {/* {How to us App Section Part} */}
-      <section className='py-16 px-6 lg:px-20  text-white flex flex-col lg:flex-row items-center lg:items-start gap-12'>
+      <section className='py-16 px-6 lg:px-20 text-white flex flex-col lg:flex-row items-center lg:items-start gap-12'>
         <div className='flex-1 max-w-lg'>
           <h3 className='text-lg font-semibold text-gray-400'>
             Simple & Quick
@@ -186,29 +156,6 @@ const NewHomePage = () => {
         <div className='flex-1 max-w-lg '>
           <img src={Header} alt='image ' />
         </div>
-
-        {/* <Card className='bg-white text-black rounded-2xl shadow-lg max-w-sm'>
-          <img
-            src={Rectangle}
-            alt='Trip to Greece'
-            className='rounded-t-2xl w-full h-52 object-cover'
-          />
-          <CardContent>
-            <h3 className='text-lg font-semibold'>Trip To Greece</h3>
-            <p className='text-gray-500 text-sm'>14-29 June | by Robbin j</p>
-            <div className='flex justify-between items-center mt-3'>
-              <p className='text-gray-600 text-sm'>24 people going</p>
-
-              <button className='text-red-500 text-xl'>&hearts;</button>
-            </div>
-          </CardContent>
-        </Card> */}
-
-        {/* <Card className='absolute bg-white text-black rounded-xl shadow-md p-4 w-60 -bottom-10 lg:bottom-auto lg:right-10'>
-          <h4 className='text-gray-500 text-sm'>Ongoing</h4>
-          <h3 className='text-lg font-semibold'>Trip to Rome</h3>
-          <Progress value={40} className='mt-2' />
-        </Card> */}
       </section>
 
       <section>
@@ -261,9 +208,9 @@ const NewHomePage = () => {
               </Card>
             </div>
             <div className='mt-8 flex justify-center space-x-2'>
-              <Button className='w-3 h-3 bg-blue-600 rounded-full'></Button>
-              <Button className='w-3 h-3 bg-gray-400 rounded-full'></Button>
-              <Button className='w-3 h-3 bg-gray-400 rounded-full'></Button>
+              <Button className='w-3 h-3 bg-blue-600 rounded-full'>1</Button>
+              <Button className='w-3 h-3 bg-gray-400 rounded-full'>2</Button>
+              <Button className='w-3 h-3 bg-gray-400 rounded-full'>3</Button>
             </div>
           </div>
         </div>
