@@ -23,9 +23,6 @@ const GalleryNavbar = () => {
       <nav className='fixed left-0 right-0 top-6 z-50 mx-auto w-[90vw] max-w-2xl flex items-center justify-between rounded-full bg-white px-6 py-2 shadow-md gap-8'>
         <ul className='hidden md:flex space-x-6'>
           <Link to='/profile' className='flex items-center gap-2'>
-          <span className='hidden md:block font-medium'>
-              {user?.userProfile?.fullName || user?.userName || 'User Name'}
-            </span>
             <div className='size-10 rounded-full overflow-hidden border border-gray-300'>
               <img
                 src={user?.userProfile?.profileUrl || defaultProfilePic}
@@ -33,7 +30,9 @@ const GalleryNavbar = () => {
                 className='w-full h-full object-cover'
               />
             </div>
-            
+            <span className='hidden md:block font-medium'>
+              
+            </span>
           </Link>
           <li>
             <Link to='/' className='hover:text-orange-500'>
@@ -46,8 +45,8 @@ const GalleryNavbar = () => {
             </Link>
           </li>
           <li>
-            <Link to='/albums' className='hover:text-orange-500'>
-              Albums
+            <Link to='/profile' className='hover:text-orange-500'>
+              Profile
             </Link>
           </li>
           <li>

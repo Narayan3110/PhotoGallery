@@ -12,6 +12,7 @@
   "dependencies": {
     "@radix-ui/react-progress": "^1.1.1",
     "@radix-ui/react-slot": "^1.1.1",
+    "@radix-ui/react-toast": "^1.2.6",
     "@reduxjs/toolkit": "^2.5.1",
     "@shadcn/ui": "^0.0.4",
     "@tailwindcss/aspect-ratio": "^0.4.2",

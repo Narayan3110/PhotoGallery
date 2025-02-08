@@ -7,10 +7,11 @@ import {
 import { updateUserProfile } from '@/services/profileUpdateService';
 import albumService from '../services/albumService';
 import { useNavigate, useLocation } from 'react-router-dom';
-import GalleryNavbar from '../components/GalleryNavbar';
 import { useDispatch } from 'react-redux';
-import { Button } from '@/components/ui/button';
+import { FaUpload } from 'react-icons/fa6';
+import { AiOutlineCloudUpload } from 'react-icons/ai';
 import { FaSort } from 'react-icons/fa';
+
 
 const GalleryPage = () => {
   const [photos, setPhotos] = useState([]);
@@ -182,45 +183,47 @@ const GalleryPage = () => {
   };
 
   return (
-    <div className='flex'>
-      <GalleryNavbar />
-      <div className='min-h-screen flex flex-col items-center justify-center text-white p-6 ml-64 w-full'>
-        <h1 className='text-3xl font-semibold text-center mb-8'>
-          Your Photo Gallery
-        </h1>
-        <div className='bg-white p-6 rounded-lg shadow-lg w-full max-w-lg text-gray-800'>
+    <div className='flex '>
+      <div className='  min-h-screen flex flex-col items-center justify-center text-white p-6 w-full '>
+        <div className='    w-full max-w-6xl bg-white p-6 rounded-lg text-gray-800 mb-0'>
           {Boolean(isProfileEditing) ? (
-            <h2 className='text-xl font-semibold text-center mb-4'>
-              Upload New Photo And Add to Profile Picture
+            <h2 className='flex flex-row items-center justify-center text-xl font-semibold text-center mb-4 gap-4 '>
+              Upload New Photo <FaUpload className='size-6 text-blue-600 ' />
             </h2>
           ) : (
-            <h2 className='text-xl font-semibold text-center mb-4'>
+            <h2 className='text-xl font-semibold text-center mb-4 pt-5'>
               Upload New Photo
             </h2>
           )}
-          <div className='flex justify-center items-center gap-4'>
+          <div className='flex justify-center items-center gap-4 '>
             <input
               type='file'
               accept='image/*'
               onChange={handleFileChange}
-              className='p-2 border border-gray-300 rounded-lg'
+              className='file:mr-4 file:rounded-full file:border-0 file:bg-violet-50 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-violet-700 hover:file:bg-violet-100 dark:file:bg-violet-600 dark:file:text-violet-100 dark:hover:file:bg-violet-500 '
             />
             <button
               onClick={handleFileUpload}
-              className='bg-blue-600 text-white p-2 rounded-lg hover:bg-blue-700'
+              className='bg-white text-white p-2 rounded-lg  bg-white'
               disabled={loading}
             >
-              {loading ? 'Uploading...' : 'Upload Photo'}
+              <AiOutlineCloudUpload className='text-violet-600 size-10' />
+              {/* {loading ? 'Uploading...' : 'Upload Photo'} */}
             </button>
           </div>
+          <div className=''> 
+          <button className='bg-white hover:bg-gray-100  '>
+            <FaSort className='text-blue-600 size-10' />
+          </button>
         </div>
+        </div>
+        
+
         {message && (
           <p className='mt-6 text-xl text-center text-yellow-200'>{message}</p>
         )}
-        <Button className='bg-blue-500'>
-                <FaSort />
-              </Button>
-        <div className='mt-8 w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
+
+        <div className=' w-full max-w-6xl columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-4'>
           {photos.length === 0 ? (
             <p className='col-span-full text-center text-lg text-gray-200'>
               No photos available.
@@ -229,13 +232,13 @@ const GalleryPage = () => {
             photos.map((photo, index) => (
               <div
                 key={photo.publicId}
-                className='relative rounded-lg shadow-xl hover:scale-105 cursor-pointer'
+                className='relative mb-4 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer overflow-hidden group'
                 onClick={() => openModal(photo.photoUrl, photo.publicId)}
               >
                 <img
                   src={photo.photoUrl}
                   alt={`Photo ${index + 1}`}
-                  className='w-full h-64 object-cover rounded-lg'
+                  className='w-full h-auto rounded-lg transition-opacity duration-300 group-hover:opacity-90'
                 />
               </div>
             ))
@@ -243,7 +246,7 @@ const GalleryPage = () => {
         </div>
         {selectedPhoto && (
           <div className='fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50'>
-            <div className='relative max-w-4xl max-h-[90vh] p-4 bg-white rounded-lg shadow-2xl text-black'>
+            <div className='relative max-w-4xl max-h-[90vh] p-4 rounded-lg shadow-2xl text-black'>
               <button
                 onClick={closeModal}
                 className='absolute top-4 right-4 text-black text-3xl p-2 rounded-full'
