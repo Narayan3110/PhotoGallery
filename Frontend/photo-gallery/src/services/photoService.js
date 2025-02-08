@@ -28,12 +28,30 @@ export const uploadPhoto = async (formData) => {
 };
 
 // Fetch photos for a given profileId
-export const fetchPhotos = async (profileId) => {
+// export const fetchPhotos = async (profileId) => {
+//   try {
+//     const token = getAuthToken(); // Get JWT token
+
+//     const response = await axios.get(
+//       `http://localhost:9090/api/photo/${profileId}`,
+//       {
+//         headers: {
+//           Authorization: `Bearer ${token}`, // Add JWT token to headers
+//         },
+//       }
+//     );
+//     return response.data; // Return the list of photo URLs
+//   } catch (error) {
+//     console.error("Error fetching photos:", error);
+//     throw error; // Propagate the error
+//   }
+// };
+export const fetchPhotos = async (profileId, order = 'desc') => {
   try {
     const token = getAuthToken(); // Get JWT token
 
     const response = await axios.get(
-      `http://localhost:9090/api/photo/${profileId}`,
+      `http://localhost:9090/api/photo/${profileId}?order=${order}`, // Add order query param
       {
         headers: {
           Authorization: `Bearer ${token}`, // Add JWT token to headers
@@ -46,6 +64,7 @@ export const fetchPhotos = async (profileId) => {
     throw error; // Propagate the error
   }
 };
+
 
 // Delete Photo By Id and Url
 export const deletePhoto = async (publicId) => {

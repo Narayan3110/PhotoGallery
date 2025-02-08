@@ -6,7 +6,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @EnableScheduling
-public class GalleryApplication {
+public class
+GalleryApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(GalleryApplication.class, args);
