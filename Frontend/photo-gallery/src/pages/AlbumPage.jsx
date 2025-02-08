@@ -177,40 +177,38 @@ const AlbumPage = () => {
                       {/* Glass Effect on Hover */}
                       <div
                         className="relative w-[280px] h-[360px] flex justify-center items-center rounded-xl bg-transparent group-hover:bg-white group-hover:bg-opacity-10 group-hover:backdrop-blur-lg group-hover:shadow-lg transition-all duration-500"
-                        style={{
-                          perspective: "1000px", // Ensure 3D perspective for better hover effects
-                        }}
+                        style={{ perspective: "1000px" }} // Ensure 3D perspective for better hover effects
                       >
-                        {/* First image (front) */}
+                        {/* First Image (Front) */}
                         {searchResults.photos?.[0] && (
                           <img
                             src={searchResults.photos[0].photoUrl}
                             alt="Front Photo"
-                            className="absolute w-4/5 h-4/5 object-cover rounded-lg z-20 transition-transform duration-300 group-hover:scale-110"
+                            className="absolute w-4/5 h-4/5 object-contain rounded-lg z-20 transition-transform duration-300 group-hover:scale-110 bg-white p-1"
                             style={{
                               boxShadow: "0 15px 25px rgba(0, 0, 0, 0.3)",
                             }}
                           />
                         )}
 
-                        {/* Second image (left) */}
+                        {/* Second Image (Left) */}
                         {searchResults.photos?.[1] && (
                           <img
                             src={searchResults.photos[1].photoUrl}
                             alt="Left Photo"
-                            className="absolute w-3/5 h-4/5 object-cover rounded-lg z-10 transition-transform duration-500 transform -translate-x-12 opacity-0 group-hover:opacity-100 group-hover:-translate-x-20"
+                            className="absolute w-3/5 h-4/5 object-contain rounded-lg z-10 transition-transform duration-500 transform -translate-x-12 opacity-0 group-hover:opacity-100 group-hover:-translate-x-20 bg-white p-1"
                             style={{
                               boxShadow: "0 10px 20px rgba(0, 0, 0, 0.2)",
                             }}
                           />
                         )}
 
-                        {/* Third image (right) */}
+                        {/* Third Image (Right) */}
                         {searchResults.photos?.[2] && (
                           <img
                             src={searchResults.photos[2].photoUrl}
                             alt="Right Photo"
-                            className="absolute w-3/5 h-4/5 object-cover rounded-lg z-10 transition-transform duration-500 transform translate-x-12 opacity-0 group-hover:opacity-100 group-hover:translate-x-20"
+                            className="absolute w-3/5 h-4/5 object-contain rounded-lg z-10 transition-transform duration-500 transform translate-x-12 opacity-0 group-hover:opacity-100 group-hover:translate-x-20 bg-white p-1"
                             style={{
                               boxShadow: "0 10px 20px rgba(0, 0, 0, 0.2)",
                             }}
@@ -239,40 +237,38 @@ const AlbumPage = () => {
                       {/* Glass Effect on Hover */}
                       <div
                         className="relative w-[280px] h-[360px] flex justify-center items-center rounded-xl bg-transparent group-hover:bg-white group-hover:bg-opacity-10 group-hover:backdrop-blur-lg group-hover:shadow-lg transition-all duration-500"
-                        style={{
-                          perspective: "1000px", // Ensure 3D perspective for better hover effects
-                        }}
+                        style={{ perspective: "1000px" }} // Ensure 3D perspective for better hover effects
                       >
-                        {/* First image (front) */}
+                        {/* First Image (Front) */}
                         {album.photos?.[0] && (
                           <img
                             src={album.photos[0].photoUrl}
                             alt="Front Photo"
-                            className="absolute w-4/5 h-4/5 object-cover rounded-lg z-20 transition-transform duration-300 group-hover:scale-110"
+                            className="absolute w-4/5 h-4/5 object-contain rounded-lg z-20 transition-transform duration-300 group-hover:scale-110 bg-white p-1"
                             style={{
                               boxShadow: "0 15px 25px rgba(0, 0, 0, 0.3)",
                             }}
                           />
                         )}
 
-                        {/* Second image (left) */}
+                        {/* Second Image (Left) */}
                         {album.photos?.[1] && (
                           <img
                             src={album.photos[1].photoUrl}
                             alt="Left Photo"
-                            className="absolute w-3/5 h-4/5 object-cover rounded-lg z-10 transition-transform duration-500 transform -translate-x-12 opacity-0 group-hover:opacity-100 group-hover:-translate-x-20"
+                            className="absolute w-3/5 h-4/5 object-contain rounded-lg z-10 transition-transform duration-500 transform -translate-x-12 opacity-0 group-hover:opacity-100 group-hover:-translate-x-20 bg-white p-1"
                             style={{
                               boxShadow: "0 10px 20px rgba(0, 0, 0, 0.2)",
                             }}
                           />
                         )}
 
-                        {/* Third image (right) */}
+                        {/* Third Image (Right) */}
                         {album.photos?.[2] && (
                           <img
                             src={album.photos[2].photoUrl}
                             alt="Right Photo"
-                            className="absolute w-3/5 h-4/5 object-cover rounded-lg z-10 transition-transform duration-500 transform translate-x-12 opacity-0 group-hover:opacity-100 group-hover:translate-x-20"
+                            className="absolute w-3/5 h-4/5 object-contain rounded-lg z-10 transition-transform duration-500 transform translate-x-12 opacity-0 group-hover:opacity-100 group-hover:translate-x-20 bg-white p-1"
                             style={{
                               boxShadow: "0 10px 20px rgba(0, 0, 0, 0.2)",
                             }}
