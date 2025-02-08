@@ -1,7 +1,7 @@
-import { Link } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
-import { logout } from "../redux/authSlice";
-import { IoIosArrowDropright } from "react-icons/io";
+import { Link } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { logout } from '../redux/authSlice';
+import { FaBars } from 'react-icons/fa6';
 
 const GalleryNavbar = () => {
   const user = useSelector((state) => state.auth.user);
@@ -11,92 +11,74 @@ const GalleryNavbar = () => {
     dispatch(logout());
     localStorage.clear();
     sessionStorage.clear();
-    window.location.href = "/login";
+    window.location.href = '/login';
   };
-  
+
   // Default Profile picture
-  const defaultProfilePic = "src/assets/photos/gallerynavbar/Default Profile.png";
+  const defaultProfilePic =
+    'src/assets/photos/gallerynavbar/Default Profile.png';
 
   return (
-    <div className="relative">
-      <nav className="bg-black text-white fixed h-screen w-64 top-0 z-50 py-4 pl-6 flex flex-col justify-between">
-        <div className="flex flex-col items-start space-y-6">
-          {/* Left Section - Navigation Links */}
-          <ul className="flex flex-col space-y-4 text-gray-300 font-medium">
-            <li>
-              <Link to="/profile" className="hover:text-white">
-                <div className="grid grid-cols-12 border-b mt-3 mb-2 items-center">
-                  <div className="col-span-3 flex items-center justify-center">
-                    <div className="w-12 h-12 rounded-full overflow-hidden border border-gray-300">
-                      <img
-                        src={user.userProfile?.profileUrl || defaultProfilePic}
-                        alt="Profile"
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                  </div>
-                  <div className="col-span-9 ml-2 mt-3">
-                    <p className="font-semibold text-gray-200 mb-0">
-                      {user.userProfile?.fullName || user.userName || "User Name"}
-                    </p>
-                    <p className="text-sm text-gray-400 truncate max-w-[150px]">
-                      {user.email || "email@example.com"}
-                    </p>
-                    <div className="absolute right-1 top-10">
-                    <IoIosArrowDropright className="text-gray-400 text-xl" />
-                  </div>
-                  </div>
-                </div>
-              </Link>
-            </li>
-            <li>
-              <Link to="/" className="hover:text-white">
-                Home
-              </Link>
-            </li>
-            <li>
-              <Link to="/gallery" className="hover:text-white">
-                Gallery
-              </Link>
-            </li>
-            <li>
-              <Link to="/albums" className="hover:text-white">
-                Albums
-              </Link>
-            </li>
-            <li>
-              <Link to="/about" className="hover:text-white">
-                About
-              </Link>
-            </li>
-            <li>
-              <Link to="/contact" className="hover:text-white">
-                Contact
-              </Link>
-            </li>
-          </ul>
-        </div>
-
-        {/* Logout Button at the bottom */}
-        <div className="mt-auto">
+    <div className='relative'>
+      <nav className='fixed left-0 right-0 top-6 z-50 mx-auto w-[90vw] max-w-2xl flex items-center justify-between rounded-full bg-white px-6 py-2 shadow-md gap-8'>
+        <ul className='hidden md:flex space-x-6'>
+          <Link to='/profile' className='flex items-center gap-2'>
+            <div className='size-10 rounded-full overflow-hidden border border-gray-300'>
+              <img
+                src={user?.userProfile?.profileUrl || defaultProfilePic}
+                alt='Profile'
+                className='w-full h-full object-cover'
+              />
+            </div>
+            <span className='hidden md:block font-medium'>
+              
+            </span>
+          </Link>
+          <li>
+            <Link to='/' className='hover:text-orange-500'>
+              Home
+            </Link>
+          </li>
+          <li>
+            <Link to='/gallery' className='hover:text-orange-500'>
+              Gallery
+            </Link>
+          </li>
+          <li>
+            <Link to='/profile' className='hover:text-orange-500'>
+              Profile
+            </Link>
+          </li>
+          <li>
+            <Link to='/about' className='hover:text-orange-500'>
+              About
+            </Link>
+          </li>
+          <li>
+            <Link to='/contact' className='hover:text-orange-500'>
+              Contact
+            </Link>
+          </li>
+        </ul>
+        <div className='flex items-center gap-2'>
           {user ? (
             <button
               onClick={handleLogout}
-              className="bg-red-500 text-white px-3 py-1 rounded-lg hover:bg-red-600 transition"
+              className='rounded-full bg-red-500 px-6 py-2 text-white hover:bg-red-600'
             >
               Logout
             </button>
           ) : (
             <>
               <Link
-                to="/login"
-                className="bg-orange-500 text-white px-3 py-1 rounded-lg hover:bg-orange-600 transition"
+                to='/login'
+                className='rounded-full bg-orange-500 px-6 py-2 text-white hover:bg-orange-600'
               >
                 Log In
               </Link>
               <Link
-                to="/register"
-                className="bg-orange-500 text-white px-3 py-1 rounded-lg hover:bg-orange-600 transition ml-2"
+                to='/register'
+                className='rounded-full bg-orange-500 px-6 py-2 text-white hover:bg-orange-600 ml-2'
               >
                 Register
               </Link>
@@ -104,6 +86,14 @@ const GalleryNavbar = () => {
           )}
         </div>
       </nav>
+
+      {/* Mobile Navbar */}
+      <div className='flex-between h-10 w-full px-6 md:hidden flex justify-between items-center'>
+        <div className='text-lg font-semibold'>PhotoGallery</div>
+        <button type='button'>
+          <FaBars />
+        </button>
+      </div>
     </div>
   );
 };
