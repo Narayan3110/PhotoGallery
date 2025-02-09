@@ -40,15 +40,16 @@ public class AlbumController {
         }
     }
 
-    // Get all albums for a profile
+    // Get all albums for a profile sorted by createdAt
     @GetMapping("/all/{id}")
-    public ResponseEntity<?> listAllAlbums(@PathVariable Long id) {
+    public ResponseEntity<?> listAllAlbums(@PathVariable Long id, @RequestParam(defaultValue = "desc") String order) {
         try {
-            return ResponseEntity.ok(albumService.getAllAlbum(id));
+            return ResponseEntity.ok(albumService.getAllAlbum(id, order));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
+
 
     // Search for an album
     @GetMapping("/search/{id}/{albumName}")

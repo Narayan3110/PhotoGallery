@@ -46,6 +46,11 @@ const GalleryNavbar = () => {
             </Link>
           </li>
           <li>
+            <Link to='/Albums' className='hover:text-orange-500'>
+              Albums
+            </Link>
+          </li>
+          <li>
             <Link to='/profile' className='hover:text-orange-500'>
               Profile
             </Link>

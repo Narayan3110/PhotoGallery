@@ -5,7 +5,10 @@ import {updateUserProfile} from '@/services/profileUpdateService';
 import { RiCameraAiFill } from "react-icons/ri";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import AuthService from '@/services/authTest';
+// <<<<<<< narayan
 // import { Verified } from 'lucide-react';
+// =======
+// >>>>>>> master
 
 const Profile = () => {
   const userData = useSelector((state) => state.auth.user);
@@ -16,7 +19,7 @@ const Profile = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [userVerified, setUserVerified] = useState("");
   const [showProfileOptions, setShowProfileOptions] = useState(false);
-  const [removeProfile, setRemoveProfile] = useState(false);
+  const addressParts = userData?.userProfile?.address?.split(',').map(part => part.trim()) || [];
 
   const toggleProfileOptions = () => {
     setShowProfileOptions(!showProfileOptions);
@@ -57,9 +60,9 @@ const Profile = () => {
     phoneNumber: userData?.userProfile?.contact || '', // Display contact as phone number
     name: userData?.userProfile?.fullName?.split(' ')[0] || '', // First Name
     surname: userData?.userProfile?.fullName?.split(' ')[1] || '', // Surname
-    city: userData?.userProfile?.address?.split(',')[0] || '', // City
-    state: userData?.userProfile?.address?.split(',')[1] || '', // State
-    country: userData?.userProfile?.address?.split(',')[2] || '', // Country
+    city : addressParts[0] || '',
+    state :addressParts[1] || '', 
+    country : addressParts[2] || '', 
     dob: userData?.userProfile?.dob || '', // Date of Birth
   });
 
@@ -82,10 +85,13 @@ const Profile = () => {
    // Handle form submission Profile Update
   const handleSubmit = async (e,removeProfile) => {
     e.preventDefault();
+
     // Merge full name and address before sending
     const fullName = `${formData.name} ${formData.surname}`;
-    const address = `${formData.city}, ${formData.state}, ${formData.country}`;
-    // updated Data to send
+
+    // Reassemble the address while ensuring no trailing commas
+    const address = [formData.city, formData.state, formData.country]
+      .join(', ');    // updated Data to send
     const updatedUserData = {
         fullName,
         address,
@@ -198,7 +204,7 @@ const Profile = () => {
         
         {/* Sidebar Nav */}
         <div className='flex mt-28 mb-10 p-10'>
-        <div className='w-1/6 ml-10 bg-white text-center p-4 rounded-lg shadow'>
+          <div className='w-1/6 ml-10 bg-white text-center p-4 rounded-lg shadow'>
             <aside className="bg-white">
               <nav className="flex flex-col gap-6 p-4">
                 <button

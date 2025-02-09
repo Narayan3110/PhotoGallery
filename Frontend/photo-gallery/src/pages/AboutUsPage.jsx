@@ -74,6 +74,7 @@ const teamMembers = [
 ];
 
 const AboutUsPage = () => {
+// <<<<<<< narayan
   return (
     <div className='flex flex-col items-center py-20 md:py-[50px] gap-3 w-full'>
       <div className='flex flex-col p-10 w-full max-w-7xl mx-auto '>
@@ -96,6 +97,33 @@ const AboutUsPage = () => {
                   our collection is designed to inspire and engage visitors like
                   you.
                 </p>
+// =======
+//     return (
+//       <div className='flex flex-col mt-10 items-center py-20 md:py-[50px] gap-3 md:gap-10 w-full'>
+//         <div className='flex flex-col p-10 pt-0 gap-8 w-full max-w-7xl mx-auto'>
+//           <h1 className='text-[32px] md:text-[80px] font-bold text-center text-neutral-900 leading-[1.38] md:leading-[88px]'>
+//           <span> About </span><span className='text-blue-600'>Photo Gallery</span>
+//           </h1>
+//           <div className='relative w-full max-w-7xl h-[7px] bg-gray-300'></div>
+//         </div>
+    
+//           <div className='shadow-xl rounded-xl border border-gray-300 p-5 md:p-10 w-full max-w-7xl'>
+//             <div className='flex flex-col items-start gap-8 w-full'>
+//               <div className='relative bg-black shadow-xl w-full rounded-lg border border-gray-300 overflow-hidden'>
+//                 <img
+//                   src='/photo/aboutus/Banner.webp'
+//                   alt='Business Meeting'
+//                   className='w-full h-auto shadow-xl'
+//                 />
+//                 <div className='absolute shadow-xl top-0 left-0 flex justify-center items-center w-full h-full bg-black bg-opacity-20 p-5'>
+//                   <div className='w-[250px] shadow-xl md:w-[250px] lg:w-[400px] lg:pb-7 bg-black bg-opacity-40 p-4 rounded-lg'>
+//                     <p className='text-gray-200 text-center font-bold text-sm md:text-sm lg:text-2xl'>
+//                       Our photo gallery showcases stunning visuals, captured with care to bring a unique perspective to each subject.
+//                       Whether it's landscapes, architecture, or moments frozen in time, our collection is designed to inspire and engage visitors like you.
+//                     </p>
+//                   </div>
+//                 </div>
+// >>>>>>> master
               </div>
             </div>
           </div>

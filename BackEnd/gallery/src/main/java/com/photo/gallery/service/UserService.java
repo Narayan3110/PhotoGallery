@@ -5,6 +5,7 @@ import com.photo.gallery.model.Role;
 import com.photo.gallery.model.User;
 import com.photo.gallery.model.UserProfile;
 import com.photo.gallery.repository.RoleRepository;
+import com.photo.gallery.repository.UserProfileReposiotry;
 import com.photo.gallery.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,9 @@ public class UserService {
 
     @Autowired
     private JWTService jwtService;
+
+    @Autowired
+    UserProfileReposiotry userProfileReposiotry ;
 
     /**
      * Retrieves all users from the database.
@@ -215,5 +219,18 @@ public class UserService {
             return true;
         }
         return false;
+    }
+
+    public boolean changePassword(Long profileId, String newPassword) {
+        Optional<UserProfile> userProfile = userProfileReposiotry.findById(profileId);
+        UserProfile up =userProfile.get();
+        if(up != null){
+           Optional<User>  user = userRepository.findById(up.getUser().getUserId());
+           User u = user.get();
+           u.setPassword(passwordEncoder.encode(newPassword));
+           userRepository.save(u);
+           return true ;
+        }
+        return false ;
     }
 }

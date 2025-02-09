@@ -20,10 +20,10 @@ api.interceptors.request.use(
 );
 
 const albumService = {
-  getAllAlbums: async (profileId) => {
+  getAllAlbums: async (profileId, order = "desc") => {
     try {
-      console.log("Fetching albums for Profile ID:", profileId);
-      const response = await api.get(`/all/${profileId}`); // Uses Axios instance with JWT
+      console.log("Fetching albums for Profile ID:", profileId, "with order:", order);
+      const response = await api.get(`/all/${profileId}?order=${order}`); // Include sorting order
       localStorage.setItem("albums", JSON.stringify(response.data));
       return response.data;
     } catch (error) {
@@ -31,6 +31,7 @@ const albumService = {
       return [];
     }
   },
+
 
   getAlbumPhotos: async (albumId) => {
     try {
