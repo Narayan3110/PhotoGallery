@@ -1,28 +1,27 @@
-import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import albumService from "../services/albumService";
+import React, { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import albumService from '../services/albumService';
+import { AiOutlineCloudUpload } from 'react-icons/ai';
+import { RiCloseCircleLine } from 'react-icons/ri';
 
 const AlbumDetailPage = () => {
   const { albumId } = useParams();
   const navigate = useNavigate();
   const [albumDetails, setAlbumDetails] = useState({
-    albumName: "",
-    createdAt: "",
+    albumName: '',
+    createdAt: '',
     photos: [],
   });
   const [loading, setLoading] = useState(true);
   const [selectedPhoto, setSelectedPhoto] = useState(null);
   const [selectedPublicId, setSelectedPublicId] = useState(null);
   const [file, setFile] = useState(null);
+  const [message, setMessage] = useState('');
 
   useEffect(() => {
     const fetchAlbumPhotos = async () => {
-      console.log("albumId :", albumId);
       try {
         const data = await albumService.getAlbumPhotos(albumId);
-        console.log("Fetched album photos:", data); // Debugging log
-
-        // Validate that data.photos is an array
         if (data && Array.isArray(data.photos)) {
           setAlbumDetails({
             albumName: data.albumName,
@@ -31,14 +30,13 @@ const AlbumDetailPage = () => {
           });
         } else {
           console.error(
-            "Invalid data format: photos is not an array or is missing."
+            'Invalid data format: photos is not an array or is missing.'
           );
-          console.log("Actual data received:", data);
+          console.log('Actual data received:', data);
         }
-
         setLoading(false);
       } catch (error) {
-        console.error("Failed to fetch album photos", error);
+        console.error('Failed to fetch album photos', error);
         setLoading(false);
       }
     };
@@ -47,8 +45,7 @@ const AlbumDetailPage = () => {
   }, [albumId]);
 
   const handleAddPhotosClick = () => {
-    console.log("albumId :", albumId);
-    navigate("/gallery", { state: { albumId } });
+    navigate('/gallery', { state: { albumId } });
   };
 
   const handlePhotoClick = (photoUrl, publicId) => {
@@ -58,12 +55,11 @@ const AlbumDetailPage = () => {
 
   const handleRemovePhoto = async () => {
     try {
-      // Retrieve user data from localStorage
-      const storedUser = JSON.parse(localStorage.getItem("user"));
+      const storedUser = JSON.parse(localStorage.getItem('user'));
       const profileId = storedUser?.userProfile?.profileId;
 
       if (!profileId) {
-        console.error("Profile ID not found in local storage.");
+        console.error('Profile ID not found in local storage.');
         return;
       }
 
@@ -73,7 +69,6 @@ const AlbumDetailPage = () => {
         selectedPublicId
       );
 
-      // Filter the photos from the album details by publicId
       setAlbumDetails((prevDetails) => ({
         ...prevDetails,
         photos: prevDetails.photos.filter(
@@ -84,7 +79,7 @@ const AlbumDetailPage = () => {
       setSelectedPhoto(null);
       setSelectedPublicId(null);
     } catch (error) {
-      console.error("Error removing photo:", error);
+      console.error('Error removing photo:', error);
     }
   };
 
@@ -94,12 +89,11 @@ const AlbumDetailPage = () => {
 
   const handleUploadPhoto = async () => {
     try {
-      // Retrieve user data from localStorage
-      const storedUser = JSON.parse(localStorage.getItem("user"));
+      const storedUser = JSON.parse(localStorage.getItem('user'));
       const profileId = storedUser?.userProfile?.profileId;
 
       if (!profileId || !file) {
-        console.error("Profile ID or file is missing.");
+        console.error('Profile ID or file is missing.');
         return;
       }
 
@@ -109,7 +103,6 @@ const AlbumDetailPage = () => {
         albumDetails.albumName
       );
 
-      // Add the new photo to the album details
       setAlbumDetails((prevDetails) => ({
         ...prevDetails,
         photos: [
@@ -119,72 +112,80 @@ const AlbumDetailPage = () => {
       }));
 
       setFile(null);
-      console.log("Photo uploaded successfully:", publicId);
     } catch (error) {
-      console.error("Error uploading photo:", error);
+      console.error('Error uploading photo:', error);
     }
   };
 
   return (
-    <div className="min-h-screen w-full p-6">
-      <h1 className="text-2xl font-bold mb-4">{albumDetails.albumName}</h1>
-      <p className="mb-6">
-        Created At: {new Date(albumDetails.createdAt).toLocaleString()}
-      </p>
-
-      <button
-        className="bg-green-600 text-white px-4 py-2 rounded-lg mb-4"
-        onClick={handleAddPhotosClick}
-      >
-        Add Photos
-      </button>
-
-      <input type="file" onChange={handleFileChange} className="mb-4" />
-      <button
-        className="bg-blue-600 text-white px-4 py-2 rounded-lg mb-4"
-        onClick={handleUploadPhoto}
-      >
-        Upload Photo
-      </button>
-
-      {selectedPhoto && (
-        <div className="fixed top-0 left-0 w-full h-full flex flex-col justify-center items-center bg-gray-900 bg-opacity-80 z-50">
-          <img
-            src={selectedPhoto}
-            alt="Selected"
-            className="max-w-full max-h-full object-contain mb-4"
-            onClick={() => setSelectedPhoto(null)}
-          />
-          <button
-            className="bg-red-600 text-white px-4 py-2 rounded-lg"
-            onClick={handleRemovePhoto}
-          >
-            Delete Photo
-          </button>
+    <div className='flex'>
+      <div className='min-h-screen flex flex-col items-center justify-center text-white p-6 w-full'>
+        {/* <div className='gap-2'>
+          <h2>{albumDetails.albumName}</h2>
+          <h2>{albumDetails.createdAt}</h2>
+        </div> */}
+        <div className='w-full bg-white rounded-lg text-gray-800 mb-0'>
+          <div className='flex justify-center items-center gap-4 p-2'>
+            <input
+              type='file'
+              accept='image/*'
+              onChange={handleFileChange}
+              className='file:mr-4 file:rounded-full file:border-0 file:bg-violet-50 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-violet-700 hover:file:bg-violet-100 dark:file:bg-violet-600 dark:file:text-violet-100 dark:hover:file:bg-violet-500'
+            />
+            <button
+              onClick={handleUploadPhoto}
+              className='rounded-full bg-purple-600 px-6 py-2 text-white hover:bg-purple-500'
+            >
+              <AiOutlineCloudUpload className='size-6' />
+            </button>
+          </div>
+          <div className='mt-8 text-xl text-center text-red-600'>{message}</div>
         </div>
-      )}
-
-      <div className="grid grid-cols-4 gap-4">
-        {albumDetails.photos.length > 0 ? (
-          albumDetails.photos.map((photo, index) => {
-            const { photoUrl, publicId } = photo;
-
-            return (
+        <div className='w-full columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-4'>
+          {albumDetails.photos.length === 0 ? (
+            <p className='col-span-full text-center text-lg text-gray-200'>
+              No photos available.
+            </p>
+          ) : (
+            albumDetails.photos.map((photo, index) => (
               <div
-                key={index}
-                className="p-4 border rounded-lg bg-gray-100"
-                onClick={() => handlePhotoClick(photoUrl, publicId)}
+                key={photo.publicId}
+                className='relative mb-4 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer overflow-hidden group'
+                onClick={() => handlePhotoClick(photo.photoUrl, photo.publicId)}
               >
                 <img
-                  src={photoUrl}
+                  src={photo.photoUrl}
                   alt={`Photo ${index + 1}`}
-                  className="w-full h-auto cursor-pointer"
+                  className='w-full h-auto rounded-lg transition-opacity duration-300 group-hover:opacity-90'
                 />
               </div>
-            );
-          })
-        ) : (
-          <p>No photos found in this album.</p>
+            ))
+          )}
+        </div>
+        {selectedPhoto && (
+          <div className='fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50'>
+            <div className='relative max-w-4xl max-h-[90vh] p-4 rounded-lg text-black'>
+              <button
+                onClick={() => setSelectedPhoto(null)}
+                className='absolute top-4 right-4 text-black text-3xl p-2 transition duration-150 ease-in-out'
+              >
+                <RiCloseCircleLine className='text-white opacity-70' />
+              </button>
+              <img
+                src={selectedPhoto}
+                alt='Selected Photo'
+                className='w-full h-auto rounded-lg object-contain'
+              />
+              <div className='absolute bottom-4 right-4 flex gap-4'>
+                <button
+                  onClick={handleRemovePhoto}
+                  className='bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700'
+                >
+                  Delete Photo
+                </button>
+              </div>
+            </div>
+          </div>
         )}
       </div>
     </div>
