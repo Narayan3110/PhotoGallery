@@ -4,6 +4,7 @@ import com.photo.gallery.model.User;
 import com.photo.gallery.service.EmailService;
 import com.photo.gallery.service.UserService;
 import jakarta.mail.MessagingException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -72,4 +73,19 @@ public class UserController {
                 ? ResponseEntity.ok("Password changed successfully")
                 : ResponseEntity.badRequest().body("Invalid token or user not found");
     }
+
+    @PostMapping("/update-password")
+    public ResponseEntity<String> updatePassword(@RequestBody Map<String, Object> request) {
+        Long profileId = Long.parseLong(request.get("profileId").toString());
+        String newPassword = request.get("newPassword").toString();
+
+        boolean passwordChanged = userService.changePassword(profileId, newPassword);
+
+        if (passwordChanged) {
+            return ResponseEntity.ok("Password changed successfully");
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Password change failed");
+        }
+    }
+
 }
