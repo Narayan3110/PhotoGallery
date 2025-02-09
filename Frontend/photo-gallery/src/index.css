@@ -52,7 +52,7 @@ p {
   color: var(--text-color);
 }
 
-/* Buttons */
+/* Buttons
 button {
   font-family: var(--font-sans);
   background-color: var(--primary-color);
@@ -61,12 +61,12 @@ button {
   padding: 0.75rem 1.5rem;
   border-radius: var(--border-radius);
   cursor: pointer;
-  transition: background-color 0.3s ease;
-}
+  transition: background-color 0.3s ;
+} */
 
-button:hover {
+/* button:hover {
   background-color: var(--secondary-color);
-}
+} */
 
 /* Links */
 a {

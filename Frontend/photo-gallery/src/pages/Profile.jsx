@@ -5,6 +5,10 @@ import {updateUserProfile} from '@/services/profileUpdateService';
 import { RiCameraAiFill } from "react-icons/ri";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import AuthService from '@/services/authTest';
+// <<<<<<< narayan
+// import { Verified } from 'lucide-react';
+// =======
+// >>>>>>> master
 
 const Profile = () => {
   const userData = useSelector((state) => state.auth.user);
