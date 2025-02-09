@@ -42,7 +42,7 @@ const SignupPage = () => {
   };
 
   return (
-    <div className="flex flex-col lg:flex-row min-h-screen w-screen bg-gray-100 pt-12">
+    <div className="flex flex-col lg:flex-row min-h-screen w-screen bg-gray-100">
       {/* Left Section: Form */}
       <div className="flex flex-1 flex-col justify-center items-center bg-white ">
         <div className="p-12 flex flex-col items-center w-[30rem]">
@@ -140,7 +140,7 @@ const SignupPage = () => {
       </div>
 
       {/* Right Section: Image */}
-      <div className="hidden lg:flex lg:w-1/2 justify-center items-center bg-white mt-8">
+      <div className="hidden lg:flex lg:w-1/2 justify-center items-center bg-white ">
         <img
           src="/photo/registrationPage/registrationMain.jpg"
           alt="Signup illustration"

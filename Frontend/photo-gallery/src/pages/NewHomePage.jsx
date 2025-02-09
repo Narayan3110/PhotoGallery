@@ -3,10 +3,11 @@ import { FcOrganization, FcShare } from 'react-icons/fc';
 import { RiMemoriesFill } from 'react-icons/ri';
 import { HiOutlineWrenchScrewdriver } from 'react-icons/hi2';
 import { FaUpload } from 'react-icons/fa6';
-import Header from '@/assets/photos/homePage/Header.png';
+import flower from '@/assets/photos/homePage/flowes.jpg';
 import user1 from '@/assets/photos/homePage/users/user1.jpg';
 import user2 from '@/assets/photos/homePage/users/user2.jpg';
-import Head from '@/assets/photos/homePage/head.png';
+// import Head from '@/assets/photos/homePage/head.png';
+import section3 from '@/assets/photos/homePage/homepageSection3.jpg';
 
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -38,7 +39,7 @@ const NewHomePage = () => {
   return (
     <div>
       <section className='relative flex flex-col md:flex-row items-center justify-between px-6 md:px-16 py-12 bg-white pt-16'>
-        <div className='max-w-lg space-y-6'>
+        <div className='max-w-lg space-y-6 '>
           <h3 className='text-orange-600 font-bold uppercase text-sm'>
             📸 Explore Stunning Moments Around the World
           </h3>
@@ -67,18 +68,18 @@ const NewHomePage = () => {
         </div>
         <div className='relative mt-10 md:mt-0'>
           <img
-            src={Head}
-            alt='Traveler'
-            width={500}
-            height={500}
-            className='rounded-lg'
+            src={flower}
+            alt='headimage'
+            width={550}
+            height={550}
+            className='rounded-lg '
           />
         </div>
       </section>
 
       {/* {Second Secton} */}
 
-      <section className='py-16 bg-gray-50 text-center'>
+      <section className='py-16 bg-gray-50 text-center '>
         <h3 className='text-gray-500 uppercase tracking-widest'>Category</h3>
         <h2 className='text-4xl font-extrabold text-gray-900 mb-12'>
           🚀 We Offer the Best Features
@@ -126,13 +127,13 @@ const NewHomePage = () => {
         </div>
       </section>
 
-      {/* {How to us App Section Part} */}
-      <section className='py-16 px-6 lg:px-20 text-white flex flex-col lg:flex-row items-center lg:items-start gap-12'>
+      {/* {How to Use App Section} */}
+      <section className='py-16 px-6 md:px-12 lg:px-20 text-black flex flex-col lg:flex-row items-center lg:items-start gap-60'>
         <div className='flex-1 max-w-lg'>
           <h3 className='text-lg font-semibold text-gray-400'>
             Simple & Quick
           </h3>
-          <h2 className='text-4xl font-bold text-black mt-2'>
+          <h2 className='text-4xl font-bold text-orange-600 mt-2'>
             📸 Organize Your Gallery in 3 Easy Steps
           </h2>
           <div className='mt-6 space-y-6'>
@@ -153,8 +154,12 @@ const NewHomePage = () => {
             ))}
           </div>
         </div>
-        <div className='flex-1 max-w-lg '>
-          <img src={Header} alt='image ' />
+        <div className='flex-1 max-w-lg  flex justify-start'>
+          <img
+            src={section3}
+            alt='Image'
+            className='w-full h-auto object-left rounded-lg '
+          />
         </div>
       </section>
 
@@ -210,7 +215,6 @@ const NewHomePage = () => {
             <div className='mt-8 flex justify-center space-x-2'>
               <Button className='w-3 h-3 bg-blue-600 rounded-full'>1</Button>
               <Button className='w-3 h-3 bg-gray-400 rounded-full'>2</Button>
-              <Button className='w-3 h-3 bg-gray-400 rounded-full'>3</Button>
             </div>
           </div>
         </div>
