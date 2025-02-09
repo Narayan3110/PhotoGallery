@@ -20,7 +20,7 @@ const GalleryNavbar = () => {
 
   return (
     <div className='relative'>
-      <nav className='fixed left-0 right-0 top-6 z-50 mx-auto w-[90vw] max-w-2xl flex items-center justify-between rounded-full bg-white px-6 py-2 shadow-md gap-8'>
+      <nav className='fixed left-0 right-0 top-6 z-50 mx-auto w-[90vw] max-w-2xl flex items-center justify-between rounded-full bg-white px-6 py-2 shadow-md gap-5'>
         <div>
           <Link to='/profile' className='flex items-center gap-2'>
             <div className='size-10 rounded-full overflow-hidden border border-gray-300'>
@@ -46,7 +46,7 @@ const GalleryNavbar = () => {
             </Link>
           </li>
           <li>
-            <Link to='/Albums' className='hover:text-orange-500'>
+            <Link to='/albums' className='hover:text-orange-500'>
               Albums
             </Link>
           </li>

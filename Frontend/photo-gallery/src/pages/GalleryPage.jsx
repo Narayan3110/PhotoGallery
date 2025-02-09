@@ -10,7 +10,8 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { FaUpload } from "react-icons/fa6";
 import { AiOutlineCloudUpload } from "react-icons/ai";
-import { FaSort } from "react-icons/fa";
+import { GoSortAsc } from "react-icons/go";
+import { GoSortDesc } from "react-icons/go";
 import { RiCloseCircleLine } from "react-icons/ri";
 
 
@@ -220,10 +221,27 @@ const GalleryPage = () => {
               <AiOutlineCloudUpload className=" size-6" />
             </button>
           </div>
-          <div className="flex align-right">
-            <button className="bg-white hover:bg-gray-100  ">
-              <FaSort className="text-blue-600 size-10" />
+          <div className="flex align-right">  
+            <button
+              onClick={toggleSortOrder}
+              onMouseEnter={() =>
+                setHoverText(
+                  order === "desc" ? "Sort by Antique" : "Sort by Latest"
+                )
+              }
+              onMouseLeave={() => setHoverText("")}
+              className="bg-transparent hover:bg-gray-100 m-2 p-2 rounded-lg shadow"
+            >
+              {/* <FaSort className="text- size-10" /> */}
+
+              {order === "desc" ? <GoSortDesc className="size-7" />:<GoSortAsc className="size-7" /> }
+
             </button>
+            {hoverText && (
+              <span className="absolute left-16 m-4 w-32 bg-gray-800 text-white text-sm px-2 py-1 rounded">
+                {hoverText}
+              </span>
+            )}               
           </div>
           <div className="mt-8 text-xl text-center text-red-600">{message}</div>
         </div>

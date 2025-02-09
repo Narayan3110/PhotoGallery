@@ -3,7 +3,8 @@ import { useNavigate } from "react-router-dom";
 import albumService from "../services/albumService";
 import { MdSearch } from "react-icons/md";
 import { FaArrowLeftLong } from "react-icons/fa6";
-import { FaSort } from "react-icons/fa";
+import { GoSortAsc } from "react-icons/go";
+import { GoSortDesc } from "react-icons/go";
 
 const AlbumPage = () => {
   const [albums, setAlbums] = useState([]);
@@ -27,18 +28,6 @@ const AlbumPage = () => {
     if (profileId) fetchAlbums();
   }, [profileId , order]);
 
-  
-  const getAllAlbums = async () => {
-    try {
-      const data = await albumService.getAllAlbums(profileId, order);
-      setAlbums(Array.isArray(data) ? data : []);
-    } catch (error) {
-      console.error("Failed to fetch albums", error);
-      setAlbums([]);
-    }
-  };
-
-  
   const toggleSortOrder = () => {
     setOrder((prevOrder) => (prevOrder === "desc" ? "asc" : "desc"));
   };
@@ -61,13 +50,22 @@ const AlbumPage = () => {
 
   const fetchAlbums = async () => {
     try {
-      const data = await albumService.getAllAlbums(profileId);
+      const data = await albumService.getAllAlbums(profileId, order);
       setAlbums(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error("Failed to fetch albums", error);
       setAlbums([]);
     }
   };
+
+  const SectionHeader = ({ title, highlight }) => (
+    <div className="w-full mb-12">
+      <h2 className="text-4xl md:text-5xl font-bold text-gray-900 text-center">
+        {title} <span className="text-blue-700">{highlight}</span>
+      </h2>
+      <div className="w-24 h-1.5 bg-blue-700 mx-auto mt-4 rounded-full" />
+    </div>
+  );
 
   const handleRightClick = (event, album) => {
     event.preventDefault();
@@ -140,18 +138,15 @@ const AlbumPage = () => {
   };
 
   return (
-    <div className="relative mt-12 min-h-screen bg-gray-300 w-full p-6">
+    <div className="relative min-h-screen bg-white rounded-lg shadow m-5 p-8">
       {/* Title*/}
-      <div className="flex flex-col p-10 pt-0 gap-5 w-full max-w-7xl mx-auto">
-        <h1 className="text-[32px] md:text-[80px] font-bold text-center text-neutral-900 leading-[1.38] md:leading-[88px]">
-          <span>My </span>
-          <span className="text-blue-600">Albums</span>
-        </h1>
-        <div className="relative w-full max-w-7xl h-[7px] bg-gray-400"></div>
-
+      <div className="flex flex-col mt-10 w-full max-w-7xl mx-auto">
+        <div className="flex flex-col m-5 w-full max-w-7xl mx-auto ">
+          <SectionHeader title="Albums"/>
+        </div>
         {/* Buttons For Creating and Searching Albums */}
-        <div className="w-full px-4">
-          <div className=" bg-red-300 relative flex flex-col md:flex-row md:justify-between items-center mb-8 gap-4">
+        <div className="w-full">
+          <div className="relative flex flex-col md:flex-row md:justify-between items-center mb-8 gap-4">
             {/* Create Album Button */}
             <button
               onClick={() => setCreateAlbumModal(true)}
@@ -172,7 +167,7 @@ const AlbumPage = () => {
                 />
                 <button
                   type="submit" // Fix: Ensure button submits the form
-                  className="absolute right-1 top-5 h-9 bg-transparent transform -translate-y-1/2 flex items-center justify-center text-black hover:text-gray-500"
+                  className="absolute right-5 top-5 h-9 bg-transparent transform -translate-y-1/2 flex items-center justify-center text-black hover:text-gray-500"
                 >
                   <MdSearch />
                 </button>
@@ -180,26 +175,7 @@ const AlbumPage = () => {
             </form>
           </div>
 
-          <div className="bg-gray-200 rounded-xl bg-green-300">
-            <div className="relative flex items-center">
-             <button
-                onClick={toggleSortOrder}
-                onMouseEnter={() =>
-                  setHoverText(
-                    order === "desc" ? "Sort by Antique" : "Sort by Latest"
-                  )
-                }
-                onMouseLeave={() => setHoverText("")}
-                className="bg-white hover:bg-gray-100 p-2 rounded-lg shadow"
-              >
-                <FaSort className="text-blue-600 size-10" />
-              </button>
-              {hoverText && (
-                <span className="absolute left-12 ml-2 bg-gray-800 text-white text-sm px-2 py-1 rounded">
-                  {hoverText}
-                </span>
-              )}
-            </div>
+          <div className="bg-gray-100 rounded-xl">
             <div className="mt-0 pt-0">
               {/* Display Search Results */}
               {searchResults ? (
@@ -260,7 +236,7 @@ const AlbumPage = () => {
                     </div>
 
                     {/* Album Name with Hover Effect */}
-                    <h3 className="mt-8 bg-gray-300 text-black font-semibold text-lg text-center w-full">
+                    <h3 className="bg-gray-200 text-black font-semibold text-lg text-center w-full">
                       {searchResults.albumName}
                     </h3>
                   </div>
@@ -269,11 +245,34 @@ const AlbumPage = () => {
                 <>
                   {/* Display Albums */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                    <div className="absolute flex items-center">
+                      {/* Sorting Button */}
+                      <button
+                        onClick={toggleSortOrder}
+                        onMouseEnter={() =>
+                          setHoverText(
+                            order === "desc" ? "Sort by Antique" : "Sort by Latest"
+                          )
+                        }
+                        onMouseLeave={() => setHoverText("")}
+                        className="bg-transparent hover:bg-gray-100 m-2 p-2 rounded-lg shadow"
+                      >
+                        {/* <FaSort className="text- size-10" /> */}
+
+                        {order === "desc" ? <GoSortDesc className="size-7" />:<GoSortAsc className="size-7" /> }
+
+                      </button>
+                      {hoverText && (
+                        <span className="absolute left-12 ml-2 w-32 bg-gray-800 text-white text-sm px-2 py-1 rounded">
+                          {hoverText}
+                        </span>
+                      )}
+                    </div>
                     {albums.length > 0 ? (
                       albums.map((album) => (
                         <div
                           key={album.albumId}
-                          className="relative flex flex-col items-center justify-center p-6 bg-transparent rounded-xl cursor-pointer group transition-transform duration-500 "
+                          className="relative flex flex-col items-center justify-center mt-10 p-6 bg-transparent rounded-xl cursor-pointer group transition-transform duration-500 "
                           onContextMenu={(e) => handleRightClick(e, album)}
                           onClick={() => handleAlbumClick(album.albumId)}
                         >
@@ -320,7 +319,7 @@ const AlbumPage = () => {
                           </div>
 
                           {/* ✅ Album Name - Always Visible & Not Affected by Hover */}
-                          <h3 className="mt-8 bg-gray-300 text-black font-semibold text-lg text-center w-full">
+                          <h3 className="bg-gray-200 text-black font-semibold text-lg text-center w-full">
                             {album.albumName}
                           </h3>
                         </div>

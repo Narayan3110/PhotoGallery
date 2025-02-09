@@ -1,4 +1,7 @@
+import React from 'react';
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
+
 import Navbar from "./components/Navbar.jsx";
 import GalleryPage from "./pages/GalleryPage.jsx";
 import ContactPage from "./pages/ContactPage.jsx";
@@ -8,12 +11,11 @@ import Footer from "./components/Footer.jsx";
 import AboutUsPage from "./pages/AboutUsPage.jsx";
 import NewHomePage from "./pages/NewHomePage.jsx";
 import VerifyPage from "./pages/VerifyPage.jsx";
-import { useSelector } from "react-redux";
 import NewPasswordPage from "./pages/NewPasswordPage.jsx";
 import ResetEmail from "./pages/ResetEmail.jsx";
 import AlbumPage from "./pages/AlbumPage.jsx";
 import AlbumDetailPage from "./pages/AlbumDetailPage.jsx";
-import GalleryNavbar from "./components/GalleryNavbar.jsx"; // Import GalleryNavbar
+import GalleryNavbar from "./components/GalleryNavbar.jsx"; 
 import Profile from "./pages/Profile.jsx";
 
 const App = () => {
@@ -21,7 +23,9 @@ const App = () => {
   const location = useLocation(); // Get current route
 
   // Check if the current path is related to the gallery (you can customize this further if needed)
-  const isGalleryPage = location.pathname.startsWith("/gallery");
+  const isGalleryPage = location.pathname.startsWith("/gallery") ||
+    location.pathname.startsWith("/albums") ||
+    location.pathname.startsWith("/profile");
 
   return (
     <>
@@ -47,8 +51,9 @@ const App = () => {
         <Route path="/set-Password" element={<NewPasswordPage />} />
         <Route path="/register" element={<RegisterPage />} />
       </Routes>
-
+      
       <Footer />
+      
     </>
   );
 };

@@ -155,9 +155,9 @@ const Profile = () => {
     <div className='flex min-h-screen bg-gray-100'>
 
       {/* Main Content */}
-      <div className='flex-1 mt-20'>
+      <div className='flex-1 m-5 p- pt-18 bg-white rounded-lg shadow'>
         <div className="relative w-full h-64">
-          <div className="h-full relative  bg-[url('src/assets/photos/profilePage/gallery-banner.webp')] bg-cover bg-center" />
+          <div className="h-full relative bg-[url('src/assets/photos/profilePage/gallery-banner.webp')] bg-cover bg-center" />
           
           {/* User Info Section */}
           <div className="absolute top-44 grid grid-cols-8 ml-40 items-center ">
@@ -177,13 +177,13 @@ const Profile = () => {
                 {showProfileOptions && (
                   <div className="flex flex-col gap-1 absolute bg-white shadow-lg rounded-lg w-28 p-1">
                     <button
-                      className="block w-full bg-gray-300 text-left p-2 hover:bg-gray-200 hover:text-[#083A50]"
+                      className="block w-full bg-gray-300 rounded-lg text-left p-2 hover:bg-gray-200 hover:text-[#083A50]"
                       onClick={handleAddProfilePic}
                     >
                       Add New
                     </button>
                     <button
-                      className="block w-full bg-gray-300 text-left p-2 hover:bg-gray-200 hover:text-[#083A50]"
+                      className="block w-full bg-gray-300 rounded-lg text-left p-2 hover:bg-gray-200 hover:text-[#083A50]"
                       onClick={handleDeleteProfilePicture}
                     >
                       Remove
@@ -204,20 +204,20 @@ const Profile = () => {
         
         {/* Sidebar Nav */}
         <div className='flex mt-28 mb-10 p-10'>
-          <div className='w-1/6 ml-10 bg-white text-center p-4 rounded-lg shadow'>
-            <aside className="bg-white">
+          <div className='w-1/6 ml-10 bg-gray-100 text-center p-4 rounded-lg shadow'>
+            <aside>
               <nav className="flex flex-col gap-6 p-4">
                 <button
-                  className={`px-3 py-2 bg-gray-300 rounded-md font-bold ${
-                    activeTab === "profile" ? "bg-gray-400 text-[#083A50]" : " hover:bg-gray-200 hover:text-[#083A50]"
+                  className={`px-3 py-2 bg-gray-200 shadow rounded-md font-bold ${
+                    activeTab === "profile" ? "bg-gray-300" : " hover:bg-gray-100"
                   }`}
                   onClick={() => setActiveTab("profile")}
                 >
                   Edit Profile
                 </button>
                 <button
-                  className={`px-3 py-2 bg-gray-300 rounded-md font-bold ${
-                    activeTab === "resetPassword" ? "bg-gray-400 text-[#083A50]" : " hover:bg-gray-200 hover:text-[#083A50]"
+                  className={`px-3 py-2 bg-gray-200 rounded-md shadow font-bold ${
+                    activeTab === "resetPassword" ? "bg-gray-300" : " hover:bg-gray-100"
                   }`}
                   onClick={() => setActiveTab("resetPassword")}
                 >
@@ -228,18 +228,18 @@ const Profile = () => {
           </div>
 
           {/* Edit Profile Form */}
-          <main className="flex-1 ml-5 space-y-5 bg-white p-6 rounded-lg mr-10 shadow">
+          <main className="flex-1 ml-5 space-y-5 bg-gray-100  p-6 rounded-lg mr-10 shadow">
             {activeTab === "profile" ? (
             
             <form onSubmit={handleSubmit}>
-              <div className="grid grid-cols-2 gap-4 text-[#CACED8] font-bold text-lg">
+              <div className="grid grid-cols-2 gap-4  font-bold text-gray-300 text-lg">
               <h1 className="text-2xl font-bold text-[#083A50]">Edit Profile</h1>
               <div className="text-right">
                 <span>Last Update {formData.updatedDate}</span>
               </div>
             </div>
 
-            <div className="grid grid-cols-2 mt-4 gap-4 text-[#CACED8] font-bold text-lg">
+            <div className="grid grid-cols-2 mt-4 gap-4 text-gray-300 font-bold text-lg">
               <span>Personal</span>
               <span>Contact</span>
             </div>
@@ -408,7 +408,7 @@ const Profile = () => {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute text-xl right-1 mt-1 text-gray-500 bg-transparent hover:bg-transparent focus:outline-none"
+                  className="absolute text-xl right-5 mt-4 text-gray-500 bg-transparent hover:bg-transparent focus:outline-none"
                 >
                   {showPassword ? <FaEyeSlash /> : <FaEye />}
                 </button>

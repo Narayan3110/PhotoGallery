@@ -74,7 +74,6 @@ const teamMembers = [
 ];
 
 const AboutUsPage = () => {
-  // <<<<<<< narayan
   return (
     <div className="flex flex-col items-center py-20 md:py-[50px] gap-3 w-full">
       <div className="flex flex-col p-10 w-full max-w-7xl mx-auto ">
@@ -91,7 +90,7 @@ const AboutUsPage = () => {
             <div className="absolute shadow-xl top-0 left-0 flex justify-center items-center w-full h-full bg-black bg-opacity-20 p-5">
               <div className="w-[250px] shadow-xl md:w-[250px] lg:w-[400px] lg:pb-7 bg-black bg-opacity-40 p-4 rounded-lg">
                 <p className="text-gray-200 text-center font-bold text-sm md:text-sm lg:text-2xl">
-                  Our photo gallery showcases stunning visuals, captured with
+                  SnapSafe showcases stunning visuals, captured with
                   care to bring a unique perspective to each subject. Whether
                   it&apos;s landscapes, architecture, or moments frozen in time,
                   our collection is designed to inspire and engage visitors like
