@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import albumService from "../services/albumService";
 import { MdSearch } from "react-icons/md";
 import { FaArrowLeftLong } from "react-icons/fa6";
+import { FaSort } from "react-icons/fa";
 
 const AlbumPage = () => {
   const [albums, setAlbums] = useState([]);
@@ -14,16 +15,33 @@ const AlbumPage = () => {
   const [albumName, setAlbumName] = useState("");
   const [searchTerm, setSearchTerm] = useState(""); // State for search term
   const [searchResults, setSearchResults] = useState(null); // State for search results
-
+  const [order, setOrder] = useState("desc");
+  const [hoverText, setHoverText] = useState("");
+  
   const navigate = useNavigate();
-
   // Get profileId from local storage
   const user = JSON.parse(localStorage.getItem("user"));
   const profileId = user?.userProfile?.profileId;
 
   useEffect(() => {
     if (profileId) fetchAlbums();
-  }, [profileId]);
+  }, [profileId , order]);
+
+  
+  const getAllAlbums = async () => {
+    try {
+      const data = await albumService.getAllAlbums(profileId, order);
+      setAlbums(Array.isArray(data) ? data : []);
+    } catch (error) {
+      console.error("Failed to fetch albums", error);
+      setAlbums([]);
+    }
+  };
+
+  
+  const toggleSortOrder = () => {
+    setOrder((prevOrder) => (prevOrder === "desc" ? "asc" : "desc"));
+  };
 
   // ✅ Close context menu when clicking outside
   useEffect(() => {
@@ -108,8 +126,13 @@ const AlbumPage = () => {
     if (!searchTerm.trim()) return;
     try {
       const result = await albumService.searchAlbum(profileId, searchTerm);
-      setSearchResults(result); 
-      console.log("searching result :", result, " serch result variable",searchResults);
+      setSearchResults(result);
+      console.log(
+        "searching result :",
+        result,
+        " serch result variable",
+        searchResults
+      );
     } catch (error) {
       console.error("Error searching for album:", error);
       setSearchResults(null);
@@ -117,19 +140,18 @@ const AlbumPage = () => {
   };
 
   return (
-        
     <div className="relative mt-12 min-h-screen bg-gray-300 w-full p-6">
       {/* Title*/}
-        <div className='flex flex-col p-10 pt-0 gap-5 w-full max-w-7xl mx-auto'>
-          <h1 className='text-[32px] md:text-[80px] font-bold text-center text-neutral-900 leading-[1.38] md:leading-[88px]'>
-          <span>My </span><span className='text-blue-600'>Albums</span>
-          </h1>
-          <div className='relative w-full max-w-7xl h-[7px] bg-gray-400'>
-        </div>
+      <div className="flex flex-col p-10 pt-0 gap-5 w-full max-w-7xl mx-auto">
+        <h1 className="text-[32px] md:text-[80px] font-bold text-center text-neutral-900 leading-[1.38] md:leading-[88px]">
+          <span>My </span>
+          <span className="text-blue-600">Albums</span>
+        </h1>
+        <div className="relative w-full max-w-7xl h-[7px] bg-gray-400"></div>
 
         {/* Buttons For Creating and Searching Albums */}
         <div className="w-full px-4">
-          <div className="relative flex flex-col md:flex-row md:justify-between items-center mb-8 gap-4">
+          <div className=" bg-red-300 relative flex flex-col md:flex-row md:justify-between items-center mb-8 gap-4">
             {/* Create Album Button */}
             <button
               onClick={() => setCreateAlbumModal(true)}
@@ -139,8 +161,8 @@ const AlbumPage = () => {
             </button>
 
             {/* Search Bar */}
-            <form onSubmit={handleSearchAlbum}> 
-              <div className="relative flex items-center w-full max-w-[390px]">
+            <form onSubmit={handleSearchAlbum}>
+              <div className="relative flex items-center w-full max-w-[390px] mt-5">
                 <input
                   type="text"
                   value={searchTerm}
@@ -158,22 +180,42 @@ const AlbumPage = () => {
             </form>
           </div>
 
-          <div className="bg-gray-200 rounded-xl">
-            {/* Display Search Results */}
-            {searchResults ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"> 
-                {/* Back Arrow Button */}
-                <button
-                  onClick={() => setSearchResults(null)} // Reset search results on click
-                  className="absolute ml-5 mt-2 p-2 bg-transparent rounded-xl transition"
-                >
-                  <FaArrowLeftLong className="text-xl text-black hover:text-gray-500" />
-                </button>
-                <div
-                  key={searchResults.albumId}
-                  className="relative mt-14 flex flex-col items-center justify-center p-6 bg-transparent rounded-xl cursor-pointer group transition-transform duration-500"
-                  onContextMenu={(e) => handleRightClick(e, album)}
-                  onClick={() => handleAlbumClick(searchResults.albumId)}
+          <div className="bg-gray-200 rounded-xl bg-green-300">
+            <div className="relative flex items-center">
+             <button
+                onClick={toggleSortOrder}
+                onMouseEnter={() =>
+                  setHoverText(
+                    order === "desc" ? "Sort by Antique" : "Sort by Latest"
+                  )
+                }
+                onMouseLeave={() => setHoverText("")}
+                className="bg-white hover:bg-gray-100 p-2 rounded-lg shadow"
+              >
+                <FaSort className="text-blue-600 size-10" />
+              </button>
+              {hoverText && (
+                <span className="absolute left-12 ml-2 bg-gray-800 text-white text-sm px-2 py-1 rounded">
+                  {hoverText}
+                </span>
+              )}
+            </div>
+            <div className="mt-0 pt-0">
+              {/* Display Search Results */}
+              {searchResults ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 ">
+                  {/* Back Arrow Button */}
+                  <button
+                    onClick={() => setSearchResults(null)} // Reset search results on click
+                    className="absolute ml-5 mt-2 p-2 bg-transparent rounded-xl transition"
+                  >
+                    <FaArrowLeftLong className="text-xl text-black hover:text-gray-500" />
+                  </button>
+                  <div
+                    key={searchResults.albumId}
+                    className="relative mt-14 flex flex-col items-center justify-center p-6 bg-transparent rounded-xl cursor-pointer group transition-transform duration-500"
+                    onContextMenu={(e) => handleRightClick(e, album)}
+                    onClick={() => handleAlbumClick(searchResults.albumId)}
                   >
                     {/* Glass Effect on Hover */}
                     <div
@@ -219,96 +261,96 @@ const AlbumPage = () => {
 
                     {/* Album Name with Hover Effect */}
                     <h3 className="mt-8 bg-gray-300 text-black font-semibold text-lg text-center w-full">
-                    {searchResults.albumName}
-                  </h3>
-                </div>
-              </div>  
-            ) : (
-            <>
-              {/* Display Albums */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                {albums.length > 0 ? (
-                  albums.map((album) => (
-                    <div
-                    key={album.albumId}
-                    className="relative flex flex-col items-center justify-center p-6 bg-transparent rounded-xl cursor-pointer group transition-transform duration-500 "
-                    onContextMenu={(e) => handleRightClick(e, album)}
-                    onClick={() => handleAlbumClick(album.albumId)}
-                  >
-                    {/* Glass Effect on Hover */}
-                    <div
-                      className="relative w-[280px] h-[360px] flex justify-center items-center rounded-xl bg-transparent group-hover:bg-white group-hover:bg-opacity-10 group-hover:backdrop-blur-lg group-hover:shadow-lg transition-all duration-500"
-                      style={{ perspective: "1000px" }} // 3D perspective
-                    >
-                      {/* First Image (Front) */}
-                      {album.photos?.[0] && (
-                        <img
-                          src={album.photos[0].photoUrl}
-                          alt="Front Photo"
-                          className="absolute w-4/5 h-4/5 object-contain rounded-lg z-20 transition-transform duration-300 group-hover:scale-110 bg-white p-1"
-                          style={{
-                            boxShadow: "0 15px 25px rgba(0, 0, 0, 0.3)",
-                          }}
-                        />
-                      )}
-                  
-                      {/* Second Image (Left) */}
-                      {album.photos?.[1] && (
-                        <img
-                          src={album.photos[1].photoUrl}
-                          alt="Left Photo"
-                          className="absolute w-3/5 h-4/5 object-contain rounded-lg z-10 transition-transform duration-500 transform -translate-x-12 opacity-0 group-hover:opacity-100 group-hover:-translate-x-20 bg-white p-1"
-                          style={{
-                            boxShadow: "0 10px 20px rgba(0, 0, 0, 0.2)",
-                          }}
-                        />
-                      )}
-                  
-                      {/* Third Image (Right) */}
-                      {album.photos?.[2] && (
-                        <img
-                          src={album.photos[2].photoUrl}
-                          alt="Right Photo"
-                          className="absolute w-3/5 h-4/5 object-contain rounded-lg z-10 transition-transform duration-500 transform translate-x-12 opacity-0 group-hover:opacity-100 group-hover:translate-x-20 bg-white p-1"
-                          style={{
-                            boxShadow: "0 10px 20px rgba(0, 0, 0, 0.2)",
-                          }}
-                        />
-                      )}
-                    </div>
-                  
-                    {/* ✅ Album Name - Always Visible & Not Affected by Hover */}
-                    <h3 className="mt-8 bg-gray-300 text-black font-semibold text-lg text-center w-full">
-                      {album.albumName}
+                      {searchResults.albumName}
                     </h3>
                   </div>
-                    
-                  ))
-                ) : (
-                  <p>No albums found</p>
-                )}
-              </div>
-            </>
-          )}
+                </div>
+              ) : (
+                <>
+                  {/* Display Albums */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                    {albums.length > 0 ? (
+                      albums.map((album) => (
+                        <div
+                          key={album.albumId}
+                          className="relative flex flex-col items-center justify-center p-6 bg-transparent rounded-xl cursor-pointer group transition-transform duration-500 "
+                          onContextMenu={(e) => handleRightClick(e, album)}
+                          onClick={() => handleAlbumClick(album.albumId)}
+                        >
+                          {/* Glass Effect on Hover */}
+                          <div
+                            className="relative w-[280px] h-[360px] flex justify-center items-center rounded-xl bg-transparent group-hover:bg-white group-hover:bg-opacity-10 group-hover:backdrop-blur-lg group-hover:shadow-lg transition-all duration-500"
+                            style={{ perspective: "1000px" }} // 3D perspective
+                          >
+                            {/* First Image (Front) */}
+                            {album.photos?.[0] && (
+                              <img
+                                src={album.photos[0].photoUrl}
+                                alt="Front Photo"
+                                className="absolute w-4/5 h-4/5 object-contain rounded-lg z-20 transition-transform duration-300 group-hover:scale-110 bg-white p-1"
+                                style={{
+                                  boxShadow: "0 15px 25px rgba(0, 0, 0, 0.3)",
+                                }}
+                              />
+                            )}
+
+                            {/* Second Image (Left) */}
+                            {album.photos?.[1] && (
+                              <img
+                                src={album.photos[1].photoUrl}
+                                alt="Left Photo"
+                                className="absolute w-3/5 h-4/5 object-contain rounded-lg z-10 transition-transform duration-500 transform -translate-x-12 opacity-0 group-hover:opacity-100 group-hover:-translate-x-20 bg-white p-1"
+                                style={{
+                                  boxShadow: "0 10px 20px rgba(0, 0, 0, 0.2)",
+                                }}
+                              />
+                            )}
+
+                            {/* Third Image (Right) */}
+                            {album.photos?.[2] && (
+                              <img
+                                src={album.photos[2].photoUrl}
+                                alt="Right Photo"
+                                className="absolute w-3/5 h-4/5 object-contain rounded-lg z-10 transition-transform duration-500 transform translate-x-12 opacity-0 group-hover:opacity-100 group-hover:translate-x-20 bg-white p-1"
+                                style={{
+                                  boxShadow: "0 10px 20px rgba(0, 0, 0, 0.2)",
+                                }}
+                              />
+                            )}
+                          </div>
+
+                          {/* ✅ Album Name - Always Visible & Not Affected by Hover */}
+                          <h3 className="mt-8 bg-gray-300 text-black font-semibold text-lg text-center w-full">
+                            {album.albumName}
+                          </h3>
+                        </div>
+                      ))
+                    ) : (
+                      <p>No albums found</p>
+                    )}
+                  </div>
+                </>
+              )}
+            </div>
           </div>
         </div>
       </div>
       {/* Context Menu */}
       {contextMenu && (
         <div
-          className="absolute border shadow-lg rounded-lg p-2 context-menu 
+          className="absolute border shadow-lg rounded-lg p-2 context-menu
                transition-all duration-200 transform scale-95 opacity-100 "
-          style={{ top: contextMenu.y, left: contextMenu.x , minWidth: "150px"  }}
+          style={{ top: contextMenu.y, left: contextMenu.x, minWidth: "150px" }}
         >
           <button
-            className="block w-full mb-1 shadow-lg bg-gray-300 rounded-md font-bold text-left px-4 py-2 text-black font-medium 
+            className="block w-full mb-1 shadow-lg bg-gray-300 rounded-md font-bold text-left px-4 py-2 text-black font-medium
                  hover:bg-gray-100 rounded-md transition-all duration-200"
             onClick={() => setRenameModal(true)}
           >
             ✏️ Rename
           </button>
           <button
-            className="block w-full text-left bg-gray-300 rounded-md font-bold  shadow-lg px-4 py-2 text-red-600 font-medium 
+            className="block w-full text-left bg-gray-300 rounded-md font-bold  shadow-lg px-4 py-2 text-red-600 font-medium
                  hover:bg-red-100 rounded-md transition-all duration-200"
             onClick={handleDeleteAlbum}
           >
@@ -321,7 +363,9 @@ const AlbumPage = () => {
       {renameModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
           <div className="bg-white p-6 pt-0 rounded-lg text-center ">
-            <h2 className="text-lg shadow-xl font-semibold mb-8 ">Rename Album</h2>
+            <h2 className="text-lg shadow-xl font-semibold mb-8 ">
+              Rename Album
+            </h2>
             <input
               type="text"
               className="border p-2 w-full shadow-xl rounded-xl"
@@ -351,7 +395,9 @@ const AlbumPage = () => {
       {createAlbumModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
           <div className="bg-white shadow-xl  p-6 pt-0 rounded-lg text-center">
-            <h2 className="text-lg shadow-xl font-semibold mb-8">Create New Album</h2>
+            <h2 className="text-lg shadow-xl font-semibold mb-8">
+              Create New Album
+            </h2>
             <input
               type="text"
               className="border p-2 w-full rounded-xl shadow-xl"
@@ -381,3 +427,4 @@ const AlbumPage = () => {
 };
 
 export default AlbumPage;
+
