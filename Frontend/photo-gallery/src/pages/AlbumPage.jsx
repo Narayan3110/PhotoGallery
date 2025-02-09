@@ -58,6 +58,15 @@ const AlbumPage = () => {
     }
   };
 
+  const SectionHeader = ({ title, highlight }) => (
+    <div className="w-full mb-12">
+      <h2 className="text-4xl md:text-5xl font-bold text-gray-900 text-center">
+        {title} <span className="text-blue-700">{highlight}</span>
+      </h2>
+      <div className="w-24 h-1.5 bg-blue-700 mx-auto mt-4 rounded-full" />
+    </div>
+  );
+
   const handleRightClick = (event, album) => {
     event.preventDefault();
     setSelectedAlbum(album);
@@ -129,14 +138,12 @@ const AlbumPage = () => {
   };
 
   return (
-    <div className="relative mt-12 min-h-screen bg-white w-full p-6">
+    <div className="relative min-h-screen bg-white rounded-lg shadow m-5 p-8">
       {/* Title*/}
-      <div className="flex flex-col p-10 pt-0 gap-5 w-full max-w-7xl mx-auto">
-        <h1 className="text-[32px] md:text-[80px] font-bold text-center text-neutral-900 leading-[1.38] md:leading-[88px]">
-          <span>Albums</span>
-        </h1>
-        <div className="relative w-full max-w-7xl h-[7px] bg-gray-400"></div>
-
+      <div className="flex flex-col p-10 pt-0 w-full max-w-7xl mx-auto">
+        <div className="flex flex-col p-10 w-full max-w-7xl mx-auto ">
+          <SectionHeader title="Albums"/>
+        </div>
         {/* Buttons For Creating and Searching Albums */}
         <div className="w-full px-4">
           <div className="relative flex flex-col md:flex-row md:justify-between items-center mb-8 gap-4">

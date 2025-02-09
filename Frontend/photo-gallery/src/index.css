@@ -21,7 +21,7 @@
 
 /* Base Styles */
 body {
-  
+  font-family: 'Poppins', sans-serif;
   line-height: 1.6;
   color: var(--text-color);
   background-color: var(--background-color);
@@ -38,7 +38,6 @@ h5,
 h6 {
   
   
-  font-family: 'Young Serif', serif;
   color: var(--primary-color);
   margin-top: 1.5rem;
   margin-bottom: 0.5rem;
@@ -46,7 +45,6 @@ h6 {
 }
 
 p {
-  font-family: 'Poppins', sans-serif;
   margin-top: 0;
   margin-bottom: 1rem;
   color: var(--text-color);
