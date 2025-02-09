@@ -140,12 +140,12 @@ const AlbumPage = () => {
   return (
     <div className="relative min-h-screen bg-white rounded-lg shadow m-5 p-8">
       {/* Title*/}
-      <div className="flex flex-col p-10 pt-0 w-full max-w-7xl mx-auto">
-        <div className="flex flex-col p-10 w-full max-w-7xl mx-auto ">
+      <div className="flex flex-col mt-10 w-full max-w-7xl mx-auto">
+        <div className="flex flex-col m-5 w-full max-w-7xl mx-auto ">
           <SectionHeader title="Albums"/>
         </div>
         {/* Buttons For Creating and Searching Albums */}
-        <div className="w-full px-4">
+        <div className="w-full">
           <div className="relative flex flex-col md:flex-row md:justify-between items-center mb-8 gap-4">
             {/* Create Album Button */}
             <button
@@ -167,7 +167,7 @@ const AlbumPage = () => {
                 />
                 <button
                   type="submit" // Fix: Ensure button submits the form
-                  className="absolute right-1 top-5 h-9 bg-transparent transform -translate-y-1/2 flex items-center justify-center text-black hover:text-gray-500"
+                  className="absolute right-5 top-5 h-9 bg-transparent transform -translate-y-1/2 flex items-center justify-center text-black hover:text-gray-500"
                 >
                   <MdSearch />
                 </button>
@@ -175,7 +175,7 @@ const AlbumPage = () => {
             </form>
           </div>
 
-          <div className="bg-gray-200 rounded-xl">
+          <div className="bg-gray-100 rounded-xl">
             <div className="mt-0 pt-0">
               {/* Display Search Results */}
               {searchResults ? (
@@ -236,7 +236,7 @@ const AlbumPage = () => {
                     </div>
 
                     {/* Album Name with Hover Effect */}
-                    <h3 className="mt-8 bg-gray-300 text-black font-semibold text-lg text-center w-full">
+                    <h3 className="bg-gray-200 text-black font-semibold text-lg text-center w-full">
                       {searchResults.albumName}
                     </h3>
                   </div>
@@ -246,6 +246,7 @@ const AlbumPage = () => {
                   {/* Display Albums */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                     <div className="absolute flex items-center">
+                      {/* Sorting Button */}
                       <button
                         onClick={toggleSortOrder}
                         onMouseEnter={() =>
@@ -318,7 +319,7 @@ const AlbumPage = () => {
                           </div>
 
                           {/* ✅ Album Name - Always Visible & Not Affected by Hover */}
-                          <h3 className="mt-8 bg-gray-300 text-black font-semibold text-lg text-center w-full">
+                          <h3 className="bg-gray-200 text-black font-semibold text-lg text-center w-full">
                             {album.albumName}
                           </h3>
                         </div>
