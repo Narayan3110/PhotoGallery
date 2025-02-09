@@ -3,26 +3,16 @@ import {
   uploadPhoto,
   fetchPhotos,
   deletePhoto,
-// <<<<<<< narayan
-} from '../services/photoService';
-import { updateUserProfile } from '@/services/profileUpdateService';
-import albumService from '../services/albumService';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { FaUpload } from 'react-icons/fa6';
-import { AiOutlineCloudUpload } from 'react-icons/ai';
-import { FaSort } from 'react-icons/fa';
+} from "../services/photoService";
+import { updateUserProfile } from "@/services/profileUpdateService";
+import albumService from "../services/albumService";
+import { useNavigate, useLocation } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { FaUpload } from "react-icons/fa6";
+import { AiOutlineCloudUpload } from "react-icons/ai";
+import { FaSort } from "react-icons/fa";
 import { RiCloseCircleLine } from "react-icons/ri";
-// =======
-// } from "../services/photoService";
-// import { updateUserProfile } from "@/services/profileUpdateService";
-// import albumService from "../services/albumService";
-// import { useNavigate, useLocation } from "react-router-dom";
-// import { useDispatch } from "react-redux";
-// import { FaUpload } from "react-icons/fa6";
-// import { AiOutlineCloudUpload } from "react-icons/ai";
-// import { FaSort } from "react-icons/fa";
-// >>>>>>> master
+
 
 const GalleryPage = () => {
   const [photos, setPhotos] = useState([]);
@@ -205,35 +195,18 @@ const GalleryPage = () => {
   };
 
   return (
-// <<<<<<< narayan
-    <div className='flex '>
-      <div className='min-h-screen flex flex-col items-center justify-center text-white p-6 w-full '>
-        <div className='w-full  bg-white  rounded-lg text-gray-800 mb-0'>
+    <div className="flex ">
+      <div className="min-h-screen flex flex-col items-center justify-center text-white p-6 w-full ">
+        <div className="w-full  bg-white  rounded-lg text-gray-800 mb-0">
           {Boolean(isProfileEditing) ? (
-            <h2 className='flex flex-row items-center justify-center text-xl font-semibold text-center mb-4 gap-4 '>
-              Upload New Photo <FaUpload className='size-6 text-blue-600  ' />
+            <h2 className="flex flex-row items-center justify-center text-xl font-semibold text-center mb-4 gap-4 ">
+              Upload New Photo <FaUpload className="size-6 text-blue-600  " />
             </h2>
           ) : (
-            <h2 className='flex flex-row items-center justify-center text-xl font-semibold text-center mb-4 gap-4  text-center  pt-10'>
-             
-            </h2>
+            <h2 className="flex flex-row items-center justify-center text-xl font-semibold text-center mb-4 gap-4  text-center  pt-10"></h2>
           )}
-          <div className='flex justify-center items-center gap-4 p-2 '>
-// =======
-//     <div className="flex ">
-//       <div className="  min-h-screen flex flex-col items-center justify-center text-white p-6 w-full ">
-//         <div className="    w-full max-w-6xl bg-white p-6 rounded-lg text-gray-800 mb-0">
-//           {Boolean(isProfileEditing) ? (
-//             <h2 className="flex flex-row items-center justify-center text-xl font-semibold text-center mb-4 gap-4 ">
-//               Upload New Photo <FaUpload className="size-6 text-blue-600 " />
-//             </h2>
-//           ) : (
-//             <h2 className="text-xl font-semibold text-center mb-4 pt-5">
-//               Upload New Photo
-//             </h2>
-//           )}
-//           <div className="flex justify-center items-center gap-4">
-// >>>>>>> master
+          <div className="flex justify-center items-center gap-4 p-2 ">
+
             <input
               type="file"
               accept="image/*"
@@ -242,55 +215,20 @@ const GalleryPage = () => {
             />
             <button
               onClick={handleFileUpload}
-// <<<<<<< narayan
-              className='rounded-full bg-purple-600 px-6 py-2 text-white hover:bg-purple-500'
+              className="rounded-full bg-purple-600 px-6 py-2 text-white hover:bg-purple-500"
             >
-              <AiOutlineCloudUpload className=' size-6' />
+              <AiOutlineCloudUpload className=" size-6" />
             </button>
           </div>
-          <div className='flex align-right'>
-            <button className='bg-white hover:bg-gray-100  '>
-              <FaSort className='text-blue-600 size-10' />
+          <div className="flex align-right">
+            <button className="bg-white hover:bg-gray-100  ">
+              <FaSort className="text-blue-600 size-10" />
             </button>
           </div>
-          <div className='mt-8 text-xl text-center text-red-600'>{message}</div>
+          <div className="mt-8 text-xl text-center text-red-600">{message}</div>
         </div>
         {/* {Photo Section} */}
-        <div className='  w-full  columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-4'>
-// =======
-//               className="bg-white text-white p-2 rounded-lg  bg-white"
-//               disabled={loading}
-//             >
-//               <AiOutlineCloudUpload className="text-violet-600 size-10" />
-//             </button>
-//           </div>
-//           <div className="relative flex items-center">
-//             <button
-//               onClick={toggleSortOrder}
-//               onMouseEnter={() =>
-//                 setHoverText(
-//                   order === "desc" ? "Sort by Antique" : "Sort by Latest"
-//                 )
-//               }
-//               onMouseLeave={() => setHoverText("")}
-//               className="bg-white hover:bg-gray-100 p-2 rounded-lg shadow"
-//             >
-//               <FaSort className="text-blue-600 size-10" />
-//             </button>
-//             {hoverText && (
-//               <span className="absolute left-12 ml-2 bg-gray-800 text-white text-sm px-2 py-1 rounded">
-//                 {hoverText}
-//               </span>
-//             )}
-//           </div>
-//         </div>
-
-//         {message && (
-//           <p className="mt-6 text-xl text-center text-yellow-200">{message}</p>
-//         )}
-
-//         <div className=" w-full max-w-6xl columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-4">
-// >>>>>>> master
+        <div className="  w-full  columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-4">
           {photos.length === 0 ? (
             <p className="col-span-full text-center text-lg text-gray-200">
               No photos available.
@@ -312,40 +250,22 @@ const GalleryPage = () => {
           )}
         </div>
         {selectedPhoto && (
-//<<<<<<< narayan
-          <div className='fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50 '>
-            <div className='relative max-w-4xl max-h-[90vh] p-4 rounded-lg text-black '>
+          <div className="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50 ">
+            <div className="relative max-w-4xl max-h-[90vh] p-4 rounded-lg text-black ">
               <button
                 onClick={closeModal}
-                className='absolute top-4 right-4 text-black text-3xl p-2 transition duration-150 ease-in-out  '
-//  =======
-//           <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50">
-//             <div className="relative max-w-4xl max-h-[90vh] p-4 rounded-lg shadow-2xl text-black">
-//               <button
-//                 onClick={closeModal}
-//                 className="absolute top-4 right-4 text-black text-3xl p-2 rounded-full"
-// >>>>>>> master
+                className="absolute top-4 right-4 text-black text-3xl p-2 transition duration-150 ease-in-out  "
               >
-                <RiCloseCircleLine className='text-white opacity-70 '/>
+                <RiCloseCircleLine className="text-white opacity-70 " />
               </button>
               <img
                 src={selectedPhoto}
-// <<<<<<< narayan
-                alt='Selected Photo'
-                className='w-full h-auto rounded-lg object-contain'
+                alt="Selected Photo"
+                className="w-full h-auto rounded-lg object-contain"
               />
               {showAlbumDropdown && (
-                <div className='absolute top-4 left-4 bg-white text-black shadow-lg p-4 rounded-lg w-72 object-contain'>
-                  <h3 className='text-lg font-semibold mb-4'>Select Album</h3>
-
-
-//                 alt="Selected Photo"
-//                 className="w-full h-auto rounded-lg"
-//               />
-//               {showAlbumDropdown && (
-//                 <div className="absolute top-4 left-4 bg-white text-black shadow-lg p-4 rounded-lg w-72">
-//                   <h3 className="text-lg font-semibold mb-4">Select Album</h3>
-// >>>>>>> master
+                <div className="absolute top-4 left-4 bg-white text-black shadow-lg p-4 rounded-lg w-72 object-contain">
+                  <h3 className="text-lg font-semibold mb-4">Select Album</h3>
                   <select
                     value={selectedAlbumId}
                     onChange={(e) => setSelectedAlbumId(e.target.value)}
