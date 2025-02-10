@@ -1,10 +1,11 @@
+
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { login } from "../redux/authSlice"; // Import the login action
 
 // Create an Axios instance with base URL and interceptors
 const apiClient = axios.create({
-  baseURL: "http://localhost:9090/api",
+  baseURL: "https://photogallery-deployement-latest.onrender.com/api",
   headers: {
     "Content-Type": "application/json",
   },

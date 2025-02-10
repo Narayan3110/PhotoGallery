@@ -16,7 +16,7 @@ const ResetEmail = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:9090/api/users/reset-email",
+        "https://photogallery-deployement-latest.onrender.com/api/users/reset-email",
         { email }
       );
       setMessage(
