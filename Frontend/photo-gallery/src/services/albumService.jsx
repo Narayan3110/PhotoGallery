@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_BASE_URL = "http://localhost:9090/api/album";
+const API_BASE_URL = "https://photogallery-deployement-latest.onrender.com/api/album";
 
 // Create an Axios instance with default settings
 const api = axios.create({
@@ -124,7 +124,7 @@ const albumService = {
 
     try {
       const response = await api.post(
-        `http://localhost:9090/api/photo/upload`,
+        `https://photogallery-deployement-latest.onrender.com/api/photo/upload`,
         formData,
         {
           headers: {

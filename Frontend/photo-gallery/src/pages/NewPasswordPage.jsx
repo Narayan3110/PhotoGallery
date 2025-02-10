@@ -130,7 +130,7 @@ const NewPasswordPage = () => {
       if (token) {
         // Non-logged-in user (password reset via email link)
         response = await axios.get(
-          "http://localhost:9090/api/users/reset-password",
+          "https://photogallery-deployement-latest.onrender.com/api/users/reset-password",
           {
             params: { token, newPassword: password }, // Pass parameters in query
           }
@@ -148,7 +148,7 @@ const NewPasswordPage = () => {
         const token = localStorage.getItem("token");
 
         response = await axios.post(
-          "http://localhost:9090/api/users/update-password",
+          "https://photogallery-deployement-latest.onrender.com/api/users/update-password",
           { newPassword: password, profileId },
           {
             headers: {

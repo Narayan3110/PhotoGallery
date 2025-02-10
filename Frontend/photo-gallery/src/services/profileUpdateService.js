@@ -4,7 +4,7 @@ import { updateUser } from "@/redux/authSlice"; // Import the new action
 export const updateUserProfile = async (profileId, updatedUserData, dispatch) => {
   try {
     const response = await axios.put(
-      `http://localhost:9090/api/userprofile/update/${profileId}`,
+      `https://photogallery-deployement-latest.onrender.com/api/userprofile/update/${profileId}`,
       null,
       { params: updatedUserData }
     );

@@ -20,7 +20,7 @@ const VerifyPage = () => {
   const verifyEmail = async (token) => {
     try {
       const response = await axios.get(
-        `http://localhost:9090/api/users/verify?token=${token}`
+        `https://photogallery-deployement-latest.onrender.com/api/users/verify?token=${token}`
       );
 
       setMessage(response.data.message || "Verification successful!");

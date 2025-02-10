@@ -11,7 +11,7 @@ export const uploadPhoto = async (formData) => {
     const token = getAuthToken(); // Get JWT token
 
     const response = await axios.post(
-      "http://localhost:9090/api/photo/upload",
+      "https://photogallery-deployement-latest.onrender.com/api/photo/upload",
       formData,
       {
         headers: {
@@ -51,7 +51,7 @@ export const fetchPhotos = async (profileId, order = 'desc') => {
     const token = getAuthToken(); // Get JWT token
 
     const response = await axios.get(
-      `http://localhost:9090/api/photo/${profileId}?order=${order}`, // Add order query param
+      `https://photogallery-deployement-latest.onrender.com/api/photo/${profileId}?order=${order}`, // Add order query param
       {
         headers: {
           Authorization: `Bearer ${token}`, // Add JWT token to headers
@@ -72,7 +72,7 @@ export const deletePhoto = async (publicId) => {
     const token = getAuthToken(); // Get JWT token
 
     const response = await axios.delete(
-      `http://localhost:9090/api/photo/delete`,
+      `https://photogallery-deployement-latest.onrender.com/api/photo/delete`,
       {
         params: { publicId }, // Send publicId as a query parameter
         headers: {
