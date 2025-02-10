@@ -1,7 +1,7 @@
 const ContactPage = () => {
   return (
     <div className="flex flex-col items-centre flex flex-col items-center py-20">
-      <h1 className="text-black font-poppins font-bold text-[40px] leading-[60px]">
+      <h1 className="text-black font-poppins font-bold text-[40px] leading-[60px] ">
         Contact Us
       </h1>
       <p className="text-[#717171] font-poppins font-medium text-[18px] leading-[27px] text-center">

@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { useNavigate } from "react-router-dom";
-import { useSelector,useDispatch } from 'react-redux';
-import {updateUserProfile} from '@/services/profileUpdateService';
-import { RiCameraAiFill } from "react-icons/ri";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { useNavigate } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { updateUserProfile } from '@/services/profileUpdateService';
+import { RiCameraAiFill } from 'react-icons/ri';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import AuthService from '@/services/authTest';
 // <<<<<<< narayan
 // import { Verified } from 'lucide-react';
@@ -13,13 +13,14 @@ import AuthService from '@/services/authTest';
 const Profile = () => {
   const userData = useSelector((state) => state.auth.user);
   const [isLoading, setIsLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
-  const [reseterrorMessage, setResetErrorMessage] = useState("");
-  const [activeTab, setActiveTab] = useState("profile"); // "profile" or "resetPassword"
+  const [errorMessage, setErrorMessage] = useState('');
+  const [reseterrorMessage, setResetErrorMessage] = useState('');
+  const [activeTab, setActiveTab] = useState('profile'); // "profile" or "resetPassword"
   const [showPassword, setShowPassword] = useState(false);
-  const [userVerified, setUserVerified] = useState("");
+  const [userVerified, setUserVerified] = useState('');
   const [showProfileOptions, setShowProfileOptions] = useState(false);
-  const addressParts = userData?.userProfile?.address?.split(',').map(part => part.trim()) || [];
+  const addressParts =
+    userData?.userProfile?.address?.split(',').map((part) => part.trim()) || [];
 
   const toggleProfileOptions = () => {
     setShowProfileOptions(!showProfileOptions);
@@ -27,7 +28,7 @@ const Profile = () => {
 
   // Use To Navigate Pages
   const navigate = useNavigate();
-  
+
   // Get the dispatch function from Redux
   const dispatch = useDispatch();
 
@@ -45,9 +46,9 @@ const Profile = () => {
   const formatDOB = (isoString) => {
     return isoString
       ? new Date(isoString).toLocaleString('en-US', {
-        day:'numeric',
-        month:'numeric',
-        year:'numeric',
+          day: 'numeric',
+          month: 'numeric',
+          year: 'numeric',
         })
       : '';
   };
@@ -60,9 +61,9 @@ const Profile = () => {
     phoneNumber: userData?.userProfile?.contact || '', // Display contact as phone number
     name: userData?.userProfile?.fullName?.split(' ')[0] || '', // First Name
     surname: userData?.userProfile?.fullName?.split(' ')[1] || '', // Surname
-    city : addressParts[0] || '',
-    state :addressParts[1] || '', 
-    country : addressParts[2] || '', 
+    city: addressParts[0] || '',
+    state: addressParts[1] || '',
+    country: addressParts[2] || '',
     dob: userData?.userProfile?.dob || '', // Date of Birth
   });
 
@@ -75,30 +76,31 @@ const Profile = () => {
   // Handle input change for both forms
   const handleChange = (e) => {
     const { name, value } = e.target;
-    if (activeTab === "profile") {
+    if (activeTab === 'profile') {
       setFormData({ ...formData, [name]: value });
     } else {
       setResetData({ ...resetData, [name]: value });
     }
   };
 
-   // Handle form submission Profile Update
-  const handleSubmit = async (e,removeProfile) => {
+  // Handle form submission Profile Update
+  const handleSubmit = async (e, removeProfile) => {
     e.preventDefault();
 
     // Merge full name and address before sending
     const fullName = `${formData.name} ${formData.surname}`;
 
     // Reassemble the address while ensuring no trailing commas
-    const address = [formData.city, formData.state, formData.country]
-      .join(', ');    // updated Data to send
+    const address = [formData.city, formData.state, formData.country].join(
+      ', '
+    ); // updated Data to send
     const updatedUserData = {
-        fullName,
-        address,
-        contact:formData.phoneNumber,
-        dob: formData.dob, // Send updated DOB
-        removeProfile
-    }; 
+      fullName,
+      address,
+      contact: formData.phoneNumber,
+      dob: formData.dob, // Send updated DOB
+      removeProfile,
+    };
     setErrorMessage('');
     setIsLoading(true);
     try {
@@ -109,347 +111,346 @@ const Profile = () => {
       );
       alert(response);
     } catch (error) {
-      setErrorMessage("Error during updating. Please try again.");
+      setErrorMessage('Error during updating. Please try again.');
     } finally {
       setIsLoading(false);
     }
   };
-    // Handle Reset Password Form Submission
-    const handleResetSubmit = async (e) => {
-      e.preventDefault();
+  // Handle Reset Password Form Submission
+  const handleResetSubmit = async (e) => {
+    e.preventDefault();
 
-      const usernameOrEmail=resetData.email;
-      const password=resetData.password;
-      setResetErrorMessage('');
-      setIsLoading(true);
-        try {
-          setUserVerified( await AuthService.loginUser(
-        usernameOrEmail,
-        password,
-        dispatch
-      ));
+    const usernameOrEmail = resetData.email;
+    const password = resetData.password;
+    setResetErrorMessage('');
+    setIsLoading(true);
+    try {
+      setUserVerified(
+        await AuthService.loginUser(usernameOrEmail, password, dispatch)
+      );
     } catch (err) {
-      console.error("Login failed:", err);
-      setResetErrorMessage("Invalid Credentials");
+      console.error('Login failed:', err);
+      setResetErrorMessage('Invalid Credentials');
     } finally {
       setIsLoading(false);
-    }   
-    };
-    // Handle ProfileChangeButton 
-    const handleAddProfilePic = () => {
-      navigate("/gallery", {
-        state: {
-        isProfileEditing:true  
-        } });
-    };
+    }
+  };
+  // Handle ProfileChangeButton
+  const handleAddProfilePic = () => {
+    navigate('/gallery', {
+      state: {
+        isProfileEditing: true,
+      },
+    });
+  };
 
-    const handleDeleteProfilePicture = () => {
-      handleSubmit({ preventDefault: () => {} }, true); // Pass 'true' for removeProfile directly
-    };
-    
-  
+  const handleDeleteProfilePicture = () => {
+    handleSubmit({ preventDefault: () => {} }, true); // Pass 'true' for removeProfile directly
+  };
+
   // Default Profile picture
-  const defaultProfilePic = "src/assets/photos/profilePage/Default Profile.png";
-
+  const defaultProfilePic = 'src/assets/photos/profilePage/Default Profile.png';
   return (
-    <div className='flex min-h-screen bg-gray-100'>
-
-      {/* Main Content */}
-      <div className='flex-1 m-5 p- pt-18 bg-white rounded-lg shadow'>
-        <div className="relative w-full h-64">
-          <div className="h-full relative bg-[url('src/assets/photos/profilePage/gallery-banner.webp')] bg-cover bg-center" />
-          
-          {/* User Info Section */}
-          <div className="absolute top-44 grid grid-cols-8 ml-40 items-center ">
-              {/* Profile Picture */}
-              <div className="relative w-40 h-40 rounded-full shadow-2xl">
+    <div className='min-h-screen bg-gray-50'>
+      <div className='max-w-7xl mx-auto px-4 py-8'>
+        {/* Profile Header */}
+        <div className='relative bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden'>
+          <div className='h-48 bg-gradient-to-r from-blue-50 to-indigo-50 relative'>
+            <div className='absolute -bottom-16 left-8'>
+              <div className='relative group'>
                 <img
                   src={userData.userProfile?.profileUrl || defaultProfilePic}
-                  alt="Profile"
-                  className="w-full h-full object-cover rounded-full border-4 bg-white border-white object-cover"
+                  alt='Profile'
+                  className='w-32 h-32 rounded-full border-4 border-white shadow-lg object-cover'
                 />
                 <div
-                  className="absolute bottom-4 right-4 bg-white p-2 rounded-full cursor-pointer"
-                  onClick={toggleProfileOptions} 
-                  >
-                <RiCameraAiFill />
-                {/* Dropdown Menu */}
+                  className='absolute inset-0 bg-black/30 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer'
+                  onClick={toggleProfileOptions}
+                >
+                  <RiCameraAiFill className='text-white text-2xl' />
+                </div>
+                {/* Profile Options Dropdown */}
                 {showProfileOptions && (
-                  <div className="flex flex-col gap-1 absolute bg-white shadow-lg rounded-lg w-28 p-1">
+                  <div className='absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-white rounded-lg shadow-lg py-2 w-40 border border-gray-100'>
                     <button
-                      className="block w-full bg-gray-300 rounded-lg text-left p-2 hover:bg-gray-200 hover:text-[#083A50]"
                       onClick={handleAddProfilePic}
+                      className='w-full px-4 py-2.5 text-sm text-gray-700 hover:bg-blue-50 transition-colors text-left'
                     >
-                      Add New
+                      Change Photo
                     </button>
                     <button
-                      className="block w-full bg-gray-300 rounded-lg text-left p-2 hover:bg-gray-200 hover:text-[#083A50]"
                       onClick={handleDeleteProfilePicture}
+                      className='w-full px-4 py-2.5 text-sm text-gray-700 hover:bg-blue-50 transition-colors text-left'
                     >
-                      Remove
+                      Remove Photo
                     </button>
                   </div>
                 )}
               </div>
             </div>
-            {/* User Details */}
-            <div className="ml-5 mt-16 col-span-6 text-white">
-              <h1 className="text-5xl font-bold text-gray-700 ">{userData.userProfile?.fullName||userData.userName}</h1>
-              <p className="text-md">
-               Your journey begins here, your account is ready! Start sharing your story, one photo at a time. 📸✨
-              </p>
-            </div>
+          </div>
+
+          {/* Profile Info */}
+          <div className='pt-20 pb-6 px-8'>
+            <h1 className='text-2xl font-bold text-gray-900 mb-1'>
+              {userData.userProfile?.fullName || userData.userName}
+            </h1>
+            <p className='text-gray-600 text-sm'>
+              Member since {formatDate(userData.createdDate)}
+            </p>
           </div>
         </div>
-        
-        {/* Sidebar Nav */}
-        <div className='flex mt-28 mb-10 p-10'>
-          <div className='w-1/6 ml-10 bg-gray-100 text-center p-4 rounded-lg shadow'>
-            <aside>
-              <nav className="flex flex-col gap-6 p-4">
-                <button
-                  className={`px-3 py-2 bg-gray-200 shadow rounded-md font-bold ${
-                    activeTab === "profile" ? "bg-gray-300" : " hover:bg-gray-100"
-                  }`}
-                  onClick={() => setActiveTab("profile")}
-                >
-                  Edit Profile
-                </button>
-                <button
-                  className={`px-3 py-2 bg-gray-200 rounded-md shadow font-bold ${
-                    activeTab === "resetPassword" ? "bg-gray-300" : " hover:bg-gray-100"
-                  }`}
-                  onClick={() => setActiveTab("resetPassword")}
-                >
-                  Reset Password
-                </button>
-              </nav>
-            </aside>
+
+        {/* Content Section */}
+        <div className='mt-8 grid grid-cols-1 lg:grid-cols-4 gap-8'>
+          {/* Navigation Sidebar */}
+          <div className='lg:col-span-1'>
+            <nav className='space-y-2 bg-white rounded-lg shadow-sm border border-gray-200 p-4'>
+              <button
+                onClick={() => setActiveTab('profile')}
+                className={`w-full px-4 py-3 text-left rounded-md transition-colors ${
+                  activeTab === 'profile'
+                    ? 'bg-blue-50 text-blue-700 font-semibold border border-blue-200'
+                    : 'text-gray-600 hover:bg-gray-50'
+                }`}
+              >
+                Profile Settings
+              </button>
+              <button
+                onClick={() => setActiveTab('resetPassword')}
+                className={`w-full px-4 py-3 text-left rounded-md transition-colors ${
+                  activeTab === 'resetPassword'
+                    ? 'bg-blue-50 text-blue-700 font-semibold border border-blue-200'
+                    : 'text-gray-600 hover:bg-gray-50'
+                }`}
+              >
+                Password & Security
+              </button>
+            </nav>
           </div>
 
-          {/* Edit Profile Form */}
-          <main className="flex-1 ml-5 space-y-5 bg-gray-100  p-6 rounded-lg mr-10 shadow">
-            {activeTab === "profile" ? (
-            
-            <form onSubmit={handleSubmit}>
-              <div className="grid grid-cols-2 gap-4  font-bold text-gray-300 text-lg">
-              <h1 className="text-2xl font-bold text-[#083A50]">Edit Profile</h1>
-              <div className="text-right">
-                <span>Last Update {formData.updatedDate}</span>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 mt-4 gap-4 text-gray-300 font-bold text-lg">
-              <span>Personal</span>
-              <span>Contact</span>
-            </div>
-              
-
-              <div className='grid grid-cols-2 mt-5 gap-4'>
-              {/* Username (read-only) */}
-              <div className="space-y-2">
-                <label className="block font-bold">Username</label>
-                <input
-                  type="text"
-                  name="userName"
-                  value={formData.userName}
-                  className="p-3 border rounded-lg bg-gray-200"
-                  readOnly
-                />
-              </div>
-
-              {/* Email */}
-              <div className="space-y-2">
-                <label className="block font-bold">Email</label>
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  className="p-3 border rounded-lg bg-gray-200"
-                  placeholder="Email"
-                  readOnly
-                />
-              </div>
-
-              {/* Name */}
-              <div className="space-y-2">
-                <label className="block font-bold">Name</label>
-                <input
-                  type="text"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  className="p-3 border rounded-lg"
-                  placeholder="Name"
-                />
-              </div>
-
-               {/* Phone Number */}
-               <div className="space-y-2">
-                <label className="block font-bold">Phone Number</label>
-                <input
-                  type="tel"
-                  name="phoneNumber"
-                  value={formData.phoneNumber}
-                  onChange={handleChange}
-                  className="p-3 border rounded-lg"
-                  placeholder="Phone Number"
-                />
-              </div>
-
-              {/* Surname */}
-              <div className="space-y-2">
-                <label className="block font-bold">Surname</label>
-                <input
-                  type="text"
-                  name="surname"
-                  value={formData.surname}
-                  onChange={handleChange}
-                  className="p-3 border rounded-lg"
-                  placeholder="Surname"
-                />
-              </div>
-
-              {/* Address */}
-              <div className="space-y-2">
-                <label className="block font-bold">City</label>
-                <input
-                  type="text"
-                  name="city"
-                  value={formData.city}
-                  onChange={handleChange}
-                  className="p-3 border rounded-lg"
-                  placeholder="City"
-                />
-              </div>
-
-              {/* Date of Birth */}
-              <div className="space-y-2">
-                <label className="block font-bold">Date of Birth</label>
-                <input
-                  type="date"
-                  name="dob"
-                  value={formData.dob}
-                  onChange={handleChange}
-                  className="p-3 border rounded-lg"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <label className="block font-bold">State</label>
-                <input
-                  type="text"
-                  name="state"
-                  value={formData.state}
-                  onChange={handleChange}
-                  className="p-3 border rounded-lg"
-                  placeholder="State"
-                />
-              </div>
-              <div></div>
-              <div className="space-y-2">
-                <label className="block font-bold">Country</label>
-                <input
-                  type="text"
-                  name="country"
-                  value={formData.country}
-                  onChange={handleChange}
-                  className="p-3 border rounded-lg"
-                  placeholder="Country"
-                />
-              </div>
-              
-              {errorMessage && (
-              <p className="text-sm col-span-2 text-red-500">{errorMessage}</p>
-              )}
-
-              {/* Submit Button */}
-              <button
-                type="submit"
-                className="mt-8 col-span-2 bg-teal-500 text-white py-3 rounded-lg hover:bg-teal-600"
-                disabled={isLoading}
-                >
-                  {isLoading ? "Saving Changes..." : "Save Changes"}
-              </button>
-              </div>
-            </form>
-          ) : (
-              // Reset Password Form
-              <form className="grid grid-cols-2 mt-5 gap-4" onSubmit={handleResetSubmit}>
-                <h1 className="text-2xl col-span-2 font-bold text-[#083A50]">
-                  Reset Password
-                </h1>
-                <div className="space-y-2">
-                  <label className="block font-bold">
-                    Email
-                  </label>
-                  <input
-                   type="email"
-                  name="email" 
-                  value={resetData.email} 
-                  readOnly className="p-3 border rounded-lg bg-gray-200"
-                  />
+          {/* Main Content */}
+          <div className='lg:col-span-3'>
+            {activeTab === 'profile' ? (
+              <form
+                onSubmit={handleSubmit}
+                className='bg-white rounded-lg shadow-sm border border-gray-200 p-8'
+              >
+                <div className='pb-6 mb-8 border-b border-gray-200'>
+                  <h2 className='text-xl font-semibold text-gray-900'>
+                    Edit Profile
+                  </h2>
+                  <p className='mt-1 text-sm text-gray-500'>
+                    Last updated {formData.updatedDate}
+                  </p>
                 </div>
 
-                <div className="space-y-2">
-                  <label className="block font-bold">
-                    Current Password
-                  </label>
-                  <div className="relative ">
-                <input
-                  type={showPassword ? "text" : "password"}
-                  name="password" 
-                  placeholder="Password"
-                  className="p-3 border rounded-lg"
-                  value={resetData.password}
-                  onChange={handleChange}
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute text-xl right-5 mt-4 text-gray-500 bg-transparent hover:bg-transparent focus:outline-none"
-                >
-                  {showPassword ? <FaEyeSlash /> : <FaEye />}
-                </button>
-              </div>
-            </div>
-
-
-                {reseterrorMessage && (
-                  <p className="text-sm col-span-2 text-red-500">{reseterrorMessage}</p>
-                )}
-
-                  {/* If userVerified is NOT null, show Set-New-Email & Set-New-Password Buttons */}
-                  {userVerified ? (
-                    <div className='grid grid-cols-2 mt-8'>
-                    {/* <button
-                      className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
-                      onClick={() => navigate("/reset-email")}
-                    >
-                      Set NewEmail
-                    </button> */}
-                    <button
-                    className="bg-red-500 col-span-2 w-1/3 text-white py-3 rounded-lg hover:bg-red-600 transition"
-                    onClick={() => navigate("/set-Password")}
-                  >
-                    Set NewPassword
-                  </button>
+                <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
+                  {/* UserName (ReadOnly) */}
+                  <div>
+                    <label className='block text-sm font-medium text-gray-700 mb-2'>
+                      Username
+                    </label>
+                    <input
+                      type='text'
+                      name='userName'
+                      value={formData.userName}
+                      className='w-full px-4 py-2.5 border border-gray-300 rounded-lg bg-gray-50 text-gray-600'
+                      readOnly
+                    />
                   </div>
 
-                  ) : (
-                    /* If userVerified is NULL, show Button */
-                    <button
-                    type="submit"
-                    className="mt-8 col-span-2 w-1/6 bg-teal-500 text-white py-3 rounded-lg hover:bg-teal-600"
-                    disabled={isLoading}
-                    >
-                      {isLoading ? "Verifying User..." : "Verified User"}
-                  </button>
+                  {/* Email */}
+                  <div>
+                    <label className='block text-sm font-medium text-gray-700 mb-2'>
+                      Email Address
+                    </label>
+                    <input
+                      type='email'
+                      name='email'
+                      value={formData.email}
+                      onChange={handleChange}
+                      className='w-full px-4 py-2.5 border border-gray-300 rounded-lg bg-gray-50 text-gray-600'
+                      placeholder='Email'
+                      readOnly
+                    />
+                  </div>
+                  {/* Name */}
+                  <div className='space-y-2'>
+                    <label className='block '>Name</label>
+                    <input
+                      type='text'
+                      name='name'
+                      value={formData.name}
+                      onChange={handleChange}
+                      className='p-3 border rounded-lg'
+                      placeholder='Name'
+                    />
+                  </div>
+                  {/* Phone Number */}
+                  <div>
+                    <label className='block text-sm font-medium text-gray-700 mb-2'>
+                      Phone Number
+                    </label>
+                    <input
+                      type='tel'
+                      name='phoneNumber'
+                      value={formData.phoneNumber}
+                      onChange={handleChange}
+                      className='p-3 border rounded-lg'
+                      placeholder='Phone Number'
+                    />
+                  </div>
+                  {/* Surname */}
+                  <div className='space-y-2'>
+                    <label className='block '>Surname</label>
+                    <input
+                      type='text'
+                      name='surname'
+                      value={formData.surname}
+                      onChange={handleChange}
+                      className='p-3 border rounded-lg'
+                      placeholder='Surname'
+                    />
+                  </div>
+
+                  {/* Address */}
+                  <div className='space-y-2'>
+                    <label className='block '>City</label>
+                    <input
+                      type='text'
+                      name='city'
+                      value={formData.city}
+                      onChange={handleChange}
+                      className='p-3 border rounded-lg'
+                      placeholder='City'
+                    />
+                  </div>
+
+                  {/* Date of Birth */}
+                  <div className='space-y-2'>
+                    <label className='block '>Date of Birth</label>
+                    <input
+                      type='date'
+                      name='dob'
+                      value={formData.dob}
+                      onChange={handleChange}
+                      className='p-3 border rounded-lg'
+                    />
+                  </div>
+
+                  <div className='space-y-2'>
+                    <label className='block '>State</label>
+                    <input
+                      type='text'
+                      name='state'
+                      value={formData.state}
+                      onChange={handleChange}
+                      className='p-3 border rounded-lg'
+                      placeholder='State'
+                    />
+                  </div>
+                  <div></div>
+                  <div className='space-y-2'>
+                    <label className='block '>Country</label>
+                    <input
+                      type='text'
+                      name='country'
+                      value={formData.country}
+                      onChange={handleChange}
+                      className='p-3 border rounded-lg'
+                      placeholder='Country'
+                    />
+                  </div>
+
+                  {errorMessage && (
+                    <div className='md:col-span-2 p-4 bg-red-50 border border-red-200 rounded-lg'>
+                      <p className='text-sm text-red-600'>{errorMessage}</p>
+                    </div>
                   )}
+
+                  <div className='md:col-span-2 pt-6'>
+                    <button
+                      type='submit'
+                      disabled={isLoading}
+                      className='w-full bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors disabled:opacity-50'
+                    >
+                      {isLoading ? 'Saving...' : 'Save Changes'}
+                    </button>
+                  </div>
+                </div>
+              </form>
+            ) : (
+              <form
+                onSubmit={handleResetSubmit}
+                className='bg-white rounded-lg shadow-sm border border-gray-200 p-8'
+              >
+                <div className='pb-6 mb-8 border-b border-gray-200'>
+                  <h2 className='text-xl font-semibold text-gray-900'>
+                    Change Password
+                  </h2>
+                  <p className='mt-1 text-sm text-gray-500'>
+                    Secure your account with a new password
+                  </p>
+                </div>
+
+                <div className='max-w-lg space-y-6'>
+                  <div>
+                    <label className='block text-sm font-medium text-gray-700 mb-2'>
+                      Current Email
+                    </label>
+                    <input
+                      type='email'
+                      value={resetData.email}
+                      readOnly
+                      className='w-full px-4 py-2.5 border border-gray-300 rounded-lg bg-gray-50 text-gray-600'
+                    />
+                  </div>
+
+                  <div>
+                    <label className='block text-sm font-medium text-gray-700 mb-2'>
+                      Current Password
+                    </label>
+                    <div className='relative'>
+                      <input
+                        type={showPassword ? 'text' : 'password'}
+                        name='password'
+                        value={resetData.password}
+                        onChange={handleChange}
+                        className='w-full px-4 py-2.5 border border-gray-300 rounded-lg pr-12 focus:border-blue-500 focus:ring-2 focus:ring-blue-200'
+                        placeholder='Enter current password'
+                      />
+                    </div>
+                  </div>
+
+                  {reseterrorMessage && (
+                    <div className='p-4 bg-red-50 border border-red-200 rounded-lg'>
+                      <p className='text-sm text-red-600'>
+                        {reseterrorMessage}
+                      </p>
+                    </div>
+                  )}
+
+                  {userVerified ? (
+                    <button
+                      onClick={() => navigate('/set-Password')}
+                      className='w-full bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors'
+                    >
+                      Set New Password
+                    </button>
+                  ) : (
+                    <button
+                      type='submit'
+                      disabled={isLoading}
+                      className='w-full bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors disabled:opacity-50'
+                    >
+                      {isLoading ? 'Verifying...' : 'Verify Identity'}
+                    </button>
+                  )}
+                </div>
               </form>
             )}
-          </main>
+          </div>
         </div>
       </div>
     </div>

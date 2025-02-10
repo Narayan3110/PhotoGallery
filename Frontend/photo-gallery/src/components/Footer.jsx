@@ -7,8 +7,8 @@ import { FaAppStoreIos } from 'react-icons/fa';
 
 const Footer = () => {
   return (
-    <footer className='bg-white text-gray-900 py-10 px-6 md:px-12 lg:px-24'>
-      <div className='max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8'>
+    <footer className='bg-gray-200 text-gray-900 py-10 px-6 md:px-12 lg:px-24 '>
+      <div className='max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 '>
         {/* Left Section - Brand Info */}
         <div>
           <h2 className='text-3xl font-bold text-indigo-900'>SnapSafe</h2>
@@ -105,7 +105,7 @@ const Footer = () => {
 
       {/* Footer Copyright */}
       <div className='text-center text-gray-500 mt-10'>
-        Copyright &copy;2025 SnapSafe - All Rights Reserved - Website Powered by
+        Copyright &copy;2025 SnapSafe - All Rights Reserved 
         SnapSafe
       </div>
     </footer>
