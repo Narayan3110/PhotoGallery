@@ -5,8 +5,8 @@ import { useDispatch } from 'react-redux';
 import { login } from '../redux/authSlice'; // Import the login action
 
 const LoginPage = () => {
-  const [usernameOrEmail, setUsernameOrEmail] = useState('TestEmail');
-  const [password, setPassword] = useState('123');
+  const [usernameOrEmail, setUsernameOrEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -63,7 +63,7 @@ const LoginPage = () => {
           <p className='text-gray-500 mb-6'>
             We are glad to see you back with us
           </p>
-          <form className='w-full  ' onSubmit={handleLogin}>
+          <form className='w-full ' onSubmit={handleLogin}>
             <div className=''>
               <label className='block text-sm mb-1'>Username</label>
               <div className='relative'>
@@ -157,7 +157,7 @@ const LoginPage = () => {
       {/* Right Section: Image */}
       <div className='hidden lg:flex lg:w-1/2 justify-center items-center bg-white'>
         <img
-          src='/photo/LoginPage/LoginMain.jpg' 
+          src='/photo/LoginPage/LoginMain.jpg'
           alt='Login illustration'
           className='h-screen w-full object-cover bg-white p-4 rounded-lg '
         />
