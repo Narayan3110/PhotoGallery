@@ -4,6 +4,16 @@ import { Mail } from "lucide-react";
 import axios from "axios";
 import rectangleImage from "../assets/photos/resetPassword/Rectangle.jpg";
 
+// Get the backend URL from environment variables
+const BACKEND_URL =
+  import.meta.env.VITE_BACK_END_URL || "http://localhost:9090/api";
+const API_BASE_URL = `${BACKEND_URL}/users`;
+
+// Create an Axios instance with default settings
+const api = axios.create({
+  baseURL: API_BASE_URL,
+});
+
 const ResetEmail = () => {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
@@ -15,10 +25,7 @@ const ResetEmail = () => {
     setMessage("");
 
     try {
-      const response = await axios.post(
-        "https://photogallery-deployement-latest.onrender.com/api/users/reset-email",
-        { email }
-      );
+      const response = await axios.post(`/reset-email`, { email });
       setMessage(
         response.data.message || "A reset link has been sent to your email."
       );
@@ -37,12 +44,13 @@ const ResetEmail = () => {
       <div className="w-full max-w-3xl flex bg-white rounded-2xl shadow-lg overflow-hidden">
         {/* Left Side */}
         <div className="w-1/2 p-6">
-          <Link to="/login" className="text-sm text-gray-500  hover:text-red-500">
+          <Link
+            to="/login"
+            className="text-sm text-gray-500  hover:text-red-500"
+          >
             &larr; Back to login
           </Link>
-          <h2 className="mt-4 text-2xl font-boldmb-4">
-            Forgot your password?
-          </h2>
+          <h2 className="mt-4 text-2xl font-boldmb-4">Forgot your password?</h2>
           <p className="mt-2 text-gray-600 ">
             Don't worry, happens to all of us. Enter your email below to recover
             your password.

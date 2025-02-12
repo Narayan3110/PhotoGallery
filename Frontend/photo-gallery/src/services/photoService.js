@@ -1,89 +1,68 @@
 import axios from "axios";
 
-// Function to get the JWT token from localStorage
-const getAuthToken = () => {
-  return localStorage.getItem("token"); // Get token from localStorage (or sessionStorage)
-};
+// Get the backend URL from environment variables
+const BACKEND_URL =
+  import.meta.env.VITE_BACK_END_URL || "http://localhost:9090/api/photo";
+
+// Function to get the JWT token from localStorage/sessionStorage
+const getAuthToken = () =>
+  localStorage.getItem("token") || sessionStorage.getItem("token");
+
+// Axios instance with base configuration
+const api = axios.create({
+  baseURL: BACKEND_URL,
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
+// Add a request interceptor to automatically attach the token
+api.interceptors.request.use(
+  (config) => {
+    const token = getAuthToken();
+    if (token) {
+      config.headers["Authorization"] = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
 
 // Upload photo to the backend
 export const uploadPhoto = async (formData) => {
   try {
-    const token = getAuthToken(); // Get JWT token
-
-    const response = await axios.post(
-      "https://photogallery-deployement-latest.onrender.com/api/photo/upload",
-      formData,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data", // Ensure it's multipart/form-data
-          Authorization: `Bearer ${token}`, // Add JWT token to headers
-        },
-      }
-    );
-    return response.data; // Return the server's response (success message)
+    const response = await api.post("/upload", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response.data;
   } catch (error) {
     console.error("Error uploading photo:", error);
-    throw error; // Propagate the error
+    throw error;
   }
 };
 
-// Fetch photos for a given profileId
-// export const fetchPhotos = async (profileId) => {
-//   try {
-//     const token = getAuthToken(); // Get JWT token
-
-//     const response = await axios.get(
-//       `http://localhost:9090/api/photo/${profileId}`,
-//       {
-//         headers: {
-//           Authorization: `Bearer ${token}`, // Add JWT token to headers
-//         },
-//       }
-//     );
-//     return response.data; // Return the list of photo URLs
-//   } catch (error) {
-//     console.error("Error fetching photos:", error);
-//     throw error; // Propagate the error
-//   }
-// };
-export const fetchPhotos = async (profileId, order = 'desc') => {
+// Fetch photos by profile ID with optional order
+export const fetchPhotos = async (profileId, order = "desc") => {
   try {
-    const token = getAuthToken(); // Get JWT token
-
-    const response = await axios.get(
-      `https://photogallery-deployement-latest.onrender.com/api/photo/${profileId}?order=${order}`, // Add order query param
-      {
-        headers: {
-          Authorization: `Bearer ${token}`, // Add JWT token to headers
-        },
-      }
-    );
-    return response.data; // Return the list of photo URLs
+    const response = await api.get(`/${profileId}`, { params: { order } });
+    return response.data;
   } catch (error) {
     console.error("Error fetching photos:", error);
-    throw error; // Propagate the error
+    throw error;
   }
 };
 
-
-// Delete Photo By Id and Url
+// Delete photo by public ID
 export const deletePhoto = async (publicId) => {
   try {
-    const token = getAuthToken(); // Get JWT token
-
-    const response = await axios.delete(
-      `https://photogallery-deployement-latest.onrender.com/api/photo/delete`,
-      {
-        params: { publicId }, // Send publicId as a query parameter
-        headers: {
-          Authorization: `Bearer ${token}`, // Add JWT token to headers
-        },
-      }
-    );
-
+    const response = await api.delete("/delete", { params: { publicId } });
     return response.data;
   } catch (error) {
     console.error("Error deleting photo:", error);
     return false;
   }
 };
+
+export default api;

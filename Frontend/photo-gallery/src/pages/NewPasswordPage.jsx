@@ -103,6 +103,9 @@ import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import rectangleImage from "../assets/photos/resetPassword/Rectangle.jpg";
 
+const BASE_URL =
+  process.env.REACT_APP_API_BASE_URL || "http://localhost:9090/api";
+
 // Utility function to extract query parameters
 const useQuery = (location) => {
   return new URLSearchParams(location.search);
@@ -129,12 +132,9 @@ const NewPasswordPage = () => {
 
       if (token) {
         // Non-logged-in user (password reset via email link)
-        response = await axios.get(
-          "https://photogallery-deployement-latest.onrender.com/api/users/reset-password",
-          {
-            params: { token, newPassword: password }, // Pass parameters in query
-          }
-        );
+        response = await axios.get(`${BASE_URL}/users/reset-password`, {
+          params: { token, newPassword: password }, // Pass parameters in query
+        });
 
         if (response.status === 200) {
           alert("Password changed successfully");
@@ -148,7 +148,7 @@ const NewPasswordPage = () => {
         const token = localStorage.getItem("token");
 
         response = await axios.post(
-          "https://photogallery-deployement-latest.onrender.com/api/users/update-password",
+          `${BASE_URL}/users/update-password`,
           { newPassword: password, profileId },
           {
             headers: {
