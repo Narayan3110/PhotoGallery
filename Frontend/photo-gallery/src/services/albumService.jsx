@@ -1,6 +1,9 @@
 import axios from "axios";
 
-const API_BASE_URL = "http://localhost:9090/api/album";
+// Get the backend URL from environment variables
+const BACKEND_URL =
+  import.meta.env.VITE_BACK_END_URL || "http://localhost:9090/api";
+const API_BASE_URL = `${BACKEND_URL}/album`;
 
 // Create an Axios instance with default settings
 const api = axios.create({
@@ -22,7 +25,12 @@ api.interceptors.request.use(
 const albumService = {
   getAllAlbums: async (profileId, order = "desc") => {
     try {
-      console.log("Fetching albums for Profile ID:", profileId, "with order:", order);
+      console.log(
+        "Fetching albums for Profile ID:",
+        profileId,
+        "with order:",
+        order
+      );
       const response = await api.get(`/all/${profileId}?order=${order}`); // Include sorting order
       localStorage.setItem("albums", JSON.stringify(response.data));
       return response.data;
@@ -31,7 +39,6 @@ const albumService = {
       return [];
     }
   },
-
 
   getAlbumPhotos: async (albumId) => {
     try {
@@ -88,8 +95,8 @@ const albumService = {
 
   addPhotoToAlbum: async (albumId, publicId) => {
     try {
-      console.log("Album Id :" + albumId);
-      console.log("Photo Id (publicId):" + publicId);
+      console.log("Album Id :", albumId);
+      console.log("Photo Id (publicId):", publicId);
 
       const response = await api.post(`/add-photo/${albumId}`, { publicId }); // Correctly formatted
       return response.data;
@@ -101,9 +108,12 @@ const albumService = {
 
   removePhotoFromAlbum: async (albumName, profileId, publicId) => {
     console.log(
-      "albumName :" + albumName,
-      "profileId :" + profileId,
-      "publicId :" + publicId
+      "albumName :",
+      albumName,
+      "profileId :",
+      profileId,
+      "publicId :",
+      publicId
     );
     try {
       const response = await api.delete(`/remove-from-album`, {
@@ -123,12 +133,13 @@ const albumService = {
     formData.append("album_name", albumName);
 
     try {
-      const response = await api.post(
-        `http://localhost:9090/api/photo/upload`,
+      const response = await axios.post(
+        `${BACKEND_URL}/photo/upload`, // Use dynamic backend URL
         formData,
         {
           headers: {
             "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${localStorage.getItem("token")}`, // Ensure token is included
           },
         }
       );
