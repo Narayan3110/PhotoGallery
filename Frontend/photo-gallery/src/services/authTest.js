@@ -1,11 +1,12 @@
-
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { login } from "../redux/authSlice"; // Import the login action
 
-// Create an Axios instance with base URL and interceptors
+// Get the backend URL from environment variables
+const BACKEND_URL = import.meta.env.VITE_BACK_END_URL || "http://localhost:9090/api/";
+
 const apiClient = axios.create({
-  baseURL: "https://photogallery-deployement-latest.onrender.com/api",
+  baseURL: BACKEND_URL,
   headers: {
     "Content-Type": "application/json",
   },
@@ -16,7 +17,7 @@ apiClient.interceptors.request.use((config) => {
   const token =
     localStorage.getItem("token") || sessionStorage.getItem("token");
   if (token) {
-    config.headers["Authorization"] = `Bearer ${token}`; // Correct string interpolation
+    config.headers["Authorization"] = `Bearer ${token}`;
   }
   return config;
 });
@@ -25,7 +26,7 @@ export class AuthService {
   // Register user
   static async registerUser(userData) {
     try {
-      const response = await apiClient.post("/users/register", userData);
+      const response = await apiClient.post("users/register", userData);
       return response.data;
     } catch (error) {
       console.error("Error in Registration Process:", error);
@@ -43,7 +44,6 @@ export class AuthService {
       });
       console.log(response.data.user);
       if (response.data) {
-        // After login success, dispatch the login action to Redux
         dispatch(
           login({
             token: response.data.token,
@@ -62,7 +62,6 @@ export class AuthService {
   // Google login
   static async googleLogin(authCode) {
     try {
-      // Send the auth code received from Google to the backend
       const response = await apiClient.post("/oauth2/google", {
         code: authCode,
       });

@@ -2,6 +2,10 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom"; // Use useNavigate instead of useHistory
 import axios from "axios";
 
+// Get the backend URL from environment variables
+const BACKEND_URL =
+  import.meta.env.VITE_BACK_END_URL || "http://localhost:9090/api/";
+
 const VerifyPage = () => {
   const [message, setMessage] = useState("");
   const navigate = useNavigate(); // Replaces useHistory()
@@ -20,7 +24,7 @@ const VerifyPage = () => {
   const verifyEmail = async (token) => {
     try {
       const response = await axios.get(
-        `https://photogallery-deployement-latest.onrender.com/api/users/verify?token=${token}`
+        `${BACKEND_URL}users/verify?token=${token}`
       );
 
       setMessage(response.data.message || "Verification successful!");
