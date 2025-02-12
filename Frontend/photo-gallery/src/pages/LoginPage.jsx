@@ -13,8 +13,9 @@ import {
 } from "@/components/ui/toast";
 
 const LoginPage = () => {
-  const [usernameOrEmail, setUsernameOrEmail] = useState("Admin1");
-  const [password, setPassword] = useState("Sanm@3004");
+  const [usernameOrEmail, setUsernameOrEmail] = useState('');
+  const [password, setPassword] = useState('');
+
   const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
