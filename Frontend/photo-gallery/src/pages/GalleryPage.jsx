@@ -9,7 +9,7 @@ import albumService from '../services/albumService';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { FaUpload } from 'react-icons/fa6';
-import { AiOutlineCloudUpload } from 'react-icons/ai';
+// import { AiOutlineCloudUpload } from 'react-icons/ai';
 import { GoSortAsc } from 'react-icons/go';
 import { GoSortDesc } from 'react-icons/go';
 import { RiCloseCircleLine } from 'react-icons/ri';

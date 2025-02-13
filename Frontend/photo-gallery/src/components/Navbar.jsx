@@ -161,7 +161,7 @@ import { logout } from "../redux/authSlice";
 import { useState } from "react";
 import { LogOut, Menu, X } from "lucide-react";
 import logo1 from "@/assets/photos/Navbar/logo1.png";
-import { Button } from "@/components/ui/button";
+// import { Button } from "@/components/ui/button";
 
 const Navbar = () => {
   const user = useSelector((state) => state.auth.user);
