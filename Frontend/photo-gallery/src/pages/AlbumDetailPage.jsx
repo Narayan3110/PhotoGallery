@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import albumService from '../services/albumService';
-import { AiOutlineCloudUpload } from 'react-icons/ai';
 import { RiCloseCircleLine } from 'react-icons/ri';
+import { Loader2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { useToast } from '@/hooks/use-toast';
 
 const AlbumDetailPage = () => {
   const { albumId } = useParams();
@@ -16,7 +18,9 @@ const AlbumDetailPage = () => {
   const [selectedPhoto, setSelectedPhoto] = useState(null);
   const [selectedPublicId, setSelectedPublicId] = useState(null);
   const [file, setFile] = useState(null);
+  const [albumName, setAlbumName] = useState("");
   const [message, setMessage] = useState('');
+  const { toast } = useToast();
 
   useEffect(() => {
     const fetchAlbumPhotos = async () => {
@@ -94,15 +98,25 @@ const AlbumDetailPage = () => {
 
       if (!profileId || !file) {
         console.error('Profile ID or file is missing.');
+        toast({
+          variant: 'destructive',
+          title: 'Error',
+          description: 'Please select a file to upload',
+        });
         return;
       }
 
+      setLoading(true);
       const publicId = await albumService.uploadPhotoToAlbum(
         profileId,
         file,
         albumDetails.albumName
       );
-
+      setLoading(false);
+      toast({
+        title: 'Success',
+        description: 'Photo uploaded successfully',
+      });
       setAlbumDetails((prevDetails) => ({
         ...prevDetails,
         photos: [
@@ -114,6 +128,13 @@ const AlbumDetailPage = () => {
       setFile(null);
     } catch (error) {
       console.error('Error uploading photo:', error);
+      toast({
+        variant: 'destructive',
+        title: 'Size Too big !',
+        description: 'Error uploading photo upload !',
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -124,20 +145,24 @@ const AlbumDetailPage = () => {
           <h2>{albumDetails.albumName}</h2>
           <h2>{albumDetails.createdAt}</h2>
         </div> */}
+        
         <div className='w-full bg-white rounded-lg text-gray-800 mb-0'>
-          <div className='flex justify-center items-center gap-4 p-2'>
+          <div className='flex justify-center items-center gap-4 p-2 '>
             <input
               type='file'
               accept='image/*'
               onChange={handleFileChange}
-              className='file:mr-4 file:rounded-full file:border-0 file:bg-violet-50 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-violet-700 hover:file:bg-violet-100 dark:file:bg-violet-600 dark:file:text-violet-100 dark:hover:file:bg-violet-500'
+              className='file:mr-4 file:rounded-full file:border-0 file:bg-violet-50 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-violet-700 hover:file:bg-violet-100 dark:file:bg-violet-600 dark:file:text-violet-100 dark:hover:file:bg-violet-500 '
             />
-            <button
-              onClick={handleUploadPhoto}
-              className='rounded-full bg-purple-600 px-6 py-2 text-white hover:bg-purple-500'
-            >
-              <AiOutlineCloudUpload className='size-6' />
-            </button>
+            {/* To upload From Device  */}
+            <Button onClick={handleUploadPhoto} disabled={loading}>
+              {loading ? <Loader2 className='animate-spin mr-2' /> : null}
+              {loading ? 'Please wait' : 'Upload Photo'}
+            </Button>
+            {/* button to add from gallery */}
+            <Button onClick={handleAddPhotosClick} variant='outline'>
+              Select from gallery
+            </Button>
           </div>
           <div className='mt-8 text-xl text-center text-red-600'>{message}</div>
         </div>

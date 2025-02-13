@@ -9,15 +9,18 @@ import albumService from '../services/albumService';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { FaUpload } from 'react-icons/fa6';
-import { AiOutlineCloudUpload } from 'react-icons/ai';
+// import { AiOutlineCloudUpload } from 'react-icons/ai';
 import { GoSortAsc } from 'react-icons/go';
 import { GoSortDesc } from 'react-icons/go';
 import { RiCloseCircleLine } from 'react-icons/ri';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
+import { Loader2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 const GalleryPage = () => {
   const [photos, setPhotos] = useState([]);
-  const [message, setMessage] = useState('');
+  // const [message, setMessage] = useState('');
   const [hoverText, setHoverText] = useState('');
   const [order, setOrder] = useState('desc');
   const [file, setFile] = useState(null);
@@ -32,6 +35,7 @@ const GalleryPage = () => {
   const location = useLocation();
   const isProfileEditing = location.state || false;
   const dispatch = useDispatch();
+  const { toast } = useToast();
 
   useEffect(() => {
     fetchUserPhotos();
@@ -49,7 +53,12 @@ const GalleryPage = () => {
       const profileId = user?.userProfile?.profileId;
 
       if (!profileId) {
-        setMessage('Profile ID not found.');
+        // setMessage('Profile ID not found.');
+        toast({
+          variant: 'destructive',
+          title: 'Error',
+          description: 'Profile ID not found',
+        });
         return;
       }
 
@@ -57,7 +66,12 @@ const GalleryPage = () => {
       setPhotos(photosData === 'No Photos To Display' ? [] : photosData);
       setCurrentPhotoIndex(0);
     } catch (error) {
-      setMessage('Error fetching photos.');
+      // setMessage('Error fetching photos.');
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: 'Profile ID not found',
+      });
       console.error('Error fetching photos:', error);
     }
   };
@@ -72,7 +86,12 @@ const GalleryPage = () => {
       const profileId = user?.userProfile?.profileId;
 
       if (!profileId) {
-        setMessage('Profile ID not found.');
+        // setMessage('Profile ID not found.');
+        toast({
+          variant: 'destructive',
+          title: 'Error',
+          description: 'Profile ID not found',
+        });
         return;
       }
 
@@ -89,14 +108,26 @@ const GalleryPage = () => {
 
   const handleFileUpload = async () => {
     if (!file) {
-      setMessage('Please select a file to upload.');
+      // setMessage('Please select a file to upload.');
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: 'Please select a file to upload',
+      });
+
       return;
     }
     try {
       const user = JSON.parse(localStorage.getItem('user'));
       const profileId = user?.userProfile?.profileId;
       if (!profileId) {
-        setMessage('Profile ID not found.');
+        // setMessage('Profile ID not found.');
+        toast({
+          variant: 'destructive',
+          title: 'Error',
+          description: 'Profile ID not found',
+        });
+
         return;
       }
 
@@ -107,15 +138,32 @@ const GalleryPage = () => {
 
       const response = await uploadPhoto(formData);
       if (response) {
-        setMessage('Photo uploaded successfully!');
+        // setMessage('Photo uploaded successfully!');
+        toast({
+          title: 'Success',
+          description: 'Photo uploaded successfully',
+        });
+
         fetchUserPhotos();
       } else {
-        setMessage('Failed to upload photo.');
+        // setMessage('Failed to upload photo.');
+        toast({
+          variant: 'destructive',
+          title: 'Error',
+          description: 'Failed to upload photo',
+        });
       }
       setLoading(false);
     } catch (error) {
-      setMessage('Error uploading photo.');
+      // setMessage('Error uploading photo.');
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: 'Error uploading photo ',
+      });
       console.error('Error uploading photo:', error);
+      // setLoading(false);
+    } finally {
       setLoading(false);
     }
   };
@@ -137,14 +185,30 @@ const GalleryPage = () => {
     try {
       const response = await deletePhoto(selectedPhotoId);
       if (response) {
-        setMessage('Photo deleted successfully!');
+        // setMessage('Photo deleted successfully!');
+        toast({
+          title: 'Success',
+          description: 'Photo deleted successfully 🗑️',
+        });
+
         fetchUserPhotos();
         closeModal();
       } else {
-        setMessage('Failed to delete photo.');
+        // setMessage('Failed to delete photo.');
+        toast({
+          variant: 'destructive',
+          title: 'Error',
+          description: 'Failed to delete photo ',
+        });
       }
     } catch (error) {
-      setMessage('Error deleting photo.');
+      // setMessage('Error deleting photo.');
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: 'Error deleting photo',
+      });
+
       console.error('Error deleting photo:', error);
     }
   };
@@ -155,18 +219,34 @@ const GalleryPage = () => {
 
   const handleAddToAlbum = async () => {
     if (!selectedAlbumId || !selectedPhotoId) {
-      setMessage('Please select an album.');
+      // setMessage('Please select an album.');
+      toast({
+        title: 'Error',
+        description: 'Please select an album',
+        variant: 'destructive',
+      });
       return;
     }
 
     try {
       await albumService.addPhotoToAlbum(selectedAlbumId, selectedPhotoId);
-      setMessage('Photo added to album successfully!');
+      // setMessage('Photo added to album successfully!');
+      toast({
+        title: 'Success',
+        description: 'Photo added to album successfully 📸',
+        variant: 'success',
+      });
       console.log('Selected' + selectedAlbumId);
       navigate(`/album/${selectedAlbumId}`); // Redirect to album details page
       setShowAlbumDropdown(false); // Hide the dropdown after adding
     } catch (error) {
-      setMessage('Error adding photo to album.');
+      // setMessage('Error adding photo to album.');
+      toast({
+        title: 'Error',
+        description: 'Error adding photo to album ! Try Again ',
+        variant: 'destructive',
+      });
+
       console.error('Error adding photo to album:', error);
     }
   };
@@ -180,7 +260,8 @@ const GalleryPage = () => {
     const updatedUserData = {
       profileUrl: selectedPhoto,
     };
-    setMessage('');
+    // setMessage('');
+
     setLoading(true);
     try {
       const response = await updateUserProfile(
@@ -191,7 +272,12 @@ const GalleryPage = () => {
       alert(response);
       navigate(`/profile`);
     } catch (error) {
-      setMessage('Error during updating Profile Picture. Please try again.');
+      // setMessage('Error during updating Profile Picture. Please try again.');
+      toast({
+        title: 'Error',
+        description: 'Error during updating Profile Picture. Please try again.',
+        variant: 'destructive',
+      });
     } finally {
       setLoading(false);
     }
@@ -230,7 +316,8 @@ const GalleryPage = () => {
         <div className='w-full bg-white rounded-lg text-gray-800 mb-0'>
           {Boolean(isProfileEditing) ? (
             <h2 className='flex flex-row items-center justify-center text-xl font-semibold text-center mb-4 gap-4 '>
-              Upload New Photo <FaUpload className='size-6 text-blue-600  ' />
+              Upload New Photo
+              <FaUpload className='size-6 text-blue-600  ' />
             </h2>
           ) : (
             <h2 className='flex flex-row items-center justify-center text-xl font-semibold text-center mb-4 gap-4 text-center pt-10'></h2>
@@ -242,24 +329,22 @@ const GalleryPage = () => {
               onChange={handleFileChange}
               className='file:mr-4 file:rounded-full file:border-0 file:bg-violet-50 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-violet-700 hover:file:bg-violet-100 dark:file:bg-violet-600 dark:file:text-violet-100 dark:hover:file:bg-violet-500 '
             />
-            <button
-              onClick={handleFileUpload}
-              className='rounded-full bg-purple-600 px-6 py-2 text-white hover:bg-purple-500'
-            >
-              <AiOutlineCloudUpload className=' size-6' />
-            </button>
+            <Button onClick={handleFileUpload} disabled={loading}>
+              {loading ? <Loader2 className='animate-spin mr-2' /> : null}
+              {loading ? 'Please wait' : 'Upload Photo'}
+            </Button>
           </div>
           <div className='flex align-right'>
             <button
               onClick={toggleSortOrder}
               onMouseEnter={() =>
-                setHoverText(order === 'desc' ? 'Sort by Antique' : 'Sort by Latest')
+                setHoverText(
+                  order === 'desc' ? 'Sort by Antique' : 'Sort by Latest'
+                )
               }
               onMouseLeave={() => setHoverText('')}
               className='bg-transparent hover:bg-gray-100 m-2 p-2 rounded-lg shadow'
             >
-              {/* <FaSort className="text- size-10" /> */}
-  
               {order === 'desc' ? (
                 <GoSortDesc className='size-7' />
               ) : (
@@ -272,7 +357,7 @@ const GalleryPage = () => {
               </span>
             )}
           </div>
-          <div className='mt-8 text-xl text-center text-red-600'>{message}</div>
+          {/* <div className='mt-8 text-xl text-center text-red-600'>{message}</div> */}
         </div>
         {/* {Photo Section} */}
         <div className='w-full columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-4'>
@@ -371,7 +456,6 @@ const GalleryPage = () => {
       </div>
     </div>
   );
-  };
-  
-  export default GalleryPage;
-  
+};
+
+export default GalleryPage;

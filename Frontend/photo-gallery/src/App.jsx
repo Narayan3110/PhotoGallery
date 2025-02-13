@@ -78,6 +78,7 @@ import AlbumPage from "./pages/AlbumPage.jsx";
 import AlbumDetailPage from "./pages/AlbumDetailPage.jsx";
 import GalleryNavbar from "./components/GalleryNavbar.jsx"; 
 import Profile from "./pages/Profile.jsx";
+import { Toaster } from "./components/ui/toaster.jsx";
 
 const App = () => {
   const user = JSON.parse(localStorage.getItem("user")); // Get user from local storage
@@ -92,7 +93,7 @@ const App = () => {
   return (
     <>
       {isGalleryPage ? <GalleryNavbar /> : <Navbar />}
-
+      <Toaster />
       <Routes>
         <Route path="/" element={<NewHomePage />} />
         <Route path="/gallery" element={user ? <GalleryPage /> : <Navigate to="/login" />} />
