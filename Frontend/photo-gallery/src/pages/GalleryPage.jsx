@@ -329,13 +329,6 @@ const GalleryPage = () => {
               onChange={handleFileChange}
               className='file:mr-4 file:rounded-full file:border-0 file:bg-violet-50 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-violet-700 hover:file:bg-violet-100 dark:file:bg-violet-600 dark:file:text-violet-100 dark:hover:file:bg-violet-500 '
             />
-            {/* <button
-              onClick={handleFileUpload}
-              className='rounded-full bg-purple-600 px-6 py-2 text-white hover:bg-purple-500'
-            >
-              <AiOutlineCloudUpload className=' size-6' />
-            </button> */}
-            {/* <Button variant='outline'>Upload</Button> */}
             <Button onClick={handleFileUpload} disabled={loading}>
               {loading ? <Loader2 className='animate-spin mr-2' /> : null}
               {loading ? 'Please wait' : 'Upload Photo'}
@@ -352,8 +345,6 @@ const GalleryPage = () => {
               onMouseLeave={() => setHoverText('')}
               className='bg-transparent hover:bg-gray-100 m-2 p-2 rounded-lg shadow'
             >
-              {/* <FaSort className="text- size-10" /> */}
-
               {order === 'desc' ? (
                 <GoSortDesc className='size-7' />
               ) : (
