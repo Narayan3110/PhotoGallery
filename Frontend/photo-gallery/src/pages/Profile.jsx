@@ -21,6 +21,7 @@ const Profile = () => {
   const [showProfileOptions, setShowProfileOptions] = useState(false);
   const addressParts =
     userData?.userProfile?.address?.split(',').map((part) => part.trim()) || [];
+  
 
   const toggleProfileOptions = () => {
     setShowProfileOptions(!showProfileOptions);
