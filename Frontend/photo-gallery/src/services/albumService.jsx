@@ -25,12 +25,12 @@ api.interceptors.request.use(
 const albumService = {
   getAllAlbums: async (profileId, order = "desc") => {
     try {
-      console.log(
-        "Fetching albums for Profile ID:",
-        profileId,
-        "with order:",
-        order
-      );
+      // console.log(
+      //   "Fetching albums for Profile ID:",
+      //   profileId,
+      //   "with order:",
+      //   order
+      // );
       const response = await api.get(`/all/${profileId}?order=${order}`); // Include sorting order
       localStorage.setItem("albums", JSON.stringify(response.data));
       return response.data;
@@ -95,8 +95,8 @@ const albumService = {
 
   addPhotoToAlbum: async (albumId, publicId) => {
     try {
-      console.log("Album Id :", albumId);
-      console.log("Photo Id (publicId):", publicId);
+      // console.log("Album Id :", albumId);
+      // console.log("Photo Id (publicId):", publicId);
 
       const response = await api.post(`/add-photo/${albumId}`, { publicId }); // Correctly formatted
       return response.data;
@@ -107,14 +107,14 @@ const albumService = {
   },
 
   removePhotoFromAlbum: async (albumName, profileId, publicId) => {
-    console.log(
-      "albumName :",
-      albumName,
-      "profileId :",
-      profileId,
-      "publicId :",
-      publicId
-    );
+    // console.log(
+    //   "albumName :",
+    //   albumName,
+    //   "profileId :",
+    //   profileId,
+    //   "publicId :",
+    //   publicId
+    // );
     try {
       const response = await api.delete(`/remove-from-album`, {
         params: { albumName, profileId, publicId },

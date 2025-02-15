@@ -36,7 +36,7 @@ const AlbumDetailPage = () => {
           console.error(
             'Invalid data format: photos is not an array or is missing.'
           );
-          console.log('Actual data received:', data);
+          // console.log('Actual data received:', data);
         }
         setLoading(false);
       } catch (error) {
