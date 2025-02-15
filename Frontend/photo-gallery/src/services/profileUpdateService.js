@@ -31,7 +31,7 @@ export const updateUserProfile = async (profileId, updatedUserData, dispatch) =>
       }
     );
 
-    console.log("Update Success:", response);
+    // console.log("Update Success:", response);
 
     if (updatedUserData.removeProfile) {
       updatedUserData.profileUrl = null;

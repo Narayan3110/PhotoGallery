@@ -36,13 +36,13 @@ export class AuthService {
 
   // Login user
   static async loginUser(usernameOrEmail, password, dispatch) {
-    console.log("Credentials : " + usernameOrEmail + " " + password);
+    // console.log("Credentials : " + usernameOrEmail + " " + password);
     try {
       const response = await apiClient.post("/users/login", {
         userName: usernameOrEmail,
         password,
       });
-      console.log(response.data.user);
+      // console.log(response.data.user);
       if (response.data) {
         dispatch(
           login({

@@ -125,12 +125,12 @@ const AlbumPage = () => {
     try {
       const result = await albumService.searchAlbum(profileId, searchTerm);
       setSearchResults(result);
-      console.log(
-        "searching result :",
-        result,
-        " serch result variable",
-        searchResults
-      );
+      // console.log(
+      //   "searching result :",
+      //   result,
+      //   " serch result variable",
+      //   searchResults
+      // );
     } catch (error) {
       console.error("Error searching for album:", error);
       setSearchResults(null);

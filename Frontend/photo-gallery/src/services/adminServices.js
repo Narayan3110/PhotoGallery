@@ -1,35 +1,37 @@
-// import axios from "axios";
-
-// const API_URL = "http://localhost:9090/api/admin";
-
-// export const fetchUsers = async () => {
-//   try {
-//     const response = await axios.get(`${API_URL}/getusers`);
-//     return response.data;
-//   } catch (error) {
-//     console.error("Error fetching users:", error);
-//     throw error;
-//   }
-// };
-
-// export const deleteUser = async (userId) => {
-//   try {
-//     await axios.delete(`${API_URL}/remove/${userId}`);
-//     return true;
-//   } catch (error) {
-//     console.error("Error deleting user:", error);
-//     throw error;
-//   }
-// };
-
 import axios from "axios";
 
-const API_URL = "http://localhost:9090/api/admin";
+const API_URL =
+  import.meta.env.VITE_BACK_END_URL || "http://localhost:9090/api/";
+
+// Function to get token from localStorage (or sessionStorage)
+const getAuthToken = () => {
+  return localStorage.getItem("token") || sessionStorage.getItem("token");
+};
+
+// Axios instance with Authorization header
+const axiosInstance = axios.create({
+  baseURL: API_URL,
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
+// Request interceptor to add JWT token to headers
+axiosInstance.interceptors.request.use(
+  (config) => {
+    const token = getAuthToken();
+    if (token) {
+      config.headers["Authorization"] = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
 
 // Fetch all users
 export const fetchUsers = async () => {
   try {
-    const response = await axios.get(`${API_URL}/getusers`);
+    const response = await axiosInstance.get(`admin/getusers`);
     return response.data;
   } catch (error) {
     console.error("Error fetching users:", error);
@@ -40,7 +42,7 @@ export const fetchUsers = async () => {
 // Fetch a single user by ID
 export const fetchUserById = async (userId) => {
   try {
-    const response = await axios.get(`${API_URL}/user/${userId}`);
+    const response = await axiosInstance.get(`admin/user/${userId}`);
     return response.data;
   } catch (error) {
     console.error("Error fetching user by ID:", error);
@@ -51,8 +53,8 @@ export const fetchUserById = async (userId) => {
 // Update user role
 export const updateUserRole = async (userId, roleName) => {
   try {
-    const response = await axios.put(
-      `${API_URL}/update-role?userId=${userId}&roleName=${roleName}`
+    const response = await axiosInstance.put(
+      `admin//update-role?userId=${userId}&roleName=${roleName}`
     );
     return response.data;
   } catch (error) {
@@ -64,8 +66,8 @@ export const updateUserRole = async (userId, roleName) => {
 // Update user password
 export const updateUserPassword = async (userId, password) => {
   try {
-    const response = await axios.put(
-      `${API_URL}/update-password?userId=${userId}&password=${password}`
+    const response = await axiosInstance.put(
+      `admin/update-password?userId=${userId}&password=${password}`
     );
     return response.data;
   } catch (error) {
@@ -77,7 +79,7 @@ export const updateUserPassword = async (userId, password) => {
 // Delete a user
 export const deleteUser = async (userId) => {
   try {
-    await axios.delete(`${API_URL}/remove/${userId}`);
+    await axiosInstance.delete(`admin/remove/${userId}`);
     return true;
   } catch (error) {
     console.error("Error deleting user:", error);
@@ -88,11 +90,10 @@ export const deleteUser = async (userId) => {
 // Fetch all available roles
 export const fetchRoles = async () => {
   try {
-    const response = await axios.get(`${API_URL}/roles`);
+    const response = await axiosInstance.get(`admin/roles`);
     return response.data;
   } catch (error) {
     console.error("Error fetching roles:", error);
     throw error;
   }
 };
-
