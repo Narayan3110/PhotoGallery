@@ -3,7 +3,7 @@ import { fetchUsers, deleteUser } from "../services/adminServices";
 
 const Admin = () => {
   const [users, setUsers] = useState([]);
-//   const navigate = useNavigate();
+  // const navigate = useNavigate();
   
   const handleViewProfile = (userId) => {
     navigate(`/profile/${userId}`);
