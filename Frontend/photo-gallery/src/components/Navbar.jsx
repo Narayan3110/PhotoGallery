@@ -4,7 +4,7 @@ import { logout } from "../redux/authSlice";
 import { useState } from "react";
 import { LogOut, Menu, X } from "lucide-react";
 import logo1 from "@/assets/photos/Navbar/logo1.png";
-import { Button } from "@/components/ui/button";
+// import { Button } from "@/components/ui/button";
 
 const Navbar = () => {
   const user = useSelector((state) => state.auth.user);
@@ -18,6 +18,8 @@ const Navbar = () => {
     sessionStorage.clear();
     navigate("/login");
   };
+
+  const isAdmin = user?.role?.roleName === "ADMIN"; // Check if user is ADMIN
 
   return (
     <nav className="bg-white py-3 w-full top-0 z-50 shadow-md">
@@ -59,6 +61,14 @@ const Navbar = () => {
             <li>
               <Link to="/gallery" className="hover:text-orange-600">
                 Gallery
+              </Link>
+            </li>
+          )}
+          {/* Show Admin Page Only for ADMIN Users */}
+          {isAdmin && (
+            <li>
+              <Link to="/admin" className="hover:text-orange-600 font-bold">
+                Admin
               </Link>
             </li>
           )}
@@ -118,6 +128,17 @@ const Navbar = () => {
                   className="block py-2 hover:text-orange-600"
                 >
                   Gallery
+                </Link>
+              </li>
+            )}
+            {/* Show Admin Page Only for ADMIN Users */}
+            {isAdmin && (
+              <li>
+                <Link
+                  to="/admin"
+                  className="block py-2 hover:text-orange-600 font-bold"
+                >
+                  Admin
                 </Link>
               </li>
             )}

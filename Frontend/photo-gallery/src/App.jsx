@@ -1,8 +1,8 @@
-import React from 'react';
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
-
 import Navbar from "./components/Navbar.jsx";
+import Admin from "./pages/Admin.jsx"; 
+import AdminUserProfile from "./pages/AdminUserProfile.jsx"; // Import the new page
 import GalleryPage from "./pages/GalleryPage.jsx";
 import ContactPage from "./pages/ContactPage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
@@ -17,30 +17,26 @@ import AlbumPage from "./pages/AlbumPage.jsx";
 import AlbumDetailPage from "./pages/AlbumDetailPage.jsx";
 import GalleryNavbar from "./components/GalleryNavbar.jsx"; 
 import Profile from "./pages/Profile.jsx";
+import { Toaster } from "./components/ui/toaster.jsx";
 
 const App = () => {
-  const user = useSelector((state) => state.auth.user); // Check if user is logged in
-  const location = useLocation(); // Get current route
+  const user = JSON.parse(localStorage.getItem("user")); 
+  const location = useLocation(); 
+  const isAdmin = user?.role?.roleName === "ADMIN"; 
 
-  // Check if the current path is related to the gallery (you can customize this further if needed)
-  const isGalleryPage = location.pathname.startsWith("/gallery") ||
+  const isGalleryPage =
+    location.pathname.startsWith("/gallery") ||
     location.pathname.startsWith("/albums") ||
     location.pathname.startsWith("/profile");
 
   return (
     <>
-      {/* Conditionally render Navbar or GalleryNavbar based on the route */}
       {isGalleryPage ? <GalleryNavbar /> : <Navbar />}
-
+      <Toaster />
       <Routes>
         <Route path="/" element={<NewHomePage />} />
-
-        {/* Protect Gallery Route */}
-        <Route
-          path="/gallery"
-          element={user ? <GalleryPage /> : <Navigate to="/login" />}
-        />
-        <Route path="/Profile" element={<Profile />} />
+        <Route path="/gallery" element={user ? <GalleryPage /> : <Navigate to="/login" />} />
+        <Route path="/profile" element={<Profile />} />
         <Route path="/albums" element={<AlbumPage />} />
         <Route path="/album/:albumId" element={<AlbumDetailPage />} />
         <Route path="/verify" element={<VerifyPage />} />
@@ -48,14 +44,18 @@ const App = () => {
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/reset-email" element={<ResetEmail />} />
-        <Route path="/set-Password" element={<NewPasswordPage />} />
+        <Route path="/set-password" element={<NewPasswordPage />} />
         <Route path="/register" element={<RegisterPage />} />
+
+        {/* Admin Routes */}
+        <Route path="/admin" element={isAdmin ? <Admin /> : <Navigate to="/" />} />
+        <Route path="/admin/user/:userId" element={isAdmin ? <AdminUserProfile /> : <Navigate to="/" />} />
       </Routes>
-      
+
       <Footer />
-      
     </>
   );
 };
 
 export default App;
+

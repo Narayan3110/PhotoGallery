@@ -5,10 +5,6 @@ import { updateUserProfile } from '@/services/profileUpdateService';
 import { RiCameraAiFill } from 'react-icons/ri';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import AuthService from '@/services/authTest';
-// <<<<<<< narayan
-// import { Verified } from 'lucide-react';
-// =======
-// >>>>>>> master
 
 const Profile = () => {
   const userData = useSelector((state) => state.auth.user);
@@ -21,6 +17,7 @@ const Profile = () => {
   const [showProfileOptions, setShowProfileOptions] = useState(false);
   const addressParts =
     userData?.userProfile?.address?.split(',').map((part) => part.trim()) || [];
+  
 
   const toggleProfileOptions = () => {
     setShowProfileOptions(!showProfileOptions);
