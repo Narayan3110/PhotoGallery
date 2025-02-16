@@ -37,13 +37,14 @@ public class SecurityConfig {
 				.csrf(AbstractHttpConfigurer::disable)
 				.authorizeHttpRequests(requests -> requests
 						.requestMatchers("/contact/**").permitAll()
-						.requestMatchers("/api/users/**", "/oauth2/**","/api/photo/**","/api/album/**").permitAll()
-						.requestMatchers("/api/userprofile/**").permitAll()
+						.requestMatchers("/api/users/**", "/oauth2/**").permitAll()
+//						.requestMatchers("/api/userprofile/**").permitAll()
 						.requestMatchers("/api/admin/**").hasAuthority("ADMIN")
 						.anyRequest().authenticated())
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
+//		,"/api/photo/**","/api/album/**"
 
 		return http.build();
 	}

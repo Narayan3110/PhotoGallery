@@ -7,6 +7,7 @@ import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -25,6 +26,9 @@ public class EmailService {
     @Autowired
     private UserRepository userRepository;
 
+    @Value("${frontend.url}")
+    private  String frontendUrl ;
+
     public void sendVerificationEmail(User savedUser) throws MessagingException {
         // Generate a unique token
         String token = UUID.randomUUID().toString();
@@ -36,7 +40,7 @@ public class EmailService {
         userRepository.save(savedUser);
 
         // Compose the verification URL
-        String verificationUrl = "http://localhost:5173/verify?token=" + token;
+        String verificationUrl = frontendUrl + "/verify?token=" + token;
         String subject = "Verify Your Email";
 
         // Create the HTML content for the email

@@ -36,8 +36,8 @@ public class User {
     @Column(name = "email")
     private String email;
 
-    @NotBlank
-    @Size(max = 120)
+//    @NotBlank
+//    @Size(max = 120)
     @Column(name = "password")
     private String password;
 
@@ -57,7 +57,7 @@ public class User {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "role_id", referencedColumnName = "role_id")
-    @JsonBackReference
+//    @JsonBackReference
     @ToString.Exclude
     private Role role;
 
