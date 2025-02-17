@@ -13,8 +13,8 @@ import {
 } from "@/components/ui/toast";
 
 const LoginPage = () => {
-  const [usernameOrEmail, setUsernameOrEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [usernameOrEmail, setUsernameOrEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState("");
@@ -24,6 +24,20 @@ const LoginPage = () => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const handleGoogleLogin = () => {
+    window.location.href =
+      "https://accounts.google.com/o/oauth2/v2/auth?client_id=111067298739-ic3vcc564d1omckgr3nlqv8e5mbr9ra7.apps.googleusercontent.com&redirect_uri=http://localhost:5173/auth/google/callback&response_type=code&scope=openid%20email%20profile";
+  };
+  // const handleGoogleLogin = () => {
+  //   const clientId =
+  //     "111067298739-ic3vcc564d1omckgr3nlqv8e5mbr9ra7.apps.googleusercontent.com";
+  //   const redirectUri = "http://localhost:5173/auth/google/callback"; // Redirect back to the same page
+  //   const scope = "openid email profile";
+  //   const responseType = "token"; // Get the access token directly
+
+  //   window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=${responseType}&scope=${scope}`;
+  // };
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -158,7 +172,10 @@ const LoginPage = () => {
               ---Login with Others---
             </p>
             <div className="flex justify-center mt-2">
-              <button className="flex items-center justify-center px-4 py-2 border rounded-md shadow-sm text-sm">
+              <button
+                onClick={handleGoogleLogin}
+                className="flex items-center justify-center px-4 py-2 border rounded-md shadow-sm text-sm"
+              >
                 <img
                   src="https://img.icons8.com/?size=100&id=17949&format=png"
                   alt="Google"
