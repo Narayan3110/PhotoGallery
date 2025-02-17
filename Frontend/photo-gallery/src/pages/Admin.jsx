@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { fetchUsers, deleteUser } from "../services/adminServices";
+import { useNavigate } from "react-router-dom";
 
 const Admin = () => {
   const [users, setUsers] = useState([]);
+
   // const navigate = useNavigate();
   
   const handleViewProfile = (userId) => {
     navigate(`/profile/${userId}`);
   };
+
 
   useEffect(() => {
     loadUsers();
@@ -31,6 +34,10 @@ const Admin = () => {
         console.error("Failed to delete user.");
       }
     }
+  };
+
+  const handleViewProfile = (userId) => {
+    navigate(`/admin/user/${userId}`);
   };
 
   return (
@@ -78,8 +85,10 @@ const Admin = () => {
                     {user.role?.roleName}
                   </td>
                   <td className="px-6 py-4 flex justify-center space-x-3">
-                    <button className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
-                    onClick={() => handleViewProfile(user.id)}>
+                    <button
+                      onClick={() => handleViewProfile(user.userId)}
+                      className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
+                    >
                       View Profile
                     </button>
                     <button
@@ -100,3 +109,4 @@ const Admin = () => {
 };
 
 export default Admin;
+

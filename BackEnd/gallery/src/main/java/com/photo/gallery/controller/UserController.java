@@ -2,15 +2,16 @@ package com.photo.gallery.controller;
 
 import com.photo.gallery.model.User;
 import com.photo.gallery.service.EmailService;
+import com.photo.gallery.service.JWTService;
 import com.photo.gallery.service.UserService;
 import jakarta.mail.MessagingException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
-@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
@@ -22,6 +23,9 @@ public class UserController {
         this.userService = userService;
         this.emailService = emailService;
     }
+
+    @Autowired
+    private JWTService jwtService;
 
     /**
      * Handles user registration and sends a verification email.
@@ -87,5 +91,42 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Password change failed");
         }
     }
+
+    /**
+     * Handles Google login by receiving an authorization code from the frontend,
+     * exchanging it for an access token, and verifying or creating the user.
+     */
+    @PostMapping("/google-login")
+    public ResponseEntity<?> googleLogin(@RequestBody Map<String, String> request) {
+        String authCode = request.get("code");
+        if (authCode == null) {
+            return ResponseEntity.badRequest().body(Map.of("message", "Authorization code is missing"));
+        }
+
+        // Exchange auth code for an access token
+        String accessToken = userService.exchangeAuthCodeForAccessToken(authCode);
+        if (accessToken == null) {
+            return ResponseEntity.badRequest().body(Map.of("message", "Failed to retrieve access token"));
+        }
+
+        // Fetch user details from Google
+        Map<String, Object> userInfo = userService.fetchGoogleUserInfo(accessToken);
+        if (userInfo == null || userInfo.get("email") == null) {
+            return ResponseEntity.badRequest().body(Map.of("message", "Failed to retrieve user information"));
+        }
+
+        // Check if user exists or create a new one
+        User user = userService.findOrCreateGoogleUser(userInfo);
+
+        // Generate JWT token
+        String jwtToken = jwtService.generateToken(user.getUserName());
+
+        return ResponseEntity.ok(Map.of(
+                "token", jwtToken,
+                "user", user
+        ));
+    }
+
+
 
 }

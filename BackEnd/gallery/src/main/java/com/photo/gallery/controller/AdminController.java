@@ -2,6 +2,7 @@ package com.photo.gallery.controller;
 
 
 import com.photo.gallery.dtos.UserDTO;
+import com.photo.gallery.dtos.UserDetailDTO;
 import com.photo.gallery.model.Role;
 import com.photo.gallery.model.User;
 import com.photo.gallery.service.UserService;
@@ -14,7 +15,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/admin")
-@CrossOrigin(origins = "http://localhost:5173")
 //@PreAuthorize("hasAuthority('ADMIN')")
 public class AdminController {
 
@@ -36,27 +36,12 @@ public class AdminController {
         return ResponseEntity.ok("User role updated");
     }
 
-//    @PreAuthorize("hasAuthority('ADMIN')")
-//    @GetMapping("/user/{id}")
-//    public ResponseEntity<UserDTO> getUser(@PathVariable Long id) {
-//        return new ResponseEntity<>(userService.getUserById(id),
-//                HttpStatus.OK);
-//    }
 
-    @GetMapping(value = "/user/{id}", consumes = MediaType.ALL_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserDTO> getUser(@PathVariable Long id) {
-        UserDTO user = userService.getUserById(id);
-        System.out.println(user);
-        return ResponseEntity.ok(user);
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<UserDetailDTO> getUserDetails(@PathVariable Long userId) {
+        UserDetailDTO userDetails = userService.getUserById(userId);
+        return ResponseEntity.ok(userDetails);
     }
-
-
-//    @GetMapping("/user/{id}")
-//    public ResponseEntity<UserDTO> getUser(@PathVariable Long id) {
-//        Optional<UserDTO> user = Optional.ofNullable(userService.getUserById(id));
-//        return user.map(ResponseEntity::ok)
-//                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));
-//    }
 
 
     //    @PreAuthorize("hasAuthority('ADMIN')")
@@ -76,6 +61,12 @@ public class AdminController {
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
+    }
+
+    @DeleteMapping("/remove/{id}")
+    public ResponseEntity<String> delete(@PathVariable Long id){
+        userService.deleteVerifiedUser(id);
+        return new ResponseEntity<>("User Deleted Successfully",HttpStatus.OK);
     }
 
 }

@@ -184,7 +184,7 @@ const GalleryPage = () => {
   };
 
   const handleDeletePhoto = async () => {
-    console.log('Selected photo id :' + selectedPhotoId);
+    // console.log('Selected photo id :' + selectedPhotoId);
     try {
       const response = await deletePhoto(selectedPhotoId);
       if (response) {
@@ -239,7 +239,7 @@ const GalleryPage = () => {
         description: 'Photo added to album successfully 📸',
         variant: 'success',
       });
-      console.log('Selected' + selectedAlbumId);
+      // console.log('Selected' + selectedAlbumId);
       navigate(`/album/${selectedAlbumId}`); // Redirect to album details page
       setShowAlbumDropdown(false); // Hide the dropdown after adding
     } catch (error) {

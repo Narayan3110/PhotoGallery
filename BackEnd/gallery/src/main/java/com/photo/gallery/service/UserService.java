@@ -1,6 +1,7 @@
 package com.photo.gallery.service;
 
 import com.photo.gallery.dtos.UserDTO;
+import com.photo.gallery.dtos.UserDetailDTO;
 import com.photo.gallery.model.Role;
 import com.photo.gallery.model.User;
 import com.photo.gallery.model.UserProfile;
@@ -9,14 +10,16 @@ import com.photo.gallery.repository.UserProfileReposiotry;
 import com.photo.gallery.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.*;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -41,10 +44,17 @@ public class UserService {
     @Autowired
     UserProfileReposiotry userProfileReposiotry ;
 
+
+    @Value("${GOOGLE_CLIENT_ID}")
+    private String googleClientId;
+
+    @Value("${GOOGLE_CLIENT_SECRET}")
+    private String googleClientSecret;
+    private final String REDIRECT_URI = "http://localhost:5173/auth/google/callback";
+
     /**
      * Retrieves all users from the database.
      */
-
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
@@ -52,25 +62,23 @@ public class UserService {
     /**
      * Retrieves a user by ID and converts it to a DTO.
      */
-    public UserDTO getUserById(Long id) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-        return convertToDto(user);
-    }
 
-    /**
-     * Converts User entity to UserDTO.
-     */
-    private static UserDTO convertToDto(User user) {
-        return new UserDTO(
+    public UserDetailDTO getUserById(Long userId) {
+        Optional<User> u = userRepository.findById(userId);
+            User user = u.get();
+
+        return new UserDetailDTO(
                 user.getUserId(),
                 user.getUserName(),
                 user.getEmail(),
+                user.isVerified(),
                 user.getRole(),
                 user.getCreatedDate(),
-                user.getUpdatedDate()
+                user.getUpdatedDate(),
+                user.getUserProfile()
         );
     }
+
 
     /**
      * Updates a user's role based on the provided role name.
@@ -232,5 +240,81 @@ public class UserService {
            return true ;
         }
         return false ;
+    }
+
+    public boolean deleteVerifiedUser(Long id) {
+        userRepository.deleteById(id);
+        return true ;
+    }
+
+
+    /**
+     * Exchanges the Google authorization code for an access token.
+     */
+    public String exchangeAuthCodeForAccessToken(String authCode) {
+        String tokenUrl = "https://oauth2.googleapis.com/token";
+
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+
+        String body = "code=" + authCode +
+                "&client_id=" + googleClientId +
+                "&client_secret=" + googleClientSecret +
+                "&redirect_uri=" + REDIRECT_URI +
+                "&grant_type=authorization_code";
+
+        HttpEntity<String> requestEntity = new HttpEntity<>(body, headers);
+        ResponseEntity<Map> response = restTemplate.exchange(tokenUrl, HttpMethod.POST, requestEntity, Map.class);
+
+        if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
+            return (String) response.getBody().get("access_token");
+        }
+        return null;
+    }
+
+    /**
+     * Fetches Google user details using the access token.
+     */
+    public Map<String, Object> fetchGoogleUserInfo(String accessToken) {
+        String userInfoUrl = "https://www.googleapis.com/oauth2/v3/userinfo";
+
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + accessToken);
+        HttpEntity<String> entity = new HttpEntity<>(headers);
+
+        ResponseEntity<Map> response = restTemplate.exchange(userInfoUrl, HttpMethod.GET, entity, Map.class);
+
+        return response.getStatusCode().is2xxSuccessful() ? response.getBody() : null;
+    }
+
+    /**
+     * Finds an existing user by email or creates a new user with Google details.
+     */
+    public User findOrCreateGoogleUser(Map<String, Object> userInfo) {
+        String email = (String) userInfo.get("email");
+
+        Optional<User> existingUser = userRepository.findByEmail(email);
+        if (existingUser.isPresent()) {
+            return existingUser.get(); // Return existing user
+        }
+
+        // Create a new user if not found
+        User newUser = new User();
+        newUser.setUserName((String) userInfo.get("name"));
+        newUser.setEmail(email);
+        UserProfile userProfile = new UserProfile();
+        userProfile.setFullName((String) userInfo.get("name"));
+        userProfile.setUser(newUser);
+        newUser.setUserProfile(userProfile);
+        newUser.setVerified(true); // Google users are always verified
+
+        // Assign default role (e.g., USER)
+        Role userRole = roleRepository.findByRoleName(Role.RoleName.USER)
+                .orElseThrow(() -> new RuntimeException("Default role not found"));
+        newUser.setRole(userRole);
+
+        return userRepository.save(newUser);
     }
 }
