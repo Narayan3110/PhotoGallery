@@ -13,10 +13,13 @@ import { FaUpload } from 'react-icons/fa6';
 import { GoSortAsc } from 'react-icons/go';
 import { GoSortDesc } from 'react-icons/go';
 import { RiCloseCircleLine } from 'react-icons/ri';
-import { ArrowLeft, ArrowRight } from 'lucide-react';
+// import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { ChevronRight } from 'lucide-react';
+import { ChevronLeft } from 'lucide-react';
+import { RiDeleteBin6Line } from "react-icons/ri";
 
 const GalleryPage = () => {
   const [photos, setPhotos] = useState([]);
@@ -391,19 +394,22 @@ const GalleryPage = () => {
                 <RiCloseCircleLine className='text-white opacity-70 ' />
               </button>
               <div className='flex items-center justify-between'>
-                <button onClick={handlePreviousPhoto}>
-                  <ArrowLeft className='bg-white rounded-lg opacity-60' />
-                  <span className='sr-only'>Previous Image</span>
-                </button>
+                <Button
+                  onClick={handlePreviousPhoto}
+                  variant='outline'
+                  size='icon'
+                >
+                  <ChevronLeft />
+                </Button>
                 <img
                   src={selectedPhoto}
                   alt='Selected Photo'
                   className='w-full h-auto rounded-lg object-contain mx-4'
                 />
-                <button onClick={handleNextPhoto}>
-                  <ArrowRight className='bg-white rounded-lg opacity-60' />
-                  <span className='sr-only'>Next slide</span>
-                </button>
+
+                <Button onClick={handleNextPhoto} variant='outline' size='icon'>
+                  <ChevronRight />
+                </Button>
               </div>
               {showAlbumDropdown && (
                 <div className='absolute top-4 left-4 bg-white text-black shadow-lg p-4 rounded-lg w-72 object-contain'>
@@ -447,7 +453,7 @@ const GalleryPage = () => {
                   onClick={handleDeletePhoto}
                   className='bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700'
                 >
-                  Delete Photo
+                  <RiDeleteBin6Line/>
                 </button>
               </div>
             </div>
