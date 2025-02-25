@@ -18,7 +18,6 @@ import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { MdFileDownload } from 'react-icons/md';
-
 const GalleryPage = () => {
   const [photos, setPhotos] = useState([]);
   // const [message, setMessage] = useState('');

@@ -3,7 +3,8 @@ import { useDispatch } from "react-redux";
 import { login } from "../redux/authSlice"; // Import the login action
 
 // Get the backend URL from environment variables
-const BACKEND_URL = import.meta.env.VITE_BACK_END_URL || "http://localhost:9090/api/";
+const BACKEND_URL =
+  import.meta.env.VITE_BACK_END_URL || "http://localhost:9090/api/";
 
 const apiClient = axios.create({
   baseURL: BACKEND_URL,
@@ -59,12 +60,33 @@ export class AuthService {
     }
   }
 
-  // Google login
-  static async googleLogin(authCode) {
+  // // Google login
+  // static async googleLogin(authCode) {
+  //   try {
+  //     const response = await apiClient.post("/oauth2/google", {
+  //       code: authCode,
+  //     });
+  //     return response.data;
+  //   } catch (error) {
+  //     console.error("Error during Google login:", error);
+  //     throw error.response?.data?.message || new Error("Google login failed.");
+  //   }
+  // }
+  static async exchangeAuthCode(authCode) {
+    console.log("AuthCode : " + authCode);
     try {
-      const response = await apiClient.post("/oauth2/google", {
-        code: authCode,
-      });
+      // Send auth code to backend
+      const response = await axios.post(
+        "http://localhost:9090/api/users/google-login",
+        {
+          code: authCode,
+        }
+      );
+
+      // Store user details & token
+      localStorage.setItem("user", JSON.stringify(response.data.user));
+      localStorage.setItem("token", response.data.token);
+
       return response.data;
     } catch (error) {
       console.error("Error during Google login:", error);

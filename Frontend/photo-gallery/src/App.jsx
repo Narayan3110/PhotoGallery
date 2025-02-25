@@ -1,7 +1,7 @@
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Navbar from "./components/Navbar.jsx";
-import Admin from "./pages/Admin.jsx"; 
+import Admin from "./pages/Admin.jsx";
 import AdminUserProfile from "./pages/AdminUserProfile.jsx"; // Import the new page
 import GalleryPage from "./pages/GalleryPage.jsx";
 import ContactPage from "./pages/ContactPage.jsx";
@@ -14,15 +14,21 @@ import VerifyPage from "./pages/VerifyPage.jsx";
 import NewPasswordPage from "./pages/NewPasswordPage.jsx";
 import ResetEmail from "./pages/ResetEmail.jsx";
 import AlbumPage from "./pages/AlbumPage.jsx";
+import GoogleAuthHandler from "./pages/GoogleAuthHandler.jsx";
+
 import AlbumDetailPage from "./pages/AlbumDetailPage.jsx";
-import GalleryNavbar from "./components/GalleryNavbar.jsx"; 
+import GalleryNavbar from "./components/GalleryNavbar.jsx";
 import Profile from "./pages/Profile.jsx";
 import { Toaster } from "./components/ui/toaster.jsx";
+// import authTest from "./services/authTest"; // Ensure correct import
 
 const App = () => {
-  const user = JSON.parse(localStorage.getItem("user")); 
-  const location = useLocation(); 
-  const isAdmin = user?.role?.roleName === "ADMIN"; 
+  // // Automatically handle Google login when app loads
+  // authTest.handleGoogleRedirect();
+
+  const user = JSON.parse(localStorage.getItem("user"));
+  const location = useLocation();
+  const isAdmin = user?.role?.roleName === "ADMIN";
 
   const isGalleryPage =
     location.pathname.startsWith("/gallery") ||
@@ -35,7 +41,10 @@ const App = () => {
       <Toaster />
       <Routes>
         <Route path="/" element={<NewHomePage />} />
-        <Route path="/gallery" element={user ? <GalleryPage /> : <Navigate to="/login" />} />
+        <Route
+          path="/gallery"
+          element={user ? <GalleryPage /> : <Navigate to="/login" />}
+        />
         <Route path="/profile" element={<Profile />} />
         <Route path="/albums" element={<AlbumPage />} />
         <Route path="/album/:albumId" element={<AlbumDetailPage />} />
@@ -46,10 +55,18 @@ const App = () => {
         <Route path="/reset-email" element={<ResetEmail />} />
         <Route path="/set-password" element={<NewPasswordPage />} />
         <Route path="/register" element={<RegisterPage />} />
-
         {/* Admin Routes */}
-        <Route path="/admin" element={isAdmin ? <Admin /> : <Navigate to="/" />} />
-        <Route path="/admin/user/:userId" element={isAdmin ? <AdminUserProfile /> : <Navigate to="/" />} />
+        <Route
+          path="/admin"
+          element={isAdmin ? <Admin /> : <Navigate to="/" />}
+        />
+        <Route
+          path="/admin/user/:userId"
+          element={isAdmin ? <AdminUserProfile /> : <Navigate to="/" />}
+        />
+
+        {/* Google OAuth Callback Route */}
+        <Route path="/auth/google/callback" element={<GoogleAuthHandler />} />
       </Routes>
 
       <Footer />
@@ -58,4 +75,3 @@ const App = () => {
 };
 
 export default App;
-

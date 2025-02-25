@@ -4,10 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 const Admin = () => {
   const [users, setUsers] = useState([]);
-
-  // const navigate = useNavigate();
-
-
+  const navigate = useNavigate();
 
   useEffect(() => {
     loadUsers();
