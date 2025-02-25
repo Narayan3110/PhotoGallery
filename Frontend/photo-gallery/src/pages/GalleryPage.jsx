@@ -13,14 +13,10 @@ import { FaUpload } from 'react-icons/fa6';
 import { GoSortAsc } from 'react-icons/go';
 import { GoSortDesc } from 'react-icons/go';
 import { RiCloseCircleLine } from 'react-icons/ri';
-// import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { ChevronRight } from 'lucide-react';
-import { ChevronLeft } from 'lucide-react';
-import { RiDeleteBin6Line } from "react-icons/ri";
 import { MdFileDownload } from 'react-icons/md';
 
 const GalleryPage = () => {
