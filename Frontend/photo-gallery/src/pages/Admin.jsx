@@ -6,10 +6,7 @@ const Admin = () => {
   const [users, setUsers] = useState([]);
 
   // const navigate = useNavigate();
-  
-  const handleViewProfile = (userId) => {
-    navigate(`/profile/${userId}`);
-  };
+
 
 
   useEffect(() => {

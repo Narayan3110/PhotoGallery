@@ -137,6 +137,8 @@ const AlbumPage = () => {
     }
   };
 
+  
+
   return (
     <div className="relative min-h-screen bg-white rounded-lg shadow m-5 p-8">
       {/* Title*/}

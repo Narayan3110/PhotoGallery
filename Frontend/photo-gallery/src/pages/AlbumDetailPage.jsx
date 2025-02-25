@@ -5,6 +5,7 @@ import { RiCloseCircleLine } from 'react-icons/ri';
 import { Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
+import { MdFileDownload } from 'react-icons/md';
 
 const AlbumDetailPage = () => {
   const { albumId } = useParams();
@@ -18,7 +19,7 @@ const AlbumDetailPage = () => {
   const [selectedPhoto, setSelectedPhoto] = useState(null);
   const [selectedPublicId, setSelectedPublicId] = useState(null);
   const [file, setFile] = useState(null);
-  const [albumName, setAlbumName] = useState("");
+  const [albumName, setAlbumName] = useState('');
   const [message, setMessage] = useState('');
   const { toast } = useToast();
 
@@ -137,6 +138,34 @@ const AlbumDetailPage = () => {
       setLoading(false);
     }
   };
+  const downloadImage = async () => {
+    if (!selectedPhoto) return;
+
+    try {
+      const response = await fetch(selectedPhoto);
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = selectedPublicId || 'downloaded_image'; // Default name if publicId is not provided
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+      toast({
+        // title: 'Success ',
+        description: 'Photo Downloaded successfully 🎉',
+      });
+    } catch (error) {
+      console.error('Error downloading image:', error);
+      toast({
+        variant: 'destructive',
+        title: 'Try Again !',
+        description: 'Something Went Wrong !',
+      });
+    }
+  };
 
   return (
     <div className='flex'>
@@ -145,7 +174,7 @@ const AlbumDetailPage = () => {
           <h2>{albumDetails.albumName}</h2>
           <h2>{albumDetails.createdAt}</h2>
         </div> */}
-        
+
         <div className='w-full bg-white rounded-lg text-gray-800 mb-0'>
           <div className='flex justify-center items-center gap-4 p-2 '>
             <input
@@ -201,6 +230,7 @@ const AlbumDetailPage = () => {
                 alt='Selected Photo'
                 className='w-full h-auto rounded-lg object-contain'
               />
+
               <div className='absolute bottom-4 right-4 flex gap-4'>
                 <button
                   onClick={handleRemovePhoto}
@@ -208,6 +238,10 @@ const AlbumDetailPage = () => {
                 >
                   Delete Photo
                 </button>
+                <Button variant='secondary' onClick={downloadImage}>
+                  <MdFileDownload />
+                  Downlaod
+                </Button>
               </div>
             </div>
           </div>

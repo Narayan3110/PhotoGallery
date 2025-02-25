@@ -14,12 +14,14 @@ import { GoSortAsc } from 'react-icons/go';
 import { GoSortDesc } from 'react-icons/go';
 import { RiCloseCircleLine } from 'react-icons/ri';
 // import { ArrowLeft, ArrowRight } from 'lucide-react';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ChevronRight } from 'lucide-react';
 import { ChevronLeft } from 'lucide-react';
 import { RiDeleteBin6Line } from "react-icons/ri";
+import { MdFileDownload } from 'react-icons/md';
 
 const GalleryPage = () => {
   const [photos, setPhotos] = useState([]);
@@ -181,6 +183,26 @@ const GalleryPage = () => {
     setSelectedPhoto(null);
     setSelectedPhotoId(null);
     setShowAlbumDropdown(false); // Hide the dropdown when modal is closed
+  };
+
+  const downloadImage = async () => {
+    if (!selectedPhoto) return;
+
+    try {
+      const response = await fetch(selectedPhoto);
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = selectedPhotoId || 'downloaded_image'; // Default name if publicId is not provided
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Error downloading image:', error);
+    }
   };
 
   const handleDeletePhoto = async () => {
@@ -394,22 +416,19 @@ const GalleryPage = () => {
                 <RiCloseCircleLine className='text-white opacity-70 ' />
               </button>
               <div className='flex items-center justify-between'>
-                <Button
-                  onClick={handlePreviousPhoto}
-                  variant='outline'
-                  size='icon'
-                >
-                  <ChevronLeft />
-                </Button>
+                <button onClick={handlePreviousPhoto}>
+                  <ArrowLeft className='bg-white rounded-lg opacity-60' />
+                  <span className='sr-only'>Previous Image</span>
+                </button>
                 <img
                   src={selectedPhoto}
                   alt='Selected Photo'
                   className='w-full h-auto rounded-lg object-contain mx-4'
                 />
-
-                <Button onClick={handleNextPhoto} variant='outline' size='icon'>
-                  <ChevronRight />
-                </Button>
+                <button onClick={handleNextPhoto}>
+                  <ArrowRight className='bg-white rounded-lg opacity-60' />
+                  <span className='sr-only'>Next slide</span>
+                </button>
               </div>
               {showAlbumDropdown && (
                 <div className='absolute top-4 left-4 bg-white text-black shadow-lg p-4 rounded-lg w-72 object-contain'>
@@ -449,11 +468,14 @@ const GalleryPage = () => {
                 >
                   Upload to Album
                 </button>
+                <Button  variant="secondary" onClick={downloadImage}>
+                  <MdFileDownload  />Downlaod
+                </Button>
                 <button
                   onClick={handleDeletePhoto}
                   className='bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700'
                 >
-                  <RiDeleteBin6Line/>
+                  Delete Photo
                 </button>
               </div>
             </div>
