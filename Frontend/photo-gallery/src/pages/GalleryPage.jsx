@@ -17,7 +17,7 @@ import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-
+import { MdFileDownload } from 'react-icons/md';
 const GalleryPage = () => {
   const [photos, setPhotos] = useState([]);
   // const [message, setMessage] = useState('');
@@ -178,6 +178,26 @@ const GalleryPage = () => {
     setSelectedPhoto(null);
     setSelectedPhotoId(null);
     setShowAlbumDropdown(false); // Hide the dropdown when modal is closed
+  };
+
+  const downloadImage = async () => {
+    if (!selectedPhoto) return;
+
+    try {
+      const response = await fetch(selectedPhoto);
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = selectedPhotoId || 'downloaded_image'; // Default name if publicId is not provided
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Error downloading image:', error);
+    }
   };
 
   const handleDeletePhoto = async () => {
@@ -443,6 +463,9 @@ const GalleryPage = () => {
                 >
                   Upload to Album
                 </button>
+                <Button  variant="secondary" onClick={downloadImage}>
+                  <MdFileDownload  />Downlaod
+                </Button>
                 <button
                   onClick={handleDeletePhoto}
                   className='bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700'
